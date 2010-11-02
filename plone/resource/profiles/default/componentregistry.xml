@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<componentregistry>
+    <adapters/>
+    <utilities>
+        <utility 
+            interface="plone.resource.interfaces.IResourceDirectory"
+            object="portal_resources"
+            name="persistent"
+            />
+    </utilities>
+</componentregistry>

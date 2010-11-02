@@ -20,7 +20,7 @@ Resource directory contents can be found by the traverser in several different
 places. The following locations are tried in order.
 
 Files in the ZODB
-  Installing ``plone.resource`` creates a folder at /++etc++site/resources
+  Installing ``plone.resource`` creates a folder called portal_resources
   which can be used to store resource directories persistently. By convention,
   the top-level folders under this folder correspond to resource types, and the
   second-level folders correspond to the resource directory name.

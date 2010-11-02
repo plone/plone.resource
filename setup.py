@@ -1,5 +1,4 @@
 from setuptools import setup, find_packages
-import os
 
 version = '1.0'
 
@@ -7,7 +6,7 @@ setup(name='plone.resource',
       version=version,
       description="",
       long_description=open("README.txt").read() + "\n" +
-                       open(os.path.join("docs", "HISTORY.txt")).read(),
+                       open("CHANGES.txt").read(),
       classifiers=[
         "Framework :: Plone",
         "Programming Language :: Python",
@@ -28,4 +27,8 @@ setup(name='plone.resource',
           'unittest2',
           # -*- Extra requirements: -*-
       ],
+      entry_points="""
+      [z3c.autoinclude.plugin]
+      target = plone
+      """,
       )

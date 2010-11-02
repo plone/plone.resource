@@ -9,3 +9,4 @@ class ResourceTraverser(SimpleHandler):
         self.context = context
     
     def traverse(self, name, remaining):
+        for name

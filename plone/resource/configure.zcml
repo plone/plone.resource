@@ -1,7 +1,17 @@
 <configure
     xmlns="http://namespaces.zope.org/zope"
-    xmlns:five="http://namespaces.zope.org/five"
-    xmlns:i18n="http://namespaces.zope.org/i18n"
-    i18n_domain="plone.resource">
+    xmlns:gs="http://namespaces.zope.org/genericsetup"
+    i18n_domain="plone">
+
+  <include file="meta.zcml"/>
+
+  <gs:registerProfile
+      name="default"
+      directory="profiles/default"
+      title="Static resource storage"
+      description="A folder for storing and serving static resource files"
+      for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+      provides="Products.GenericSetup.interfaces.EXTENSION"
+      />
 
 </configure>
