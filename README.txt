@@ -83,8 +83,8 @@ Files in a central resource directory
     top-level directories are resource types and 2nd-level directories are
     resource directory names).
     
-    For example, the following in site.zcml would register the path var/resources
-    within the buildout root:
+    For example, the following in site.zcml would register the path
+    var/resources within the buildout root:
     
       <plone:resourceDirectory
         directory="/path/to/buildout/var/resources"

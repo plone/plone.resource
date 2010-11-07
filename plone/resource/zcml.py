@@ -41,22 +41,27 @@ def registerResourceDirectory(_context, directory, name=None, type=None):
     The actual ZCA registrations are deferred so that conflicts can be resolved
     via zope.configuration's discriminator machinery.
     """
-    
     if _context.package and directory.startswith('/'):
         raise ConfigurationError('Resource directories in distributions must '
                                  'be specified as relative paths.')
     elif _context.package:
         directory = _context.path(directory)
-    
+    elif not _context.package and not directory.startswith('/'):
+        raise ConfigurationError('Global resource directories must be '
+                                 'specified as absolute paths.')
+
+    if '..' in directory.split('/'):
+        raise ConfigurationError('Traversing to parent directories via .. is not allowed.')
     if not os.path.exists(directory):
         raise IOError, 'Directory not found: %s' % directory
     
-    if not type and not name:
-        identifier = ''
-    elif not type:
-        identifier = name
+    if name is None and _context.package:
+        name = _context.package.__name__
+    
+    if type:
+        identifier = '++%s++%s' % (type, name or '')
     else:
-        identifier = '++%s++%s' % (type, name)
+        identifier = name or ''
     
     directory = FilesystemResourceDirectory(type, name, directory)
     
