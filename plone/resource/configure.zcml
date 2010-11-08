@@ -1,6 +1,7 @@
 <configure
     xmlns="http://namespaces.zope.org/zope"
     xmlns:gs="http://namespaces.zope.org/genericsetup"
+    xmlns:plone="http://namespaces.plone.org/plone"
     i18n_domain="plone">
 
   <include file="meta.zcml"/>
@@ -13,5 +14,21 @@
       for="Products.CMFPlone.interfaces.IPloneSiteRoot"
       provides="Products.GenericSetup.interfaces.EXTENSION"
       />
+
+
+  <!-- demo traverser -->
+  <!-- <adapter
+      name="theme"
+      for="* zope.publisher.interfaces.IRequest"
+      provides="zope.traversing.interfaces.ITraversable"
+      factory=".testing.ThemeTraverser"
+      /> -->
+
+  <!-- demo theme -->
+  <!-- <plone:resourceDirectory
+    type="theme"
+    name="demo"
+    directory="demo"
+    /> -->
 
 </configure>

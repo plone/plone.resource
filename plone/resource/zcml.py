@@ -63,7 +63,7 @@ def registerResourceDirectory(_context, directory, name=None, type=None):
     else:
         identifier = name or ''
     
-    directory = FilesystemResourceDirectory(type, name, directory)
+    directory = FilesystemResourceDirectory(directory)
     
     _context.action(
         discriminator = ('plone:resourceDirectory', identifier),

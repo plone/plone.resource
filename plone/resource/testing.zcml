@@ -1,0 +1,13 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    i18n_domain="plone">
+
+  <!-- demo traverser -->
+  <adapter
+      name="theme"
+      for="* zope.publisher.interfaces.IRequest"
+      provides="zope.traversing.interfaces.ITraversable"
+      factory=".testing.ThemeTraverser"
+      />
+
+</configure>

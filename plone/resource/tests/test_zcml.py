@@ -42,8 +42,6 @@ class ZCMLTestCase(unittest.TestCase):
         """)
         
         res = getUtility(IResourceDirectory, name='++theme++foo')
-        self.assertEqual('theme', res.type)
-        self.assertEqual('foo', res.name)
         self.assertTrue(res.directory.endswith(os.path.join('plone', 'resource', 'tests', 'resources')))
     
     def test_dist_with_name_only(self):
@@ -54,9 +52,7 @@ class ZCMLTestCase(unittest.TestCase):
           />
         """)
 
-        res = getUtility(IResourceDirectory, name='foo')
-        self.assertEqual(None, res.type)
-        self.assertEqual('foo', res.name)
+        getUtility(IResourceDirectory, name='foo')
     
     def test_dist_with_type_only(self):
         runSnippet("""
@@ -66,9 +62,7 @@ class ZCMLTestCase(unittest.TestCase):
           />
         """)
 
-        res = getUtility(IResourceDirectory, name='++theme++plone.resource.tests')
-        self.assertEqual('theme', res.type)
-        self.assertEqual('plone.resource.tests', res.name)
+        getUtility(IResourceDirectory, name='++theme++plone.resource.tests')
 
     def test_dist_without_name_or_type(self):
         runSnippet("""
@@ -77,9 +71,7 @@ class ZCMLTestCase(unittest.TestCase):
           />
         """)
 
-        res = getUtility(IResourceDirectory, name='plone.resource.tests')
-        self.assertEqual(None, res.type)
-        self.assertEqual('plone.resource.tests', res.name)
+        getUtility(IResourceDirectory, name='plone.resource.tests')
 
     def test_dist_rejects_absolute_directory(self):
         self.assertRaises(ConfigurationError,
@@ -95,8 +87,6 @@ class ZCMLTestCase(unittest.TestCase):
         """, dist=None)
         
         res = getUtility(IResourceDirectory)
-        self.assertEqual(None, res.type)
-        self.assertEqual(None, res.name)
         self.assertEqual('/', res.directory)
 
     def test_global_rejects_relative_directory(self):

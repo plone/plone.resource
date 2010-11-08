@@ -3,8 +3,7 @@ from zope import schema
 
 
 class IResourceDirectory(Interface):
-    type = schema.ASCIILine()
-    name = schema.ASCIILine()
+    pass
 
 
 class IFilesystemResourceDirectory(IResourceDirectory):
