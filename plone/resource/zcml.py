@@ -41,6 +41,7 @@ def registerResourceDirectory(_context, directory, name=None, type=None):
     The actual ZCA registrations are deferred so that conflicts can be resolved
     via zope.configuration's discriminator machinery.
     """
+    
     if _context.package and directory.startswith('/'):
         raise ConfigurationError('Resource directories in distributions must '
                                  'be specified as relative paths.')
@@ -63,10 +64,11 @@ def registerResourceDirectory(_context, directory, name=None, type=None):
     else:
         identifier = name or ''
     
+    directory = os.path.sep.join(directory.split('/'))
     directory = FilesystemResourceDirectory(directory)
     
     _context.action(
-        discriminator = ('plone:resourceDirectory', identifier),
+        discriminator = ('plone:static', identifier),
         callable = handler,
         args = ('registerUtility', directory, IResourceDirectory, identifier),
         )

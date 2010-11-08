@@ -3,7 +3,7 @@
     xmlns:meta="http://namespaces.zope.org/meta">
 
     <meta:directive
-        name="resourceDirectory"
+        name="static"
         namespace="http://namespaces.plone.org/plone"
         schema=".zcml.IResourceDirectoryDirective"
         handler=".zcml.registerResourceDirectory"

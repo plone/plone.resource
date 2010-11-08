@@ -25,7 +25,7 @@
       /> -->
 
   <!-- demo theme -->
-  <!-- <plone:resourceDirectory
+  <!-- <plone:static
     type="theme"
     name="demo"
     directory="demo"

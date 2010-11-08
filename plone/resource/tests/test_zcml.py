@@ -34,7 +34,7 @@ class ZCMLTestCase(unittest.TestCase):
     
     def test_dist_with_name_and_type(self):
         runSnippet("""
-        <plone:resourceDirectory
+        <plone:static
           name="foo"
           type="theme"
           directory="resources"
@@ -46,7 +46,7 @@ class ZCMLTestCase(unittest.TestCase):
     
     def test_dist_with_name_only(self):
         runSnippet("""
-        <plone:resourceDirectory
+        <plone:static
           name="foo"
           directory="resources"
           />
@@ -56,7 +56,7 @@ class ZCMLTestCase(unittest.TestCase):
     
     def test_dist_with_type_only(self):
         runSnippet("""
-        <plone:resourceDirectory
+        <plone:static
           type="theme"
           directory="resources"
           />
@@ -66,7 +66,7 @@ class ZCMLTestCase(unittest.TestCase):
 
     def test_dist_without_name_or_type(self):
         runSnippet("""
-        <plone:resourceDirectory
+        <plone:static
           directory="resources"
           />
         """)
@@ -76,12 +76,12 @@ class ZCMLTestCase(unittest.TestCase):
     def test_dist_rejects_absolute_directory(self):
         self.assertRaises(ConfigurationError,
             runSnippet,
-            """<plone:resourceDirectory directory="/" />"""
+            """<plone:static directory="/" />"""
             )
 
     def test_global(self):
         runSnippet("""
-        <plone:resourceDirectory
+        <plone:static
           directory="/"
           />
         """, dist=None)
@@ -92,18 +92,18 @@ class ZCMLTestCase(unittest.TestCase):
     def test_global_rejects_relative_directory(self):
         self.assertRaises(ConfigurationError,
             runSnippet,
-            """<plone:resourceDirectory directory="foobar" />""",
+            """<plone:static directory="foobar" />""",
             dist=None
             )
 
     def test_missing_directory(self):
         self.assertRaises(ConfigurationError,
             runSnippet,
-            """<plone:resourceDirectory directory="foobar" />"""
+            """<plone:static directory="foobar" />"""
             )
 
     def test_rejects_parent_directory_traversal(self):
         self.assertRaises(ConfigurationError,
             runSnippet,
-            """<plone:resourceDirectory directory="../tests" />"""
+            """<plone:static directory="../tests" />"""
             )
