@@ -4,10 +4,10 @@
 
   <!-- demo traverser -->
   <adapter
-      name="theme"
+      name="demo"
       for="* zope.publisher.interfaces.IRequest"
       provides="zope.traversing.interfaces.ITraversable"
-      factory=".testing.ThemeTraverser"
+      factory=".testing.DemoTraverser"
       />
 
 </configure>

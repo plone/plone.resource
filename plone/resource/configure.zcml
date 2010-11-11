@@ -15,20 +15,4 @@
       provides="Products.GenericSetup.interfaces.EXTENSION"
       />
 
-
-  <!-- demo traverser -->
-  <!-- <adapter
-      name="theme"
-      for="* zope.publisher.interfaces.IRequest"
-      provides="zope.traversing.interfaces.ITraversable"
-      factory=".testing.ThemeTraverser"
-      /> -->
-
-  <!-- demo theme -->
-  <!-- <plone:static
-    type="theme"
-    name="demo"
-    directory="demo"
-    /> -->
-
 </configure>

@@ -2,6 +2,6 @@
 <tool-setup>
     <required
         tool_id="portal_resources"
-        class="plone.resource.directory.PersistentResourceDirectory"
+        class="Products.BTreeFolder2.BTreeFolder2.BTreeFolder2"
         />
 </tool-setup>

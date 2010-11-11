@@ -10,15 +10,15 @@ class IntegrationTestCase(unittest.TestCase):
         self.portal = self.layer.get('portal')
     
     def test_persistent_directory_installed(self):
-        # should be available as an IResourceDirectory utility named 'persistent'
-        from zope.component import getUtility
-        utility = getUtility(IResourceDirectory, name='persistent')
-        
-        # should be available as the portal_resources tool
+        # directory should be available as the portal_resources tool
         from Products.CMFCore.utils import getToolByName
         tool = getToolByName(self.portal, 'portal_resources')
         self.assertEqual('portal_resources', tool.getId())
 
-        # the tool and utility are identical except for their acquisition wrappers
+        # wrapper should be available as an IResourceDirectory utility named 'persistent'
+        from zope.component import getUtility
+        utility = getUtility(IResourceDirectory, name='persistent')
+
+        # the utility's context attribute is the (unwrapped) tool
         from Acquisition import aq_base
-        self.assertTrue(aq_base(tool) is aq_base(utility))
+        self.assertTrue(aq_base(tool) is utility.context)

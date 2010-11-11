@@ -47,5 +47,5 @@ PLONE_RESOURCE_INTEGRATION_TESTING = \
 
 
 from plone.resource.traversal import ResourceTraverser
-class ThemeTraverser(ResourceTraverser):
-    name = u'theme'
+class DemoTraverser(ResourceTraverser):
+    name = 'demo'

@@ -8,6 +8,7 @@ from zope.component import provideUtility, provideAdapter
 from zope.interface import Interface
 from zope.publisher.interfaces import IRequest
 from zope.traversing.interfaces import ITraversable
+from Products.BTreeFolder2.BTreeFolder2 import BTreeFolder2
 from plone.resource.interfaces import IResourceDirectory
 from plone.resource.directory import PersistentResourceDirectory
 from plone.resource.directory import FilesystemResourceDirectory
@@ -30,8 +31,8 @@ class TraversalTestCase(unittest.TestCase):
         dir = FilesystemResourceDirectory(test_dir_path)
         provideUtility(dir, provides=IResourceDirectory, name=u'foo')
         
-        res = self.app.restrictedTraverse('++theme++foo')
-        self.failUnless(res.directory.endswith('resources/theme'))
+        res = self.app.restrictedTraverse('++demo++foo')
+        self.failUnless(res.directory.endswith('resources/demo'))
         
         from plone.resource.traversal import ResourceTraverser
         class ThingyTraverser(ResourceTraverser):
@@ -41,36 +42,38 @@ class TraversalTestCase(unittest.TestCase):
 
     def test_traverse_packaged_type_specific_directory(self):
         dir = FilesystemResourceDirectory(test_dir_path)
-        provideUtility(dir, provides=IResourceDirectory, name=u'++theme++foo')
+        provideUtility(dir, provides=IResourceDirectory, name=u'++demo++foo')
         
-        res = self.app.restrictedTraverse('++theme++foo')
+        res = self.app.restrictedTraverse('++demo++foo')
         self.failUnless(res.directory.endswith('resources'))
     
     def test_traverse_global_directory(self):
         dir = FilesystemResourceDirectory(test_dir_path)
         provideUtility(dir, provides=IResourceDirectory, name=u'')
         
-        res = self.app.restrictedTraverse('++theme++foo')
-        self.failUnless(res.directory.endswith('resources/theme/foo'))
+        res = self.app.restrictedTraverse('++demo++foo')
+        self.failUnless(res.directory.endswith('resources/demo/foo'))
         
-        self.assertRaises(NotFound, self.app.restrictedTraverse, '++theme++bar')
+        self.assertRaises(NotFound, self.app.restrictedTraverse, '++demo++bar')
     
     def test_traverse_persistent_directory(self):
-        dir = PersistentResourceDirectory('portal_resources')
-        self.app._setOb('portal_resources', dir)
-        dir._setOb('theme', PersistentResourceDirectory('theme'))
-        dir.theme._setOb('foo', PersistentResourceDirectory('foo'))
+        root = BTreeFolder2('portal_resources')
+        self.app._setOb('portal_resources', root)
+        root._setOb('demo', BTreeFolder2('demo'))
+        root.demo._setOb('foo', BTreeFolder2('foo'))
+        
+        dir = PersistentResourceDirectory(root)
         provideUtility(dir, provides=IResourceDirectory, name=u'persistent')
         
-        res = self.app.restrictedTraverse('++theme++foo')
-        self.failUnless(res.absolute_url().endswith('portal_resources/theme/foo'))
+        res = self.app.restrictedTraverse('++demo++foo')
+        self.assertEqual('portal_resources/demo/foo', '/'.join(res.context.getPhysicalPath()))
 
-        self.assertRaises(NotFound, self.app.restrictedTraverse, '++theme++bar')
+        self.assertRaises(NotFound, self.app.restrictedTraverse, '++demo++bar')
 
     def test_publish_resource(self):
         dir = FilesystemResourceDirectory(test_dir_path)
         provideUtility(dir, provides=IResourceDirectory, name=u'')
         
         browser = z2.Browser(self.app)
-        browser.open(self.app.absolute_url() + '/++theme++foo/test.html')
+        browser.open(self.app.absolute_url() + '/++demo++foo/test.html')
         self.assertEqual('asdf', browser.contents)

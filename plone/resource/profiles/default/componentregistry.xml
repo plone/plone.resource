@@ -4,7 +4,7 @@
     <utilities>
         <utility 
             interface="plone.resource.interfaces.IResourceDirectory"
-            object="portal_resources"
+            factory="plone.resource.directory.PersistentResourceDirectory"
             name="persistent"
             />
     </utilities>
