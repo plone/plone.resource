@@ -30,6 +30,8 @@ class TraversalTestCase(unittest.TestCase):
         
         res = self.app.restrictedTraverse('++demo++foo')
         self.failUnless(res.directory.endswith('resources'))
+        
+        self.assertRaises(NotFound, self.app.restrictedTraverse, '++demo++asdf')
     
     def test_traverse_global_directory(self):
         dir = FilesystemResourceDirectory(test_dir_path)

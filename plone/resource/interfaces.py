@@ -1,3 +1,4 @@
+from zope.interface import Attribute
 from zope.publisher.interfaces import IPublishTraverse
 
 
@@ -8,6 +9,11 @@ class IResourceDirectory(IPublishTraverse):
     regardless of whether they are stored on the filesystem or in the
     ZODB.
     """
+
+    __name__ = Attribute("""The name of the directory.""")
+    
+    def __repr__():
+        """Returns a string identifier of the directory."""
 
     def openFile(path):
         """Returns the file or filelike object identified by the given path

@@ -21,7 +21,7 @@ class ResourceTraverser(SimpleHandler):
             try:
                 return res[type][name]
             except KeyError:
-                pass
+                pass # pragma: no cover
         
         # 2. Global resource directory:
         #    Try (global resource directory)/$type/$name

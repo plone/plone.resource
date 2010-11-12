@@ -12,6 +12,8 @@ from Products.CMFCore.utils import getToolByName
 from plone.resource.interfaces import IResourceDirectory
 from plone.resource.interfaces import IWritableResourceDirectory
 
+FILTERED_NAMES = ('.svn',)
+
 
 class PersistentResourceDirectory(object):
     """A resource directory stored in the ZODB.
@@ -29,6 +31,11 @@ class PersistentResourceDirectory(object):
             # This gets pickled, so we can't keep the acquisition chain.
             context = aq_base(getToolByName(getSite(), 'portal_resources'))
         self.context = context
+        self.__name__ = context.getId()
+    
+    def __repr__(self):
+        return '<%s object at %s>' % (self.__class__.__name__,
+                                      '/'.join(self.context.getPhysicalPath()))
     
     def publishTraverse(self, request, name):
         context = self.context
@@ -61,7 +68,7 @@ class PersistentResourceDirectory(object):
         return str(f.data)
     
     def listDirectory(self):
-        return self.context.objectIds()
+        return [n for n in self.context.objectIds() if n not in FILTERED_NAMES]
     
     def isDirectory(self, path):
         try:
@@ -94,6 +101,10 @@ class FilesystemResourceDirectory(object):
 
     def __init__(self, directory):
         self.directory = directory
+        self.__name__ = os.path.basename(directory)
+
+    def __repr__(self):
+        return '<%s object at %s>' % (self.__class__.__name__, self.directory)
 
     def _resolveSubpath(self, path):
         parts = path.split('/')
@@ -120,7 +131,8 @@ class FilesystemResourceDirectory(object):
         return self.openFile(self, path).read()
 
     def listDirectory(self):
-        return os.listdir(self.directory)
+        names = os.listdir(self.directory) 
+        return [n for n in names if n not in FILTERED_NAMES]
     
     def isDirectory(self, path):
         return os.path.isdir(self._resolveSubpath(path))
