@@ -24,12 +24,17 @@ class PersistentResourceDirectory(object):
     
     def __init__(self, context=None):
         if context is None:
+            # This is also used as a local IResourceDirectory utility,
+            # named u'persistent', which wraps the root folder.
+            # This gets pickled, so we can't keep the acquisition chain.
             context = aq_base(getToolByName(getSite(), 'portal_resources'))
         self.context = context
     
     def publishTraverse(self, request, name):
         context = self.context
         if aq_parent(context) is None:
+            # Re-supply the acquisition chain if this is the root resource
+            # directory, so that security checks work.
             site = getSite()
             if site is not None:
                 context = context.__of__(site)
