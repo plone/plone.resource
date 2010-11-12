@@ -34,11 +34,14 @@ Files in the ZODB
 Files in Python distributions
 
   A folder in a Python distribution (e.g. egg) can be registered as a resource
-  directory using the plone:static ZCML directive.  For example,
-  this registers a "resources" directory with the name "mytheme"::
+  directory of a particular type and name using the plone:static ZCML
+  directive.  For example, this registers a directory named "theme" as a
+  resource directory of type "theme". It would be accessible at 
+  ++theme++mytheme::
   
     <plone:static
-      directory="resources"
+      directory="theme"
+      type="theme"
       name="mytheme"
       />
   
@@ -46,28 +49,12 @@ Files in Python distributions
      You must do ``<include package="plone.resource" file="meta.zcml"/>``
      before you can use the plone:static directive.
   
-  Since no resource type is specified, plone.resource expects subdirectories
-  for each resource type is that is supplied. So a theme resource could be
-  placed at resources/theme/myfile (relative to the package where the
-  ZCML is located), and would be accessible at ++theme++mytheme/myfile.
-  
   The name of the resource directory defaults to the name of the package, so
   can be omitted. e.g. the following directive in a package named "mytheme"
   would result in the same registration as above::
   
     <plone:static
       directory="resources"
-      />
-  
-  (XXX don't allow absolute path in this case)
-  
-  A resource type can optionally be specified on the directive. In this case,
-  no subdirectory named for the resource type should be present.  e.g. the
-  following directive in the mytheme package would make a file placed at
-  theme/myfile available at the URL ++theme++mytheme/myfile::
-  
-    <plone:static
-      directory="theme"
       type="theme"
       />
   
@@ -97,5 +84,3 @@ Files in a central resource directory
 What types of resources can be stored
 -------------------------------------
 
-A new resource type traverser can be registered using the plone:resourceType
-ZCML directive.

@@ -44,15 +44,15 @@ class ZCMLTestCase(unittest.TestCase):
         res = getUtility(IResourceDirectory, name='++theme++foo')
         self.assertTrue(res.directory.endswith(os.path.join('plone', 'resource', 'tests', 'resources')))
     
-    def test_dist_with_name_only(self):
-        runSnippet("""
-        <plone:static
-          name="foo"
-          directory="resources"
-          />
-        """)
-
-        getUtility(IResourceDirectory, name='foo')
+    def test_dist_rejects_with_missing_type(self):
+        # resource directories in distributions must be registered with a type
+        self.assertRaises(ConfigurationError,
+            runSnippet,
+            """<plone:static
+              name="foo"
+              directory="resources"
+              />"""
+            )
     
     def test_dist_with_type_only(self):
         runSnippet("""
@@ -63,15 +63,6 @@ class ZCMLTestCase(unittest.TestCase):
         """)
 
         getUtility(IResourceDirectory, name='++theme++plone.resource.tests')
-
-    def test_dist_without_name_or_type(self):
-        runSnippet("""
-        <plone:static
-          directory="resources"
-          />
-        """)
-
-        getUtility(IResourceDirectory, name='plone.resource.tests')
 
     def test_dist_rejects_absolute_directory(self):
         self.assertRaises(ConfigurationError,

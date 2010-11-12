@@ -62,6 +62,9 @@ def registerResourceDirectory(_context, directory, name=None, type=None):
     if type:
         identifier = '++%s++%s' % (type, name or '')
     else:
+        if _context.package:
+            raise ConfigurationError('Resource directories in distributions '
+                                     'must have a specified resource type.')
         identifier = name or ''
     
     directory = os.path.sep.join(directory.split('/'))

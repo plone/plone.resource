@@ -39,13 +39,4 @@ class ResourceTraverser(SimpleHandler):
         if res is not None:
             return res
         
-        # 4. Packaged type-generic resource directory:
-        #    Try (directory named after name)/$type
-        res = queryUtility(IResourceDirectory, name=name)
-        if res:
-            try:
-                return res[type]
-            except KeyError:
-                pass # pragma: no cover
-        
         raise NotFound
