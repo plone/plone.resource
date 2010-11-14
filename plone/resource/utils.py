@@ -1,4 +1,4 @@
-from zope.component import queryUtility, getSiteManager
+from zope.component import queryUtility, getUtilitiesFor
 from plone.resource.interfaces import IResourceDirectory
 
 
@@ -15,6 +15,7 @@ def iterDirectoriesOfType(type, filter_duplicates=True):
     - the global resource directory
     - resource directories in distributions
     """
+    
     found = set()
     
     # 1. Persistent resource directory:
@@ -39,8 +40,7 @@ def iterDirectoriesOfType(type, filter_duplicates=True):
     # 3. Packaged resource directories:
     #    Scan the registry
     identifier = '++%s++' % type
-    sm = getSiteManager()
-    for u in sm.registeredUtilities():
-        if u.provided is IResourceDirectory and u.name.startswith(identifier):
-            if not filter_duplicates or u.component.__name__ not in found:
-                yield u.component
+    for name, u in getUtilitiesFor(IResourceDirectory):
+        if name.startswith(identifier):
+            if not filter_duplicates or u.__name__ not in found:
+                yield u
