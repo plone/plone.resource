@@ -99,9 +99,9 @@ class FilesystemResourceDirectory(object):
     implements(IResourceDirectory)
     adapts(str)
 
-    def __init__(self, directory):
+    def __init__(self, directory, name=None):
         self.directory = directory
-        self.__name__ = os.path.basename(directory)
+        self.__name__ = name or os.path.basename(directory)
 
     def __repr__(self):
         return '<%s object at %s>' % (self.__class__.__name__, self.directory)

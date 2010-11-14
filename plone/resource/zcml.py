@@ -68,7 +68,7 @@ def registerResourceDirectory(_context, directory, name=None, type=None):
         identifier = name or ''
     
     directory = os.path.sep.join(directory.split('/'))
-    directory = FilesystemResourceDirectory(directory)
+    directory = FilesystemResourceDirectory(directory, name)
     
     _context.action(
         discriminator = ('plone:static', identifier),
