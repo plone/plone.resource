@@ -1,8 +1,7 @@
-from zExceptions import NotFound
 from zope.component import queryUtility
 from zope.traversing.namespace import SimpleHandler
 from plone.resource.interfaces import IResourceDirectory
-
+from zExceptions import NotFound
 
 class ResourceTraverser(SimpleHandler):
 
@@ -20,7 +19,7 @@ class ResourceTraverser(SimpleHandler):
         if res:
             try:
                 return res[type][name]
-            except KeyError:
+            except (KeyError, NotFound,):
                 pass # pragma: no cover
         
         # 2. Global resource directory:
