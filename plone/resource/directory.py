@@ -47,9 +47,9 @@ class PersistentResourceDirectory(object):
                 context = context.__of__(site)
         
         if self.isDirectory(name):
-            return self.__class__(context.restrictedTraverse(name).__of__(context))
+            return self.__class__(context.unrestrictedTraverse(name).__of__(context))
         elif self.isFile(name):
-            return context.restrictedTraverse(name).__of__(context)
+            return context.unrestrictedTraverse(name).__of__(context)
 
         raise NotFound
 
@@ -61,7 +61,7 @@ class PersistentResourceDirectory(object):
     
     def readFile(self, path):
         try:
-            f = self.context.restrictedTraverse(path)
+            f = self.context.unrestrictedTraverse(path)
         except Exception, e:
             raise IOError(str(e))
         
@@ -72,7 +72,7 @@ class PersistentResourceDirectory(object):
     
     def isDirectory(self, path):
         try:
-            obj = self.context.restrictedTraverse(path)
+            obj = self.context.unrestrictedTraverse(path)
         except:
             obj = None
         
@@ -80,7 +80,7 @@ class PersistentResourceDirectory(object):
     
     def isFile(self, path):
         try:
-            obj = self.context.restrictedTraverse(path)
+            obj = self.context.unrestrictedTraverse(path)
         except:
             obj = None
         
@@ -128,7 +128,7 @@ class FilesystemResourceDirectory(object):
         return open(filepath, 'rb')
     
     def readFile(self, path):
-        return self.openFile(self, path).read()
+        return self.openFile(path).read()
 
     def listDirectory(self):
         names = os.listdir(self.directory) 
