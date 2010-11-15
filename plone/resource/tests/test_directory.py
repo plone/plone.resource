@@ -90,6 +90,39 @@ class TestPersistentResourceDirectory(unittest.TestCase):
         dir.context._setOb(FILTERED_NAMES[0], BTreeFolder2('filtered'))
         self.assertEqual(['demo'], dir.listDirectory())
 
+    def test_makeDirectory(self):
+        dir = self._makeOne()
+        dir.makeDirectory('demo/bar')
+        newdir = dir['demo']['bar']
+        self.assertTrue(isinstance(newdir.context, BTreeFolder2))
+
+    def test_makeDirectory_extra_slashes(self):
+        dir = self._makeOne()
+        dir.makeDirectory('/demo/bar/')
+        newdir = dir['demo']['bar']
+        self.assertTrue(isinstance(newdir.context, BTreeFolder2))
+
+    def test_writeFile(self):
+        dir = self._makeOne()
+        dir.writeFile('qux', 'qux')
+        self.assertEqual('qux', dir.readFile('qux'))
+        
+    def test_writeFile_directory_missing(self):
+        dir = self._makeOne()
+        dir.writeFile('baz/qux', 'qux')
+        self.assertEqual('qux', dir.readFile('baz/qux'))
+    
+    def test_writeFile_file_already_exists(self):
+        dir = self._makeOne()
+        dir.writeFile('demo/foo/test.html', 'changed')
+        self.assertEqual('changed', dir.readFile('demo/foo/test.html'))
+    
+    def test_importZip(self):
+        dir = self._makeOne()
+        f = open(os.path.join(os.path.dirname(__file__), 'resources.zip'))
+        dir.importZip(f)
+        self.assertEqual('from zip', dir.readFile('demo/foo/test.html'))
+
 
 class TestFilesystemResourceDirectory(unittest.TestCase):
     

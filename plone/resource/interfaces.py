@@ -49,6 +49,23 @@ class IResourceDirectory(IPublishTraverse):
 
 class IWritableResourceDirectory(IResourceDirectory):
 
-    def importZip(zip):
+    def makeDirectory(path):
+        """Create the given path as a directory. (Returns successfully without
+        doing anything if the directory already exists.)
+        """
+
+    def writeFile(path, data):
+        """Write a file at the specified path.
+        
+        Parent directories will be added if necessary. The final path component
+        gives the filename. If the file already exists, it will be overwritten.
+        
+        ``data`` may be a string or file-like object.
+        """
+
+    def importZip(file):
         """Imports the contents of a zip file into this directory.
+        
+        ``file`` may be a filename or file-like object. The file data must be
+        a ZIP archive.
         """

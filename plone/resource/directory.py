@@ -1,5 +1,7 @@
 import os.path
+import zipfile
 from Acquisition import aq_base, aq_parent
+from Products.BTreeFolder2.BTreeFolder2 import BTreeFolder2
 from StringIO import StringIO
 from zExceptions import NotFound
 from zope.component import adapts
@@ -89,8 +91,36 @@ class PersistentResourceDirectory(object):
     def exportZip(self):
         raise NotImplemented
     
-    def importZip(self, zip):
-        raise NotImplemented
+    def makeDirectory(self, path):
+        parent = self.context
+        names = path.strip('/').split('/')
+        for name in names:
+            if name not in parent:
+                f = BTreeFolder2(name)
+                parent._setOb(name, f)
+            parent = parent[name]
+    
+    def writeFile(self, path, data):
+        basepath = os.path.dirname(path)
+        self.makeDirectory(basepath)
+        filename = path.split('/')[-1]
+        f = File(filename, filename, data)
+        container = self.context.unrestrictedTraverse(basepath)
+        if filename in container:
+            container._delOb(filename)
+        container._setOb(filename, f)
+    
+    def importZip(self, file):
+        f = zipfile.ZipFile(file)
+        for name in f.namelist():
+            member = f.getinfo(name)
+            path = member.filename.lstrip('/')
+
+            if path.endswith('/'):
+                self.makeDirectory(path)
+            else:
+                data = f.open(member).read()
+                self.writeFile(path, data)
 
 
 class FilesystemResourceDirectory(object):
