@@ -110,8 +110,9 @@ class PersistentResourceDirectory(object):
             container._delOb(filename)
         container._setOb(filename, f)
     
-    def importZip(self, file):
-        f = zipfile.ZipFile(file)
+    def importZip(self, f):
+        if not isinstance(f, zipfile.ZipFile):
+            f = zipfile.ZipFile(f)
         for name in f.namelist():
             member = f.getinfo(name)
             path = member.filename.lstrip('/')

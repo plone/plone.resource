@@ -66,6 +66,6 @@ class IWritableResourceDirectory(IResourceDirectory):
     def importZip(file):
         """Imports the contents of a zip file into this directory.
         
-        ``file`` may be a filename or file-like object. The file data must be
-        a ZIP archive.
+        ``file`` may be a filename, file-like object, or instance of
+        zipfile.ZipFile. The file data must be a ZIP archive.
         """

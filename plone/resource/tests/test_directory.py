@@ -123,6 +123,12 @@ class TestPersistentResourceDirectory(unittest.TestCase):
         dir.importZip(f)
         self.assertEqual('from zip', dir.readFile('demo/foo/test.html'))
 
+    def test_importZip_takes_ZipFile(self):
+        dir = self._makeOne()
+        from zipfile import ZipFile
+        f = ZipFile(os.path.join(os.path.dirname(__file__), 'resources.zip'))
+        dir.importZip(f)
+        self.assertEqual('from zip', dir.readFile('demo/foo/test.html'))
 
 class TestFilesystemResourceDirectory(unittest.TestCase):
     
