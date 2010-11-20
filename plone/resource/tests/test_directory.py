@@ -86,8 +86,7 @@ class TestPersistentResourceDirectory(unittest.TestCase):
     
     def test_listDirectory_filters_by_name(self):
         dir = self._makeOne()
-        from plone.resource.directory import FILTERED_NAMES
-        dir.context._setOb(FILTERED_NAMES[0], BTreeFolder2('filtered'))
+        dir.context._setOb('.svn', BTreeFolder2('filtered'))
         self.assertEqual(['demo'], dir.listDirectory())
 
     def test_makeDirectory(self):
@@ -129,6 +128,13 @@ class TestPersistentResourceDirectory(unittest.TestCase):
         f = ZipFile(os.path.join(os.path.dirname(__file__), 'resources.zip'))
         dir.importZip(f)
         self.assertEqual('from zip', dir.readFile('demo/foo/test.html'))
+
+    def test_importZip_filters_resource_forks(self):
+        dir = self._makeOne()
+        f = open(os.path.join(os.path.dirname(__file__), 'resources.zip'))
+        dir.importZip(f)
+        self.assertFalse('__MACOSX' in dir.context.objectIds())
+
 
 class TestFilesystemResourceDirectory(unittest.TestCase):
     
@@ -182,8 +188,7 @@ class TestFilesystemResourceDirectory(unittest.TestCase):
     
     def test_listDirectory_filters_by_name(self):
         dir = self._makeOne()
-        from plone.resource.directory import FILTERED_NAMES
-        name = FILTERED_NAMES[0]
+        name = '.svn'
         if name not in os.listdir(dir.directory): # pragma: no cover
             f = open(os.path.join(dir.directory, name), 'w')
             f.write()

@@ -1,3 +1,4 @@
+import re
 import os.path
 import zipfile
 from Acquisition import aq_base, aq_parent
@@ -14,7 +15,9 @@ from Products.CMFCore.utils import getToolByName
 from plone.resource.interfaces import IResourceDirectory
 from plone.resource.interfaces import IWritableResourceDirectory
 
-FILTERED_NAMES = ('.svn',)
+# filter dot files, Mac resource forks
+FILTERS = (r'\..*', '__MACOSX')
+FILTERS = [re.compile(pattern) for pattern in FILTERS]
 
 
 class PersistentResourceDirectory(object):
@@ -70,7 +73,8 @@ class PersistentResourceDirectory(object):
         return str(f.data)
     
     def listDirectory(self):
-        return [n for n in self.context.objectIds() if n not in FILTERED_NAMES]
+        return [n for n in self.context.objectIds()
+                  if not any(filter.match(n) for filter in FILTERS)]
     
     def isDirectory(self, path):
         try:
@@ -116,6 +120,11 @@ class PersistentResourceDirectory(object):
         for name in f.namelist():
             member = f.getinfo(name)
             path = member.filename.lstrip('/')
+            
+            # test each part of the path against the filters
+            if any(any(filter.match(n) for filter in FILTERS)
+                   for n in path.split('/')):
+                continue
 
             if path.endswith('/'):
                 self.makeDirectory(path)
@@ -162,8 +171,9 @@ class FilesystemResourceDirectory(object):
         return self.openFile(path).read()
 
     def listDirectory(self):
-        names = os.listdir(self.directory) 
-        return [n for n in names if n not in FILTERED_NAMES]
+        names = os.listdir(self.directory)
+        return [n for n in names
+                  if not any(filter.match(n) for filter in FILTERS)]
     
     def isDirectory(self, path):
         return os.path.isdir(self._resolveSubpath(path))
