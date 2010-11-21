@@ -140,7 +140,14 @@ class TestPersistentResourceDirectory(unittest.TestCase):
         f = open(os.path.join(os.path.dirname(__file__), 'resources.zip'))
         dir.importZip(f)
         self.assertFalse('.svn' in dir)
-
+    
+    def test_delitem(self):
+        dir = self._makeOne()
+        dir.makeDirectory('demo')
+        self.assertTrue('demo' in dir)
+        del dir['demo']
+        self.assertFalse('demo' in dir)
+    
 class TestFilesystemResourceDirectory(unittest.TestCase):
     
     def _makeOne(self):

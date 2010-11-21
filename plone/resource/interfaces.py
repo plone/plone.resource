@@ -73,3 +73,7 @@ class IWritableResourceDirectory(IResourceDirectory):
         ``file`` may be a filename, file-like object, or instance of
         zipfile.ZipFile. The file data must be a ZIP archive.
         """
+    
+    def __delitem__(name):
+        """Delete a file or directory inside this directory
+        """

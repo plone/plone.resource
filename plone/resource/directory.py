@@ -64,6 +64,9 @@ class PersistentResourceDirectory(object):
     def __getitem__(self, name):
         return self.publishTraverse(None, name)
     
+    def __delitem__(self, name):
+        del self.context[name]
+    
     def __contains__(self, name):
         return name in self.context
     
