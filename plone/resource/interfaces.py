@@ -46,8 +46,9 @@ class IResourceDirectory(IPublishTraverse):
     def isFile(path):
         """Returns True if the given path is a file."""
 
-    def exportZip():
-        """Exports the contents of this directory as a zip file.
+    def exportZip(out):
+        """Exports the contents of this directory as a zip file, which will
+        be written to the open file handle ``out``.
         """
 
 

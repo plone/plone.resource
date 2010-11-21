@@ -2,6 +2,9 @@
     xmlns="http://namespaces.zope.org/zope"
     i18n_domain="plone">
 
+  <include file="permissions.zcml" />
+  <include file="browser.zcml" />
+
   <!-- demo traverser -->
   <adapter
       name="demo"

@@ -25,7 +25,6 @@ DEMO_TRAVERSER_FIXTURE = DemoTraverser()
 DEMO_TRAVERSER_INTEGRATION_TESTING = \
     z2.IntegrationTesting(bases=(DEMO_TRAVERSER_FIXTURE,), name="plone.resource:DemoTraverser")
 
-
 class PloneResource(PloneSandboxLayer):
     defaultBases = (PLONE_FIXTURE,)
     

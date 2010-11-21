@@ -35,7 +35,7 @@ class PersistentResourceDirectory(object):
             # named u'persistent', which wraps the root folder.
             # This gets pickled, so we can't keep the acquisition chain.
             context = aq_base(getToolByName(getSite(), 'portal_resources'))
-        self.context = context
+        self.context = self.__parent__  = context
         self.__name__ = context.getId()
     
     def __repr__(self):
@@ -101,8 +101,21 @@ class PersistentResourceDirectory(object):
         
         return isinstance(obj, File)
     
-    def exportZip(self):
-        raise NotImplemented
+    def exportZip(self, out):
+        prefix = self.__name__
+        
+        zf = zipfile.ZipFile(out, 'w')
+        
+        def write(dir, prefix, zf):
+            for name in dir.listDirectory():
+                relativeName = "%s/%s" % (prefix, name,)
+                if dir.isDirectory(name):
+                    write(dir[name], relativeName)
+                elif dir.isFile(name):
+                    zf.writestr(relativeName, dir.readFile(name))
+        
+        write(self, prefix, zf)
+        zf.close()
     
     def makeDirectory(self, path):
         parent = self.context
@@ -116,7 +129,7 @@ class PersistentResourceDirectory(object):
             parent = parent[name]
     
     def writeFile(self, path, data):
-        basepath = os.path.dirname(path)
+        basepath = '/'.join(path.split('/')[:-1])
         self.makeDirectory(basepath)
         filename = path.split('/')[-1]
         if isinstance(filename, unicode):
@@ -135,8 +148,7 @@ class PersistentResourceDirectory(object):
             path = member.filename.lstrip('/')
             
             # test each part of the path against the filters
-            if any(any(filter.match(n) for filter in FILTERS)
-                   for n in path.split('/')):
+            if any(any(filter.match(n) for filter in FILTERS) for n in path.split('/')):
                 continue
 
             if path.endswith('/'):
@@ -155,6 +167,12 @@ class FilesystemResourceDirectory(object):
     def __init__(self, directory, name=None):
         self.directory = directory
         self.__name__ = name or os.path.basename(directory)
+
+    @property
+    def __parent__(self):
+        # makes security work
+        site = getSite()
+        return site
 
     def __repr__(self):
         return '<%s object at %s>' % (self.__class__.__name__, self.directory)
@@ -194,5 +212,21 @@ class FilesystemResourceDirectory(object):
     def isFile(self, path):
         return os.path.isfile(self._resolveSubpath(path))
     
-    def exportZip(self):
-        raise NotImplemented
+    def exportZip(self, out):
+        prefix = self.__name__
+        zf = zipfile.ZipFile(out, 'w')
+        
+        toStrip = len(self.directory.replace(os.path.sep, '/')) + 1
+        
+        for (dirpath, dirnames, filenames) in os.walk(self.directory):
+            subpath = dirpath.replace(os.path.sep, '/')[toStrip:].strip('/')
+            
+            for filename in filenames:
+                path = '/'.join([subpath, filename]).strip('/')
+                
+                if any(any(filter.match(n) for filter in FILTERS) for n in path.split('/')):
+                    continue
+                
+                zf.writestr('/'.join([prefix, path,]), self.readFile(path))
+        
+        zf.close()
