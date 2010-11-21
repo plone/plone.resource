@@ -15,6 +15,10 @@ class IResourceDirectory(IPublishTraverse):
     def __repr__():
         """Returns a string identifier of the directory."""
 
+    def __contains__(name):
+        """Return true if the given file or directory exists
+        """
+
     def openFile(path):
         """Returns the file or filelike object identified by the given path
         (relative to this directory).
