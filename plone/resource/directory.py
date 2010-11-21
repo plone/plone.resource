@@ -43,6 +43,9 @@ class PersistentResourceDirectory(object):
                                       '/'.join(self.context.getPhysicalPath()))
     
     def publishTraverse(self, request, name):
+        if isinstance(name, unicode):
+            name = name.encode('utf-8')
+        
         context = self.context
         if aq_parent(context) is None:
             # Re-supply the acquisition chain if this is the root resource
@@ -60,7 +63,10 @@ class PersistentResourceDirectory(object):
 
     def __getitem__(self, name):
         return self.publishTraverse(None, name)
-
+    
+    def __contains__(self, name):
+        return name in self.context
+    
     def openFile(self, path):
         return StringIO(self.readFile(path))
     
@@ -100,6 +106,8 @@ class PersistentResourceDirectory(object):
         names = path.strip('/').split('/')
         for name in names:
             if name not in parent:
+                if isinstance(name, unicode):
+                    name = name.encode('utf-8')
                 f = BTreeFolder2(name)
                 parent._setOb(name, f)
             parent = parent[name]
@@ -108,6 +116,8 @@ class PersistentResourceDirectory(object):
         basepath = os.path.dirname(path)
         self.makeDirectory(basepath)
         filename = path.split('/')[-1]
+        if isinstance(filename, unicode):
+            filename = filename.encode('utf-8')
         f = File(filename, filename, data)
         container = self.context.unrestrictedTraverse(basepath)
         if filename in container:

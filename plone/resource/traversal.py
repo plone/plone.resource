@@ -1,3 +1,4 @@
+import urllib
 from zope.component import queryUtility
 from zope.traversing.namespace import SimpleHandler
 from plone.resource.interfaces import IResourceDirectory
@@ -12,6 +13,9 @@ class ResourceTraverser(SimpleHandler):
     
     def traverse(self, name, remaining):
         type = self.name
+        
+        # Note: also fixes possible unicode problems
+        name = urllib.quote(name)
         
         # 1. Persistent resource directory:
         #    Try (persistent resource directory)/$type/$name

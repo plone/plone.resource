@@ -134,7 +134,12 @@ class TestPersistentResourceDirectory(unittest.TestCase):
         f = open(os.path.join(os.path.dirname(__file__), 'resources.zip'))
         dir.importZip(f)
         self.assertFalse('__MACOSX' in dir.context.objectIds())
-
+    
+    def test_importZip_filters_hidden_directories(self):
+        dir = self._makeOne()
+        f = open(os.path.join(os.path.dirname(__file__), 'resources.zip'))
+        dir.importZip(f)
+        self.assertFalse('.svn' in dir)
 
 class TestFilesystemResourceDirectory(unittest.TestCase):
     
