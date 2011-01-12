@@ -32,7 +32,7 @@ class ResourceTraverser(SimpleHandler):
         if res:
             try:
                 return res[type][name]
-            except KeyError:
+            except (KeyError, NotFound,):
                 pass # pragma: no cover
         
         # 3. Packaged type-specific resource directory:
