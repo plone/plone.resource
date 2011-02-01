@@ -5,15 +5,14 @@ from Acquisition import aq_base, aq_parent
 from Products.BTreeFolder2.BTreeFolder2 import BTreeFolder2
 from StringIO import StringIO
 from zExceptions import NotFound
-from zope.component import adapts
 from zope.interface import implements
 from zope.site.hooks import getSite
 from OFS.interfaces import IObjectManager
 from OFS.Image import File
-from Products.Five.browser.resource import FileResourceFactory
 from Products.CMFCore.utils import getToolByName
 from plone.resource.interfaces import IResourceDirectory
 from plone.resource.interfaces import IWritableResourceDirectory
+from plone.resource.file import FilesystemFile
 
 # filter dot files, Mac resource forks
 FILTERS = (r'\..*', '__MACOSX')
@@ -27,7 +26,6 @@ class PersistentResourceDirectory(object):
     are instances of OFS.Image.File.
     """
     implements(IWritableResourceDirectory)
-    adapts(IObjectManager)
     
     def __init__(self, context=None):
         if context is None:
@@ -162,17 +160,17 @@ class FilesystemResourceDirectory(object):
     """A resource directory based on files in the filesystem.
     """
     implements(IResourceDirectory)
-    adapts(str)
 
-    def __init__(self, directory, name=None):
+    __allow_access_to_unprotected_subobjects__ = True
+
+    def __init__(self, directory, name=None, parent=None):
         self.directory = directory
-        self.__name__ = name or os.path.basename(directory)
-
-    @property
-    def __parent__(self):
-        # makes security work
-        site = getSite()
-        return site
+        self.__name__ = name
+        if name is None:
+            self.__name__ = os.path.basename(directory)
+        self.__parent__ = parent
+        if parent is None:
+            self.__parent__ = getSite()
 
     def __repr__(self):
         return '<%s object at %s>' % (self.__class__.__name__, self.directory)
@@ -185,9 +183,9 @@ class FilesystemResourceDirectory(object):
     def publishTraverse(self, request, name):
         filepath = self._resolveSubpath(name)
         if self.isDirectory(name):
-            return self.__class__(filepath)
+            return self.__class__(filepath, parent=self)
         elif self.isFile(name):
-            return FileResourceFactory(name, filepath)(request)
+            return FilesystemFile(self, request, filepath, name)
 
         raise NotFound
 
@@ -197,7 +195,7 @@ class FilesystemResourceDirectory(object):
     def openFile(self, path):
         filepath = self._resolveSubpath(path)
         return open(filepath, 'rb')
-    
+
     def readFile(self, path):
         return self.openFile(path).read()
 
@@ -205,13 +203,13 @@ class FilesystemResourceDirectory(object):
         names = os.listdir(self.directory)
         return [n for n in names
                   if not any(filter.match(n) for filter in FILTERS)]
-    
+
     def isDirectory(self, path):
         return os.path.isdir(self._resolveSubpath(path))
-    
+
     def isFile(self, path):
         return os.path.isfile(self._resolveSubpath(path))
-    
+
     def exportZip(self, out):
         prefix = self.__name__
         zf = zipfile.ZipFile(out, 'w')

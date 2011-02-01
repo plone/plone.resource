@@ -6,5 +6,7 @@
   <include file="permissions.zcml" />
   <include file="browser.zcml" />
   <include file="profiles.zcml" />
+  <include file="caching.zcml" />
+  <include file="file.zcml" />
   
 </configure>

@@ -169,7 +169,7 @@ class TestFilesystemResourceDirectory(unittest.TestCase):
         dir = self._makeOne()
         file = dir.publishTraverse(None, 'demo/foo/test.html')
         subpath = os.path.join(dir.directory, 'demo', 'foo', 'test.html')
-        self.assertEqual(file.context.path, subpath)
+        self.assertEqual(file.path, subpath)
     
     def test_publishTraverse_not_found(self):
         dir = self._makeOne()

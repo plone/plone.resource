@@ -1,0 +1,7 @@
+plone.resource to-do
+--------------------
+
+ [ ] Finish README documentation
+
+ [ ] Implement IRawReadFile for in-ZODB files
+ [ ] Implement IRawWriteFile for in-ZODB files
