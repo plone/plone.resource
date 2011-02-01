@@ -5,3 +5,5 @@ plone.resource to-do
 
  [ ] Implement IRawReadFile for in-ZODB files
  [ ] Implement IRawWriteFile for in-ZODB files
+ 
+ [ ] Make in-ZODB files blob-backed
