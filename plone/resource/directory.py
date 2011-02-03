@@ -168,9 +168,17 @@ class FilesystemResourceDirectory(object):
         self.__name__ = name
         if name is None:
             self.__name__ = os.path.basename(directory)
-        self.__parent__ = parent
-        if parent is None:
-            self.__parent__ = getSite()
+        self._parent = parent
+
+    @property
+    def __parent__(self):
+        if self._parent is None:
+            return getSite()
+        return self._parent
+
+    @__parent__.setter
+    def __parent__(self, value):
+        self._parent = value
 
     def __repr__(self):
         return '<%s object at %s>' % (self.__class__.__name__, self.directory)
