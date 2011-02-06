@@ -44,16 +44,20 @@ class TraversalTestCase(unittest.TestCase):
     def test_iterDirectoriesOfType(self):
         from plone.resource.utils import iterDirectoriesOfType
         dirs = list(iterDirectoriesOfType('demo'))
-        self.assertEqual(1, len(dirs))
+        self.assertEqual(2, len(dirs))
         self.assertTrue(dirs[0].context.aq_base is
                         self.zodb_dir['demo']['foo'].context.aq_base)
-
+        self.assertTrue(dirs[1].directory ==
+                        self.global_dir['demo']['manifest-test'].directory)
+    
     def test_iterDirectoriesOfType_dont_filter_duplicates(self):
         from plone.resource.utils import iterDirectoriesOfType
         dirs = list(iterDirectoriesOfType('demo', filter_duplicates=False))
-        self.assertEqual(3, len(dirs))
+        self.assertEqual(4, len(dirs))
         self.assertTrue(dirs[0].context.aq_base is
                         self.zodb_dir['demo']['foo'].context.aq_base)
         self.assertTrue(dirs[1].directory ==
                         self.global_dir['demo']['foo'].directory)
-        self.assertTrue(dirs[2].directory == self.package_dir.directory)
+        self.assertTrue(dirs[2].directory ==
+                        self.global_dir['demo']['manifest-test'].directory)
+        self.assertTrue(dirs[3].directory == self.package_dir.directory)
