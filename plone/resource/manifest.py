@@ -50,16 +50,21 @@ class ManifestFormat(object):
     
     ``keys`` should be a list of keys that should be returned.
     
-    ``defaults`` can be used to pass a dict of default values.
+    ``defaults`` can be used to pass a dict of default values. The keys 
+    should correspond to ``keys``, but it is not mandatory to fill every key.
     
-    The keys in ``defaults`` should correspond to ``keys``, but it is not
-    mandatory to fill every key.
+    ``parameterSections`` can be a list section names in the ``manifest.cfg``
+    file that can be used to supply additional, free-form parameters. For
+    example, if ``parameters`` is ['parameters'] and 'resourceType' is
+    'theme', then the ``manifest.cfg`` file may optionally contain a section
+    ``[theme:parameters]``.
     """
     
-    def __init__(self, resourceType, keys, defaults=None):
+    def __init__(self, resourceType, keys, defaults=None, parameterSections=None):
         self.resourceType = resourceType
         self.keys = keys
         self.defaults = defaults or {}
+        self.parameterSections = parameterSections or []
 
 def getManifest(fp, format, defaults=None):
     """Read the manifest from the given open file pointer according to the
@@ -70,15 +75,23 @@ def getManifest(fp, format, defaults=None):
     if defaults is None:
         defaults = format.defaults
     
-    options = dict([(k, defaults.get(k, None)) for k in format.keys])
-    
-    parser = SafeConfigParser(options)
+    parser = SafeConfigParser()
     parser.readfp(fp)
     
     results = {}
     for key in format.keys:
-        results[key] = parser.get(format.resourceType, key) or defaults.get(key, None)
-        
+        if parser.has_option(format.resourceType, key):
+            results[key] = parser.get(format.resourceType, key)
+        else:
+            results[key] = defaults.get(key, None)
+    
+    for key in format.parameterSections:
+        sectionName = "%s:%s" % (format.resourceType, key,)
+        if parser.has_section(sectionName):
+            results[key] = dict(parser.items(sectionName))
+        else:
+            results[key] = {}
+    
     return results
 
 def extractManifestFromZipFile(zipfile, format, defaults=None, manifestFilename=MANIFEST_FILENAME):

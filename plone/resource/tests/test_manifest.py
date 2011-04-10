@@ -25,6 +25,7 @@ base_path = os.path.dirname(__file__)
 test_dir_path = os.path.join(base_path, 'resources')
 
 TEST_FORMAT = ManifestFormat('demo', ['title', 'description', 'bar'], {'bar': 'baz'})
+TEST_FORMAT_PARAMS = ManifestFormat('demo', ['title', 'description', 'bar'], {'bar': 'baz'}, ['params'])
 
 class TestManifest(unittest.TestCase):
     layer = DEMO_TRAVERSER_INTEGRATION_TESTING
@@ -34,13 +35,23 @@ class TestManifest(unittest.TestCase):
     
     def tearDown(self):
         zca.popGlobalRegistry()
-
+    
     def test_get_manifest(self):
         fp = open(os.path.join(test_dir_path, 'demo', 'manifest-test', 'manifest.cfg'))
         manifest = getManifest(fp, TEST_FORMAT)
         self.assertEqual(manifest['title'], 'Manifest test')
         self.assertEqual(manifest['description'], None)
         self.assertEqual(manifest['bar'], 'baz')
+        
+        fp.close()
+
+    def test_get_manifest_params(self):
+        fp = open(os.path.join(test_dir_path, 'demo', 'manifest-test', 'manifest.cfg'))
+        manifest = getManifest(fp, TEST_FORMAT_PARAMS)
+        self.assertEqual(manifest['title'], 'Manifest test')
+        self.assertEqual(manifest['description'], None)
+        self.assertEqual(manifest['bar'], 'baz')
+        self.assertEqual(manifest['params'], {'alpha': 'beta', 'delta': 'theta'})
         
         fp.close()
     
