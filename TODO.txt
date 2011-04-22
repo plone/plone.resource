@@ -7,3 +7,5 @@ plone.resource to-do
  [ ] Implement IRawWriteFile for in-ZODB files
  
  [ ] Make in-ZODB files blob-backed
+
+ [ ] Make stable resource urls possible, e.g. ++theme++my.theme++12345
