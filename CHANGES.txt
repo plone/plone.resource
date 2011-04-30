@@ -1,6 +1,14 @@
 Changelog
 =========
 
+1.0b2
+-----
+
+- Add a more compatible filestream iterator for filesystem files that allows
+  coercion to string or unicode. This fixes possible compatibility issues
+  with resource merging through Resource Registries.
+  [optilude]
+
 1.0b1 (2011-04-22)
 -------------------
 
