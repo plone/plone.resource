@@ -1,8 +1,8 @@
 Changelog
 =========
 
-1.0b2
------
+1.0b2 (2011-05-16)
+------------------
 
 - Add a more compatible filestream iterator for filesystem files that allows
   coercion to string or unicode. This fixes possible compatibility issues
@@ -10,6 +10,6 @@ Changelog
   [optilude]
 
 1.0b1 (2011-04-22)
--------------------
+------------------
 
 - Initial release
