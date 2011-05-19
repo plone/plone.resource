@@ -71,15 +71,26 @@ Files in a central resource directory
     resource directory names).
     
     For example, the following in site.zcml would register the path
-    var/resources within the buildout root:
+    var/resources within the buildout root::
     
       <plone:static
         directory="/path/to/buildout/var/resources"
         />
 
-    (Typically, this could be injected into site.zcml by specifying the 
-    zcml_additional option in the plone.recipe.zope2instance buildout recipe.)
+    Typically, this could be injected into site.zcml by specifying the 
+    zcml-additional option in the `plone.recipe.zope2instance`_
+    buildout recipe, like this::
 
+      zcml-additional =
+          <configure xmlns="http://namespaces.zope.org/zope"
+                     xmlns:plone="http://namespaces.plone.org/plone">
+            <plone:static directory="${buildout:directory}/resources" />
+          </configure>
+
+
+
+.. _`plone.recipe.zope2instance`: http://pypi.python.org/pypi/plone.recipe.zope2instance
+ 
 
 What types of resources can be stored
 -------------------------------------
