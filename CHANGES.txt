@@ -4,6 +4,9 @@ Changelog
 1.0b3 (unreleased)
 ------------------
 
+- Fix resource directory download bug with subdirectories.
+  [elro]
+
 1.0b2 (2011-05-16)
 ------------------
 

@@ -108,7 +108,7 @@ class PersistentResourceDirectory(object):
             for name in dir.listDirectory():
                 relativeName = "%s/%s" % (prefix, name,)
                 if dir.isDirectory(name):
-                    write(dir[name], relativeName)
+                    write(dir[name], relativeName, zf)
                 elif dir.isFile(name):
                     zf.writestr(relativeName, dir.readFile(name))
         
