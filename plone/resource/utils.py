@@ -1,6 +1,6 @@
 from zope.component import queryUtility, getUtilitiesFor
 from plone.resource.interfaces import IResourceDirectory
-
+from zExceptions import NotFound
 
 def iterDirectoriesOfType(type, filter_duplicates=True):
     """
@@ -44,3 +44,35 @@ def iterDirectoriesOfType(type, filter_duplicates=True):
         if name.startswith(identifier):
             if not filter_duplicates or u.__name__ not in found:
                 yield u
+
+def queryResourceDirectory(type, name):
+    """Find the IResourceDirectory of the given name and type. Returns
+    None if not found.
+    """
+    
+    # 1. Persistent resource directory:
+    #    Try (persistent resource directory)/$type/$name
+    res = queryUtility(IResourceDirectory, name=u'persistent')
+    if res:
+        try:
+            return res[type][name]
+        except (KeyError, NotFound,):
+            pass # pragma: no cover
+    
+    # 2. Global resource directory:
+    #    Try (global resource directory)/$type/$name
+    res = queryUtility(IResourceDirectory, name=u'')
+    if res:
+        try:
+            return res[type][name]
+        except (KeyError, NotFound,):
+            pass # pragma: no cover
+    
+    # 3. Packaged type-specific resource directory:
+    #    Try (directory named after type + name)
+    identifier = u'++%s++%s' % (type, name)
+    res = queryUtility(IResourceDirectory, name=identifier)
+    if res is not None:
+        return res
+    
+    return None
