@@ -4,6 +4,9 @@ Changelog
 1.0b5 (unreleased)
 ------------------
 
+- Ensure any files are skipped in iterDirectoriesOfType.
+  [elro]
+
 1.0b4 (2011-05-29)
 ------------------
 

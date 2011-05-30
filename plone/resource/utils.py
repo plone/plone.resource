@@ -24,6 +24,8 @@ def iterDirectoriesOfType(type, filter_duplicates=True):
     if res and res.isDirectory(type):
         typedir = res[type]
         for dirname in typedir.listDirectory():
+            if not typedir.isDirectory(dirname):
+                continue
             yield typedir[dirname]
             found.add(dirname)
     
@@ -33,6 +35,8 @@ def iterDirectoriesOfType(type, filter_duplicates=True):
     if res and res.isDirectory(type):
         typedir = res[type]
         for dirname in typedir.listDirectory():
+            if not typedir.isDirectory(dirname):
+                continue
             if not filter_duplicates or dirname not in found:
                 yield typedir[dirname]
                 found.add(dirname)
