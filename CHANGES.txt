@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.0b5 (unreleased)
+1.0b5 (2011-06-08)
 ------------------
 
 - Ensure any files are skipped in iterDirectoriesOfType.
