@@ -1,4 +1,5 @@
 from zope.interface import Attribute
+from zope.interface import Interface
 from zope.publisher.interfaces import IPublishTraverse
 
 
@@ -78,3 +79,7 @@ class IWritableResourceDirectory(IResourceDirectory):
     def __delitem__(name):
         """Delete a file or directory inside this directory
         """
+
+
+class IUniqueResourceRequest(Interface):
+    """Marker interface for requests to ++unique++<id>"""

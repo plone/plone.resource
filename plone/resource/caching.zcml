@@ -10,5 +10,8 @@
         for=".file.FilesystemFile"
         ruleset="plone.resource"
         />
-  
+
+    <!-- Unique resource ruleset lookup -->
+    <adapter factory=".caching.UniqueResourceLookup" />
+
 </configure>

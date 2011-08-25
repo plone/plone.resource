@@ -4,6 +4,10 @@ Changelog
 1.0b6 (unreleased)
 ------------------
 
+- Add a ++unique++ resource traverser for resource directories to cache as
+  'plone.stableResource'.
+  [elro]
+
 1.0b5 (2011-06-08)
 ------------------
 

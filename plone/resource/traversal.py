@@ -1,6 +1,8 @@
 import urllib
+from zope.interface import alsoProvides
 from zope.traversing.namespace import SimpleHandler
 
+from plone.resource.interfaces import IUniqueResourceRequest
 from plone.resource.utils import queryResourceDirectory
 
 from zExceptions import NotFound
@@ -23,3 +25,15 @@ class ResourceTraverser(SimpleHandler):
             return res
         
         raise NotFound
+
+
+class UniqueResourceTraverser(SimpleHandler):
+    """A traverser to allow unique URLs for caching"""
+
+    def __init__(self, context, request):
+        self.context = context
+        self.request = request
+
+    def traverse(self, name, remaining):
+        alsoProvides(self.request, IUniqueResourceRequest)
+        return self.context

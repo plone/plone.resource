@@ -10,4 +10,12 @@
       class=".download.DownloadView"
       />
 
+  <!-- Unique traverser -->
+  <adapter
+      name="unique"
+      for=".interfaces.IResourceDirectory zope.publisher.interfaces.IRequest"
+      provides="zope.traversing.interfaces.ITraversable"
+      factory=".traversal.UniqueResourceTraverser"
+      />
+
 </configure>

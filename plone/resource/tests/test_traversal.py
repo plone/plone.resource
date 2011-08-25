@@ -7,6 +7,7 @@ from zExceptions import NotFound
 from zope.component import provideUtility
 from Products.BTreeFolder2.BTreeFolder2 import BTreeFolder2
 from plone.resource.interfaces import IResourceDirectory
+from plone.resource.interfaces import IUniqueResourceRequest
 from plone.resource.directory import PersistentResourceDirectory
 from plone.resource.directory import FilesystemResourceDirectory
 from plone.resource.file import FilesystemFile
@@ -40,7 +41,6 @@ class TraversalTestCase(unittest.TestCase):
         
         res = self.app.restrictedTraverse('++demo++foo/test.html')
         self.assertTrue(isinstance(res, FilesystemFile))
-
     
     def test_traverse_global_directory(self):
         dir = FilesystemResourceDirectory(test_dir_path)
@@ -73,4 +73,21 @@ class TraversalTestCase(unittest.TestCase):
         browser.handleErrors = False
         
         browser.open(self.app.absolute_url() + '/++demo++foo/test.html')
+        self.assertEqual('asdf', browser.contents)
+
+    def test_traverse_unique_resource_marks_request(self):
+        dir = FilesystemResourceDirectory(test_dir_path)
+        provideUtility(dir, provides=IResourceDirectory, name=u'')
+        
+        res = self.app.restrictedTraverse('++demo++foo/++unique++bar/test.html')
+        self.assertTrue(IUniqueResourceRequest.providedBy(self.app.REQUEST))
+
+    def test_publish_unique_resource(self):
+        dir = FilesystemResourceDirectory(test_dir_path)
+        provideUtility(dir, provides=IResourceDirectory, name=u'')
+        
+        browser = z2.Browser(self.app)
+        browser.handleErrors = False
+        
+        browser.open(self.app.absolute_url() + '/++demo++foo/++unique++bar/test.html')
         self.assertEqual('asdf', browser.contents)
