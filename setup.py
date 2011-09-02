@@ -31,6 +31,7 @@ setup(name='plone.resource',
           'zope.filerepresentation',
           'z3c.caching',
           'python-dateutil',
+          'plone.caching',
           'Zope2',
       ],
       extras_require = {
