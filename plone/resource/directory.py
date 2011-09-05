@@ -128,7 +128,8 @@ class PersistentResourceDirectory(object):
     
     def writeFile(self, path, data):
         basepath = '/'.join(path.split('/')[:-1])
-        self.makeDirectory(basepath)
+        if basepath:
+            self.makeDirectory(basepath)
         filename = path.split('/')[-1]
         if isinstance(filename, unicode):
             filename = filename.encode('utf-8')

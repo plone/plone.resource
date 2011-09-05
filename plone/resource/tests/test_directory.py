@@ -105,7 +105,13 @@ class TestPersistentResourceDirectory(unittest.TestCase):
         dir = self._makeOne()
         dir.writeFile('qux', 'qux')
         self.assertEqual('qux', dir.readFile('qux'))
-        
+    
+    def test_writeFile_does_not_create_empty_directory(self):
+        dir = self._makeOne()
+        dir.writeFile('qux', 'qux')
+        self.assertFalse('' in dir)
+        self.assertTrue('qux' in dir)
+    
     def test_writeFile_directory_missing(self):
         dir = self._makeOne()
         dir.writeFile('baz/qux', 'qux')
