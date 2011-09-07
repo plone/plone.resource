@@ -19,6 +19,11 @@ class IResourceDirectory(IPublishTraverse):
     def __contains__(name):
         """Return true if the given file or directory exists
         """
+    
+    def __getitem__(name):
+        """Return the file or resource directory with the given name
+        as an object
+        """
 
     def openFile(path):
         """Returns the file or filelike object identified by the given path

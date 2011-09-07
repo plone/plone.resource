@@ -80,3 +80,20 @@ def queryResourceDirectory(type, name):
         return res
     
     return None
+
+def cloneResourceDirectory(source, target):
+    """Copy all directories and files in the resource directory source to
+    the writable resource directory target
+    """
+
+    for name in source.listDirectory():
+        if source.isDirectory(name):
+            target.makeDirectory(name)
+            cloneResourceDirectory(source[name], target[name])
+        else:
+            f = source.openFile(name)
+            try:
+                target.writeFile(name, f)
+            finally:
+                f.close()
+    

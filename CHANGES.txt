@@ -4,6 +4,9 @@ Changelog
 1.0b6 (unreleased)
 ------------------
 
+- Added cloneResourceDirectory() helper method in the utils module
+  [optilude]
+
 - Add a ++unique++ resource traverser for resource directories to cache as
   'plone.stableResource'.
   [elro]

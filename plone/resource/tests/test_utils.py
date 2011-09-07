@@ -61,3 +61,27 @@ class TraversalTestCase(unittest.TestCase):
         self.assertTrue(dirs[2].directory ==
                         self.global_dir['demo']['manifest-test'].directory)
         self.assertTrue(dirs[3].directory == self.package_dir.directory)
+
+    def test_cloneDirectory(self):
+        from plone.resource.directory import PersistentResourceDirectory
+        from plone.resource.utils import cloneResourceDirectory
+
+        root = BTreeFolder2('portal_resources')
+        root._setOb('demo', BTreeFolder2('demo'))
+        root['demo']._setOb('foo', BTreeFolder2('foo'))
+        root['demo']._setOb('bar', BTreeFolder2('bar'))
+        
+        source = PersistentResourceDirectory(root['demo']['foo'])
+        target = PersistentResourceDirectory(root['demo']['bar'])
+
+        source.writeFile('file1.txt', 'file1')
+        source.writeFile('subdir1/file2.txt', 'file2')
+        source.makeDirectory('subdir2')
+
+        cloneResourceDirectory(source, target)
+
+        self.assertEqual(source.listDirectory(), target.listDirectory())
+        self.assertEqual(source['subdir1'].listDirectory(), target['subdir1'].listDirectory())
+        self.assertEqual(source['subdir2'].listDirectory(), target['subdir2'].listDirectory())
+        self.assertEqual(source.readFile('file1.txt'), target.readFile('file1.txt'))
+        self.assertEqual(source.readFile('subdir1/file2.txt'), target.readFile('subdir1/file2.txt'))
