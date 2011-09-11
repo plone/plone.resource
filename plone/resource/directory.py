@@ -99,6 +99,12 @@ class PersistentResourceDirectory(object):
         
         return isinstance(obj, File)
     
+    def rename(self, oldName, newName):
+        obj = self.context[oldName]
+        obj.id = obj.__name__ = newName
+        self.context._delOb(oldName)
+        self.context._setOb(newName, obj)
+    
     def exportZip(self, out):
         prefix = self.__name__
         

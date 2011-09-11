@@ -84,7 +84,10 @@ class IWritableResourceDirectory(IResourceDirectory):
     def __delitem__(name):
         """Delete a file or directory inside this directory
         """
-
+    
+    def rename(oldName, newName):
+        """Rename a child file or folder
+        """
 
 class IUniqueResourceRequest(Interface):
     """Marker interface for requests to ++unique++<id>"""

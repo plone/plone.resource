@@ -4,6 +4,9 @@ Changelog
 1.0b6 (unreleased)
 ------------------
 
+- Added rename() method for writable resource directories
+  [optilude]
+
 - Added cloneResourceDirectory() helper method in the utils module
   [optilude]
 

@@ -154,6 +154,11 @@ class TestPersistentResourceDirectory(unittest.TestCase):
         del dir['demo']
         self.assertFalse('demo' in dir)
     
+    def test_rename(self):
+        dir = self._makeOne()
+        dir.rename('demo', 'demo1')
+        self.assertEqual(['demo1'], dir.listDirectory())
+
 class TestFilesystemResourceDirectory(unittest.TestCase):
     
     def _makeOne(self):
