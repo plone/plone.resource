@@ -1,18 +1,20 @@
-import re
 import os.path
+import re
 import zipfile
+
 from Acquisition import aq_base, aq_parent
+from OFS.Image import File
+from OFS.interfaces import IObjectManager
 from Products.BTreeFolder2.BTreeFolder2 import BTreeFolder2
+from Products.CMFCore.utils import getToolByName
 from StringIO import StringIO
 from zExceptions import NotFound
 from zope.interface import implements
 from zope.site.hooks import getSite
-from OFS.interfaces import IObjectManager
-from OFS.Image import File
-from Products.CMFCore.utils import getToolByName
+
+from plone.resource.file import FilesystemFile
 from plone.resource.interfaces import IResourceDirectory
 from plone.resource.interfaces import IWritableResourceDirectory
-from plone.resource.file import FilesystemFile
 
 # filter dot files, Mac resource forks
 FILTERS = (r'\..*', '__MACOSX')
@@ -22,8 +24,8 @@ FILTERS = [re.compile(pattern) for pattern in FILTERS]
 class PersistentResourceDirectory(object):
     """A resource directory stored in the ZODB.
     
-    It is assumed that directories provide IObjectManager and that files
-    are instances of OFS.Image.File.
+    It is assumed that directories provide IObjectManager
+    and that files are instances of OFS.Image.File.
     """
     implements(IWritableResourceDirectory)
     
@@ -33,7 +35,7 @@ class PersistentResourceDirectory(object):
             # named u'persistent', which wraps the root folder.
             # This gets pickled, so we can't keep the acquisition chain.
             context = aq_base(getToolByName(getSite(), 'portal_resources'))
-        self.context = self.__parent__  = context
+        self.context = self.__parent__ = context
         self.__name__ = context.getId()
     
     def __repr__(self):
@@ -53,7 +55,9 @@ class PersistentResourceDirectory(object):
                 context = context.__of__(site)
         
         if self.isDirectory(name):
-            return self.__class__(context.unrestrictedTraverse(name).__of__(context))
+            return self.__class__(
+                context.unrestrictedTraverse(name).__of__(context)
+            )
         elif self.isFile(name):
             return context.unrestrictedTraverse(name).__of__(context)
 
@@ -74,7 +78,7 @@ class PersistentResourceDirectory(object):
     def readFile(self, path):
         try:
             f = self.context.unrestrictedTraverse(path)
-        except Exception, e:
+        except Exception as e:
             raise IOError(str(e))
         
         return str(f.data)
@@ -153,7 +157,9 @@ class PersistentResourceDirectory(object):
             path = member.filename.lstrip('/')
             
             # test each part of the path against the filters
-            if any(any(filter.match(n) for filter in FILTERS) for n in path.split('/')):
+            if any(any(filter.match(n) for filter in FILTERS)
+                   for n in path.split('/')
+                   ):
                 continue
 
             if path.endswith('/'):
@@ -237,7 +243,9 @@ class FilesystemResourceDirectory(object):
             for filename in filenames:
                 path = '/'.join([subpath, filename]).strip('/')
                 
-                if any(any(filter.match(n) for filter in FILTERS) for n in path.split('/')):
+                if any(any(filter.match(n) for filter in FILTERS)
+                    for n in path.split('/')
+                    ):
                     continue
                 
                 zf.writestr('/'.join([prefix, path,]), self.readFile(path))
