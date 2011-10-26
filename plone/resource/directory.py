@@ -244,8 +244,8 @@ class FilesystemResourceDirectory(object):
                 path = '/'.join([subpath, filename]).strip('/')
                 
                 if any(any(filter.match(n) for filter in FILTERS)
-                    for n in path.split('/')
-                    ):
+                       for n in path.split('/')
+                       ):
                     continue
                 
                 zf.writestr('/'.join([prefix, path,]), self.readFile(path))
