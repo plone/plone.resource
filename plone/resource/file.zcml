@@ -3,5 +3,6 @@
     i18n_domain="plone">
 
     <adapter factory=".file.rawReadFile" />
+    <adapter factory=".file.FileLastModified" />
   
 </configure>
