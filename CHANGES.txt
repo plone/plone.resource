@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.0b6 (unreleased)
+1.0b6 (2011-11-24)
 ------------------
 
 - Added rename() method for writable resource directories
