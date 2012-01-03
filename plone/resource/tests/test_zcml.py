@@ -23,15 +23,15 @@ def runSnippet(snippet, dist='plone.resource.tests'):
 
 
 class ZCMLTestCase(unittest.TestCase):
-    
+
     def setUp(self):
         clearZCML()
         import plone.resource
         XMLConfig('meta.zcml', plone.resource)()
-    
+
     def tearDown(self):
         tearDown()
-    
+
     def test_dist_with_name_and_type(self):
         runSnippet("""
         <plone:static
@@ -40,10 +40,10 @@ class ZCMLTestCase(unittest.TestCase):
           directory="resources"
           />
         """)
-        
+
         res = getUtility(IResourceDirectory, name='++theme++foo')
         self.assertTrue(res.directory.endswith(os.path.join('plone', 'resource', 'tests', 'resources')))
-    
+
     def test_dist_rejects_with_missing_type(self):
         # resource directories in distributions must be registered with a type
         self.assertRaises(ConfigurationError,
@@ -53,7 +53,7 @@ class ZCMLTestCase(unittest.TestCase):
               directory="resources"
               />"""
             )
-    
+
     def test_dist_with_type_only(self):
         runSnippet("""
         <plone:static
@@ -76,7 +76,7 @@ class ZCMLTestCase(unittest.TestCase):
           directory="/"
           />
         """, dist=None)
-        
+
         res = getUtility(IResourceDirectory)
         self.assertEqual('/', res.directory)
 

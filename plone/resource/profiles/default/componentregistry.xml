@@ -2,7 +2,7 @@
 <componentregistry>
     <adapters/>
     <utilities>
-        <utility 
+        <utility
             interface="plone.resource.interfaces.IResourceDirectory"
             factory="plone.resource.directory.PersistentResourceDirectory"
             name="persistent"

@@ -13,17 +13,17 @@ class ResourceTraverser(SimpleHandler):
 
     def __init__(self, context, request=None):
         self.context = context
-    
+
     def traverse(self, name, remaining):
         type = self.name
-        
+
         # Note: also fixes possible unicode problems
         name = urllib.quote(name)
-        
+
         res = queryResourceDirectory(type, name)
         if res is not None:
             return res
-        
+
         raise NotFound
 
 

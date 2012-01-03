@@ -5,10 +5,10 @@ from plone.resource.interfaces import IResourceDirectory
 
 class IntegrationTestCase(unittest.TestCase):
     layer = PLONE_RESOURCE_INTEGRATION_TESTING
-    
+
     def setUp(self):
         self.portal = self.layer.get('portal')
-    
+
     def test_persistent_directory_installed(self):
         # directory should be available as the portal_resources tool
         from Products.CMFCore.utils import getToolByName

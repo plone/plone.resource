@@ -4,5 +4,5 @@
 
     <adapter factory=".file.rawReadFile" />
     <adapter factory=".file.FileLastModified" />
-  
+
 </configure>

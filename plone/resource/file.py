@@ -21,13 +21,13 @@ from ZPublisher.Iterators import filestream_iterator
 
 class ResourceIterator(filestream_iterator):
     """Resource iterator that allows (inefficient) coercion to str/unicode.
-    
+
     This is needed for ResourceRegistries support, for example.
     """
-    
+
     def __str__(self):
         return self.read()
-    
+
     def __unicode__(self):
         return self.read().decode('utf-8')
 
@@ -35,7 +35,7 @@ class FilesystemFile(object):
     """Representation of a file. When called, it will set response headers
     and return the file's contents
     """
-    
+
     def __init__(self, parent, request, path, name):
         self.path = path
         self.request = request
@@ -43,24 +43,24 @@ class FilesystemFile(object):
         self.__parent__ = parent
 
         self.lastModifiedTimestamp = float(os.path.getmtime(path)) or time.time()
-    
+
     def getContentType(self, default='application/octet-stream'):
         extension = os.path.splitext(self.__name__)[1].lower()
         return mimetypes.types_map.get(extension, default)
-    
+
     def __call__(self, REQUEST=None, RESPONSE=None):
-        
+
         contentType = self.getContentType()
         lastModifiedHeader = formatdate(self.lastModifiedTimestamp, usegmt=True)
-        
+
         request = REQUEST
         if request is None:
             request = self.request
-        
+
         response = RESPONSE
         if response is None:
             response = self.request.response
-        
+
         response.setHeader('Content-Type', contentType)
         response.setHeader('Content-Length', os.path.getsize(self.path))
         response.setHeader('Last-Modified', lastModifiedHeader)
@@ -72,10 +72,10 @@ class FileLastModified(object):
     """
     implements(ILastModified)
     adapts(FilesystemFile)
-    
+
     def __init__(self, context):
         self.context = context
-    
+
     def __call__(self):
         return datetime.datetime.fromtimestamp(self.context.lastModifiedTimestamp, tz=tzlocal())
 

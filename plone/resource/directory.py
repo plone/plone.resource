@@ -23,12 +23,12 @@ FILTERS = [re.compile(pattern) for pattern in FILTERS]
 
 class PersistentResourceDirectory(object):
     """A resource directory stored in the ZODB.
-    
+
     It is assumed that directories provide IObjectManager
     and that files are instances of OFS.Image.File.
     """
     implements(IWritableResourceDirectory)
-    
+
     def __init__(self, context=None):
         if context is None:
             # This is also used as a local IResourceDirectory utility,
@@ -37,15 +37,15 @@ class PersistentResourceDirectory(object):
             context = aq_base(getToolByName(getSite(), 'portal_resources'))
         self.context = self.__parent__ = context
         self.__name__ = context.getId()
-    
+
     def __repr__(self):
         return '<%s object at %s>' % (self.__class__.__name__,
                                       '/'.join(self.context.getPhysicalPath()))
-    
+
     def publishTraverse(self, request, name):
         if isinstance(name, unicode):
             name = name.encode('utf-8')
-        
+
         context = self.context
         if aq_parent(context) is None:
             # Re-supply the acquisition chain if this is the root resource
@@ -53,7 +53,7 @@ class PersistentResourceDirectory(object):
             site = getSite()
             if site is not None:
                 context = context.__of__(site)
-        
+
         if self.isDirectory(name):
             return self.__class__(
                 context.unrestrictedTraverse(name).__of__(context)
@@ -65,55 +65,55 @@ class PersistentResourceDirectory(object):
 
     def __getitem__(self, name):
         return self.publishTraverse(None, name)
-    
+
     def __delitem__(self, name):
         del self.context[name]
-    
+
     def __contains__(self, name):
         return name in self.context
-    
+
     def openFile(self, path):
         return StringIO(self.readFile(path))
-    
+
     def readFile(self, path):
         try:
             f = self.context.unrestrictedTraverse(path)
         except Exception as e:
             raise IOError(str(e))
-        
+
         return str(f.data)
-    
+
     def listDirectory(self):
         return [n for n in self.context.objectIds()
                   if not any(filter.match(n) for filter in FILTERS)]
-    
+
     def isDirectory(self, path):
         try:
             obj = self.context.unrestrictedTraverse(path)
         except:
             obj = None
-        
+
         return IObjectManager.providedBy(obj)
-    
+
     def isFile(self, path):
         try:
             obj = self.context.unrestrictedTraverse(path)
         except:
             obj = None
-        
+
         return isinstance(obj, File)
-    
+
     def rename(self, oldName, newName):
         obj = self.context[oldName]
         obj.id = obj.__name__ = newName
         self.context._delOb(oldName)
         self.context._setOb(newName, obj)
-    
+
     def exportZip(self, out):
         prefix = self.__name__
-        
+
         zf = zipfile.ZipFile(out, 'w')
-        
+
         def write(dir, prefix, zf):
             for name in dir.listDirectory():
                 relativeName = "%s/%s" % (prefix, name,)
@@ -121,10 +121,10 @@ class PersistentResourceDirectory(object):
                     write(dir[name], relativeName, zf)
                 elif dir.isFile(name):
                     zf.writestr(relativeName, dir.readFile(name))
-        
+
         write(self, prefix, zf)
         zf.close()
-    
+
     def makeDirectory(self, path):
         parent = self.context
         names = path.strip('/').split('/')
@@ -135,7 +135,7 @@ class PersistentResourceDirectory(object):
                 f = BTreeFolder2(name)
                 parent._setOb(name, f)
             parent = parent[name]
-    
+
     def writeFile(self, path, data):
         basepath = '/'.join(path.split('/')[:-1])
         if basepath:
@@ -148,14 +148,14 @@ class PersistentResourceDirectory(object):
         if filename in container:
             container._delOb(filename)
         container._setOb(filename, f)
-    
+
     def importZip(self, f):
         if not isinstance(f, zipfile.ZipFile):
             f = zipfile.ZipFile(f)
         for name in f.namelist():
             member = f.getinfo(name)
             path = member.filename.lstrip('/')
-            
+
             # test each part of the path against the filters
             if any(any(filter.match(n) for filter in FILTERS)
                    for n in path.split('/')
@@ -234,20 +234,20 @@ class FilesystemResourceDirectory(object):
     def exportZip(self, out):
         prefix = self.__name__
         zf = zipfile.ZipFile(out, 'w')
-        
+
         toStrip = len(self.directory.replace(os.path.sep, '/')) + 1
-        
+
         for (dirpath, dirnames, filenames) in os.walk(self.directory):
             subpath = dirpath.replace(os.path.sep, '/')[toStrip:].strip('/')
-            
+
             for filename in filenames:
                 path = '/'.join([subpath, filename]).strip('/')
-                
+
                 if any(any(filter.match(n) for filter in FILTERS)
                        for n in path.split('/')
                        ):
                     continue
-                
+
                 zf.writestr('/'.join([prefix, path,]), self.readFile(path))
-        
+
         zf.close()

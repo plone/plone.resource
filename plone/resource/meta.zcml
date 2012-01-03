@@ -8,5 +8,5 @@
         schema=".zcml.IResourceDirectoryDirective"
         handler=".zcml.registerResourceDirectory"
         />
-           
+
 </configure>

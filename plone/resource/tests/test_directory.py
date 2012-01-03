@@ -5,23 +5,23 @@ from Products.BTreeFolder2.BTreeFolder2 import BTreeFolder2
 
 
 class TestPersistentResourceDirectory(unittest.TestCase):
-    
+
     def _makeOne(self):
         root = BTreeFolder2('portal_resources')
         root._setOb('demo', BTreeFolder2('demo'))
         root.demo._setOb('foo', BTreeFolder2('foo'))
-        
+
         from StringIO import StringIO
         from OFS.Image import File
         file = File('test.html', 'test.html', StringIO('asdf'))
         root.demo.foo._setOb('test.html', file)
-        
+
         from plone.resource.directory import PersistentResourceDirectory
         return PersistentResourceDirectory(root)
-    
+
     def _assertSameUnwrapped(self, a, b):
         self.assertTrue(aq_base(a) is aq_base(b))
-    
+
     def test_ctor_implicit_context(self):
         from zope.site.testing import siteSetUp, createSiteManager, siteTearDown
         siteSetUp()
@@ -30,19 +30,19 @@ class TestPersistentResourceDirectory(unittest.TestCase):
         createSiteManager(site, setsite=True)
         root = self._makeOne().context
         site._setOb('portal_resources', root)
-        
+
         from plone.resource.directory import PersistentResourceDirectory
         try:
             dir = PersistentResourceDirectory()
             # context should be stored unwrapped
             self.assertTrue(aq_base(root) is dir.context)
-            
+
             # but re-wrapped during traversal
             traversed = dir['demo']
             self.assertTrue(site in traversed.context.aq_chain)
         finally:
             siteTearDown()
-    
+
     def test_repr(self):
         dir = self._makeOne()
         s = '<PersistentResourceDirectory object at portal_resources>'
@@ -52,12 +52,12 @@ class TestPersistentResourceDirectory(unittest.TestCase):
         dir = self._makeOne()
         subdir = dir.publishTraverse(None, 'demo')
         self._assertSameUnwrapped(subdir.context, dir.context.demo)
-    
+
     def test_publishTraverse_file(self):
         dir = self._makeOne()
         file = dir.publishTraverse(None, 'demo/foo/test.html')
         self._assertSameUnwrapped(file, dir.context.demo.foo['test.html'])
-    
+
     def test_publishTraverse_not_found(self):
         dir = self._makeOne()
         from zExceptions import NotFound
@@ -71,7 +71,7 @@ class TestPersistentResourceDirectory(unittest.TestCase):
         dir = self._makeOne()
         file = dir.openFile('demo/foo/test.html')
         self.assertEqual('asdf', file.read())
-    
+
     def test_readFile(self):
         dir = self._makeOne()
         self.assertEqual('asdf', dir.readFile('demo/foo/test.html'))
@@ -83,7 +83,7 @@ class TestPersistentResourceDirectory(unittest.TestCase):
     def test_listDirectory(self):
         dir = self._makeOne()
         self.assertEqual(['demo'], dir.listDirectory())
-    
+
     def test_listDirectory_filters_by_name(self):
         dir = self._makeOne()
         dir.context._setOb('.svn', BTreeFolder2('filtered'))
@@ -105,23 +105,23 @@ class TestPersistentResourceDirectory(unittest.TestCase):
         dir = self._makeOne()
         dir.writeFile('qux', 'qux')
         self.assertEqual('qux', dir.readFile('qux'))
-    
+
     def test_writeFile_does_not_create_empty_directory(self):
         dir = self._makeOne()
         dir.writeFile('qux', 'qux')
         self.assertFalse('' in dir)
         self.assertTrue('qux' in dir)
-    
+
     def test_writeFile_directory_missing(self):
         dir = self._makeOne()
         dir.writeFile('baz/qux', 'qux')
         self.assertEqual('qux', dir.readFile('baz/qux'))
-    
+
     def test_writeFile_file_already_exists(self):
         dir = self._makeOne()
         dir.writeFile('demo/foo/test.html', 'changed')
         self.assertEqual('changed', dir.readFile('demo/foo/test.html'))
-    
+
     def test_importZip(self):
         dir = self._makeOne()
         f = open(os.path.join(os.path.dirname(__file__), 'resources.zip'))
@@ -140,32 +140,32 @@ class TestPersistentResourceDirectory(unittest.TestCase):
         f = open(os.path.join(os.path.dirname(__file__), 'resources.zip'))
         dir.importZip(f)
         self.assertFalse('__MACOSX' in dir.context.objectIds())
-    
+
     def test_importZip_filters_hidden_directories(self):
         dir = self._makeOne()
         f = open(os.path.join(os.path.dirname(__file__), 'resources.zip'))
         dir.importZip(f)
         self.assertFalse('.svn' in dir)
-    
+
     def test_delitem(self):
         dir = self._makeOne()
         dir.makeDirectory('demo')
         self.assertTrue('demo' in dir)
         del dir['demo']
         self.assertFalse('demo' in dir)
-    
+
     def test_rename(self):
         dir = self._makeOne()
         dir.rename('demo', 'demo1')
         self.assertEqual(['demo1'], dir.listDirectory())
 
 class TestFilesystemResourceDirectory(unittest.TestCase):
-    
+
     def _makeOne(self):
         from plone.resource.directory import FilesystemResourceDirectory
         path = os.path.join(os.path.dirname(__file__), 'resources')
         return FilesystemResourceDirectory(path)
-    
+
     def test_repr(self):
         dir = self._makeOne()
         s = '<FilesystemResourceDirectory object at %s>' % dir.directory
@@ -175,13 +175,13 @@ class TestFilesystemResourceDirectory(unittest.TestCase):
         dir = self._makeOne()
         subdir = dir.publishTraverse(None, 'demo')
         self.assertEqual(subdir.directory, os.path.join(dir.directory, 'demo'))
-    
+
     def test_publishTraverse_file(self):
         dir = self._makeOne()
         file = dir.publishTraverse(None, 'demo/foo/test.html')
         subpath = os.path.join(dir.directory, 'demo', 'foo', 'test.html')
         self.assertEqual(file.path, subpath)
-    
+
     def test_publishTraverse_not_found(self):
         dir = self._makeOne()
         from zExceptions import NotFound
@@ -196,7 +196,7 @@ class TestFilesystemResourceDirectory(unittest.TestCase):
         dir = self._makeOne()
         file = dir.openFile('demo/foo/test.html')
         self.assertEqual('asdf', file.read())
-    
+
     def test_readFile(self):
         dir = self._makeOne()
         self.assertEqual('asdf', dir.readFile('demo/foo/test.html'))
@@ -208,7 +208,7 @@ class TestFilesystemResourceDirectory(unittest.TestCase):
     def test_listDirectory(self):
         dir = self._makeOne()
         self.assertEqual(['demo'], dir.listDirectory())
-    
+
     def test_listDirectory_filters_by_name(self):
         dir = self._makeOne()
         name = '.svn'

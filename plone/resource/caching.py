@@ -6,11 +6,11 @@ from plone.resource.interfaces import IUniqueResourceRequest
 
 class UniqueResourceLookup(object):
     """Unique resource ruleset lookup.
-    
+
     Returns 'plone.stableResource' for requests marked with
     IUniqueResourceRequest.
     """
-    
+
     implements(IRulesetLookup)
     adapts(Interface, IUniqueResourceRequest)
 
