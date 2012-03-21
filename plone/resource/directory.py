@@ -28,6 +28,8 @@ class PersistentResourceDirectory(object):
     and that files are instances of OFS.Image.File.
     """
     implements(IWritableResourceDirectory)
+    
+    __allow_access_to_unprotected_subobjects__ = True
 
     def __init__(self, context=None):
         if context is None:
