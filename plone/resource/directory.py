@@ -67,6 +67,9 @@ class PersistentResourceDirectory(object):
         return self.publishTraverse(None, name)
 
     def __setitem__(self, name, item):
+        if isinstance(name, unicode):
+            name = name.encode('utf-8')
+
         if IResourceDirectory.providedBy(item):
             item = item.context
         self.context[name] = item

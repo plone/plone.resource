@@ -168,6 +168,15 @@ class TestPersistentResourceDirectory(unittest.TestCase):
         self.assertEqual(dir['demo']['foo'].readFile('test.html'),
                          dir['demo']['bar'].readFile('test.html'),)
 
+    def test_setitem_file_unicode(self):
+        dir = self._makeOne()
+        f = dir['demo']['foo']['test.html']
+        dir['demo'].makeDirectory('bar')
+
+        dir['demo']['bar'][u'test.html'] = f
+        self.assertEqual(dir['demo']['foo'].readFile('test.html'),
+                         dir['demo']['bar'].readFile('test.html'),)
+
     def test_setitem_directory(self):
         dir = self._makeOne()
         dir['demo']['foo'].makeDirectory('d1')
