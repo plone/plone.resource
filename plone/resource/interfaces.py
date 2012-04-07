@@ -85,6 +85,10 @@ class IWritableResourceDirectory(IResourceDirectory):
         """Delete a file or directory inside this directory
         """
 
+    def __setitem__(name, item):
+        """Add a file or directory as returned by ``__getitem__()``
+        """
+
     def rename(oldName, newName):
         """Rename a child file or folder
         """

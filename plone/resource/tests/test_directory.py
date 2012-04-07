@@ -159,6 +159,26 @@ class TestPersistentResourceDirectory(unittest.TestCase):
         dir.rename('demo', 'demo1')
         self.assertEqual(['demo1'], dir.listDirectory())
 
+    def test_setitem_file(self):
+        dir = self._makeOne()
+        f = dir['demo']['foo']['test.html']
+        dir['demo'].makeDirectory('bar')
+
+        dir['demo']['bar']['test.html'] = f
+        self.assertEqual(dir['demo']['foo'].readFile('test.html'),
+                         dir['demo']['bar'].readFile('test.html'),)
+
+    def test_setitem_directory(self):
+        dir = self._makeOne()
+        dir['demo']['foo'].makeDirectory('d1')
+
+        d1 = dir['demo']['foo']['d1']
+        del dir['demo']['foo']['d1']
+
+        dir['demo']['foo']['d2'] = d1
+
+        self.assertEqual(dir['demo']['foo']['d2'].__name__, 'd2')
+
 class TestFilesystemResourceDirectory(unittest.TestCase):
 
     def _makeOne(self):
@@ -214,7 +234,7 @@ class TestFilesystemResourceDirectory(unittest.TestCase):
         name = '.svn'
         if name not in os.listdir(dir.directory): # pragma: no cover
             f = open(os.path.join(dir.directory, name), 'w')
-            f.write()
+            f.write("")
             f.close()
         self.assertTrue(name in os.listdir(dir.directory))
         self.assertEqual(['demo'], dir.listDirectory())

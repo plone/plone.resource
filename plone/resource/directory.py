@@ -66,6 +66,12 @@ class PersistentResourceDirectory(object):
     def __getitem__(self, name):
         return self.publishTraverse(None, name)
 
+    def __setitem__(self, name, item):
+        if IResourceDirectory.providedBy(item):
+            item = item.context
+        self.context[name] = item
+        item.id = item.__name__ = name
+
     def __delitem__(self, name):
         del self.context[name]
 
@@ -167,7 +173,6 @@ class PersistentResourceDirectory(object):
             else:
                 data = f.open(member).read()
                 self.writeFile(path, data)
-
 
 class FilesystemResourceDirectory(object):
     """A resource directory based on files in the filesystem.

@@ -4,8 +4,8 @@ Changelog
 1.0b7 (unreleased)
 ------------------
 
-- Nothing changed yet.
-
+- Add __setitem__() support for writeable resource directories.
+  [optilude]
 
 1.0b6 (2011-11-24)
 ------------------
