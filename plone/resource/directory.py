@@ -153,6 +153,9 @@ class PersistentResourceDirectory(object):
         if isinstance(filename, unicode):
             filename = filename.encode('utf-8')
         f = File(filename, filename, data)
+        if f.getContentType() == 'text/html':
+            # otherwise HTTPResponse.setBody assumes latin1 and mangles things
+            f.content_type = 'text/html; charset=utf-8'
         container = self.context.unrestrictedTraverse(basepath)
         if filename in container:
             container._delOb(filename)
