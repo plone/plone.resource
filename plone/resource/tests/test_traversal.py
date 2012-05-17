@@ -31,7 +31,7 @@ class TraversalTestCase(unittest.TestCase):
         provideUtility(dir, provides=IResourceDirectory, name=u'++demo++foo')
 
         res = self.app.restrictedTraverse('++demo++foo')
-        self.failUnless(res.directory.endswith('resources'))
+        self.assertTrue(res.directory.endswith('resources'))
 
         self.assertRaises(NotFound, self.app.restrictedTraverse, '++demo++asdf')
 
@@ -47,7 +47,7 @@ class TraversalTestCase(unittest.TestCase):
         provideUtility(dir, provides=IResourceDirectory, name=u'')
 
         res = self.app.restrictedTraverse('++demo++foo')
-        self.failUnless(res.directory.endswith('resources/demo/foo'))
+        self.assertTrue(res.directory.endswith('resources/demo/foo'))
 
         self.assertRaises(NotFound, self.app.restrictedTraverse, '++demo++bar')
 
