@@ -20,6 +20,8 @@ Resource directory contents can be found by the traverser in several different
 places. The following locations are tried in order.
 
 Files in the ZODB
+^^^^^^^^^^^^^^^^^
+
   Installing ``plone.resource`` creates a folder called portal_resources which
   can be used to store resource directories persistently. By convention, the
   top-level folders under this folder correspond to resource types, and the
@@ -32,6 +34,7 @@ Files in the ZODB
 
 
 Files in Python distributions
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
   A folder in a Python distribution (e.g. egg) can be registered as a resource
   directory of a particular type and name using the plone:static ZCML
@@ -62,30 +65,69 @@ Files in Python distributions
   allow unwanted file access.
 
 Files in a central resource directory
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-    If the plone:static directive is used from site.zcml (i.e., with
-    no active package in the ZCML import context), then it may specify the
-    absolute path to a top-level resources directory.  This should have the
-    same subdirectory structure as the in-ZODB resources directory (i.e.,
-    top-level directories are resource types and 2nd-level directories are
-    resource directory names).
+    If the ``plone:static`` directive is used from ``site.zcml`` (i.e., with no
+    active package in the ZCML import context), then it may specify the
+    absolute path to a top-level resources directory.  This directory should
+    have the same sub-directory structure as the in-ZODB resources directory in
+    that top-level directories are resource types, and 2nd-level directories
+    are resource directory names.  In addition, in order for resources to be
+    available, the top-level directories require a traverser to be registered.
     
-    For example, the following in site.zcml would register the path
-    var/resources within the buildout root::
+    For example, the following in ``site.zcml`` would register the given path
+    within the buildout root::
     
       <plone:static
         directory="/path/to/buildout/var/resources"
         />
 
-    Typically, this could be injected into site.zcml by specifying the 
-    resources option in the `plone.recipe.zope2instance`_
+    Typically, this can be injected into ``site.zcml`` by specifying the 
+    ``resources option`` in the `plone.recipe.zope2instance`_
     buildout recipe, like this::
 
       resources = ${buildout:directory}/resources
 
-.. _`plone.recipe.zope2instance`: http://pypi.python.org/pypi/plone.recipe.zope2instance
- 
+    As a worked example, if one wanted to serve resources for use with
+    ``plone.app.theming``, which provides the ``++theme++`` traverser, then
+    a resource located at::
+    
+        ${directory}/resources/theme/my.project/logo.png
 
+    would be traversable at a URL like so::
+    
+        http://localhost:8080/Plone/++theme++my.project/logo.png
+
+.. _`plone.recipe.zope2instance`: http://pypi.python.org/pypi/plone.recipe.zope2instance
+
+Additional traversers
+---------------------
+
+    Traversers can be registered via ZCML using an adapter like so::
+
+     <adapter
+       name="demo"
+       for="* zope.publisher.interfaces.IRequest"
+       provides="zope.traversing.interfaces.ITraversable"
+       factory="my.project.traversal.MyTraverser"
+       />
+
+    with a corresponding factory definition of::
+    
+        from plone.resource.traversal import ResourceTraverser
+        class MyTraverser(ResourceTraverser):
+            name = 'demo'
+
+    This, when coupled with configuration like that in the 
+    `Files in a central resource directory`_ section above, would mean that
+    resources located at::
+    
+        ${directory}/resources/demo/my.project/logo.png
+
+    would be traversable at a URL like so::
+    
+        http://localhost:8080/Plone/++demo++my.project/logo.png
+ 
 What types of resources can be stored
 -------------------------------------
 
