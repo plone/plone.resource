@@ -5,7 +5,7 @@ version = '1.0.1.dev0'
 setup(name='plone.resource',
       version=version,
       description="",
-      long_description=open("README.txt").read() + "\n" +
+      long_description=open("README.rst").read() + "\n" +
                        open("CHANGES.txt").read(),
       classifiers=[
         "Framework :: Plone",
