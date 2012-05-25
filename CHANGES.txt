@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.0.1 (unreleased)
+1.0.1 (2012-05-25)
 ------------------
 
 - Make sure text/html files imported as persistent files will be
