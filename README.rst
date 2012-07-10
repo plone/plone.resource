@@ -66,15 +66,18 @@ Files in Python distributions
 
 Minimum zcml config example
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    Note::
 
-    <configure xmlns:plone="http://namespaces.plone.org/plone">
+      <configure xmlns:plone="http://namespaces.plone.org/plone">
       <include package="plone.resource" file="meta.zcml"/>
       <plone:static
         directory="resources"
         type="theme"
         name="myproject"
         />
-    </configure>
+      </configure>
+
+    ..
 
 Files in a central resource directory
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
