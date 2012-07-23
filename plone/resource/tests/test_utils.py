@@ -56,10 +56,13 @@ class TraversalTestCase(unittest.TestCase):
         self.assertEqual(4, len(dirs))
         self.assertTrue(dirs[0].context.aq_base is
                         self.zodb_dir['demo']['foo'].context.aq_base)
-        self.assertTrue(dirs[1].directory ==
-                        self.global_dir['demo']['foo'].directory)
-        self.assertTrue(dirs[2].directory ==
-                        self.global_dir['demo']['manifest-test'].directory)
+        unordered_entries = [
+            self.global_dir['demo']['foo'].directory,
+            self.global_dir['demo']['manifest-test'].directory
+        ]
+        self.assertIn(dirs[1].directory, unordered_entries)
+        self.assertIn(dirs[2].directory, unordered_entries)
+        self.assertNotEqual(dirs[1].directory, dirs[2].directory)
         self.assertTrue(dirs[3].directory == self.package_dir.directory)
 
     def test_cloneDirectory(self):
