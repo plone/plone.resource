@@ -197,7 +197,8 @@ class TestFilesystemResourceDirectory(unittest.TestCase):
 
     def test_repr(self):
         dir = self._makeOne()
-        s = '<FilesystemResourceDirectory object at %s>' % dir.directory
+        subpath = dir.directory[dir.directory.index(dir.__name__):]
+        s = '<FilesystemResourceDirectory object at %s>' % subpath
         self.assertEqual(s, repr(dir))
 
     def test_publishTraverse_directory(self):
