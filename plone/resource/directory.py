@@ -204,8 +204,6 @@ class FilesystemResourceDirectory(object):
     def __parent__(self, value):
         self._parent = value
 
-#    def __repr__(self):
-#        return '<%s object at portal_resources>' % (self.__class__.__name__, )
     def __repr__(self):
         subpath = self.directory[self.directory.index(self.__name__):]
         return '<%s object at %s>' % (self.__class__.__name__, subpath)
