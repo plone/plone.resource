@@ -4,7 +4,8 @@ Changelog
 1.0.3 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- security hardening: we don't want the anonymous user to look at our fs
+  [giacomos]
 
 
 1.0.2 (2013-01-01)
