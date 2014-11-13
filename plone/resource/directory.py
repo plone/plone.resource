@@ -222,6 +222,11 @@ class FilesystemResourceDirectory(object):
 
         raise NotFound
 
+    def __contains__(self, name):
+        if self.publishTraverse(None, name):
+            return True
+        return False
+
     def __getitem__(self, name):
         return self.publishTraverse(None, name)
 
