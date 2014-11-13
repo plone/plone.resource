@@ -222,6 +222,10 @@ class TestFilesystemResourceDirectory(unittest.TestCase):
         subpath = os.path.join(dir.directory, 'demo')
         self.assertEqual(dir['demo'].directory, subpath)
 
+    def test_contains(self):
+        dir = self._makeOne()
+        self.assertTrue('demo' in dir)
+        
     def test_openFile(self):
         dir = self._makeOne()
         file = dir.openFile('demo/foo/test.html')
