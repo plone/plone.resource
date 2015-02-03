@@ -4,6 +4,9 @@ Changelog
 1.0.4 (unreleased)
 ------------------
 
+- use utf-8 encoding when writing more than just text/html
+  [vangheem]
+
 - provides a proper __contains__ method in FilesystemResourceDirectory
   [ebrehault]
 
