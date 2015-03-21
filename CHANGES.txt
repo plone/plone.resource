@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.0.4 (unreleased)
+1.0.4 (2015-03-21)
 ------------------
 
 - use utf-8 encoding when writing more than just text/html
