@@ -1,6 +1,9 @@
-from zope.component import queryUtility, getUtilitiesFor
+# -*- coding: utf-8 -*-
 from plone.resource.interfaces import IResourceDirectory
 from zExceptions import NotFound
+from zope.component import getUtilitiesFor
+from zope.component import queryUtility
+
 
 def iterDirectoriesOfType(type, filter_duplicates=True):
     """
@@ -49,6 +52,7 @@ def iterDirectoriesOfType(type, filter_duplicates=True):
             if not filter_duplicates or u.__name__ not in found:
                 yield u
 
+
 def queryResourceDirectory(type, name):
     """Find the IResourceDirectory of the given name and type. Returns
     None if not found.
@@ -61,7 +65,7 @@ def queryResourceDirectory(type, name):
         try:
             return res[type][name]
         except (KeyError, NotFound,):
-            pass # pragma: no cover
+            pass  # pragma: no cover
 
     # 2. Global resource directory:
     #    Try (global resource directory)/$type/$name
@@ -70,7 +74,7 @@ def queryResourceDirectory(type, name):
         try:
             return res[type][name]
         except (KeyError, NotFound,):
-            pass # pragma: no cover
+            pass  # pragma: no cover
 
     # 3. Packaged type-specific resource directory:
     #    Try (directory named after type + name)
@@ -80,6 +84,7 @@ def queryResourceDirectory(type, name):
         return res
 
     return None
+
 
 def cloneResourceDirectory(source, target):
     """Copy all directories and files in the resource directory source to

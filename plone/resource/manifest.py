@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """Utilities for working with manifest files.
 
 The manifest is stored in a file ``manifest.cfg`` in the root of a resource
@@ -27,19 +28,17 @@ To get this manifest from an open file pointer ``fp``, do::
 ``bar``. ``title`` and ``description`` will be ``None`` if not found in the
 manifest. ``bar`` will be ``baz`` if not found.
 """
-
-import logging
 from ConfigParser import SafeConfigParser
-
-from zope.component import getUtility
-
-from plone.resource.interfaces import IResourceDirectory
 from plone.resource.directory import FILTERS
+from plone.resource.interfaces import IResourceDirectory
 from plone.resource.utils import iterDirectoriesOfType
+from zope.component import getUtility
+import logging
 
 MANIFEST_FILENAME = 'manifest.cfg'
 
 LOGGER = logging.getLogger('plone.resource.manifest')
+
 
 class ManifestFormat(object):
     """Describes a manifest format.
@@ -60,11 +59,13 @@ class ManifestFormat(object):
     ``[theme:parameters]``.
     """
 
-    def __init__(self, resourceType, keys, defaults=None, parameterSections=None):
+    def __init__(self, resourceType, keys, defaults=None,
+                 parameterSections=None):
         self.resourceType = resourceType
         self.keys = keys
         self.defaults = defaults or {}
         self.parameterSections = parameterSections or []
+
 
 def getManifest(fp, format, defaults=None):
     """Read the manifest from the given open file pointer according to the
@@ -94,7 +95,9 @@ def getManifest(fp, format, defaults=None):
 
     return results
 
-def extractManifestFromZipFile(zipfile, format, defaults=None, manifestFilename=MANIFEST_FILENAME):
+
+def extractManifestFromZipFile(zipfile, format, defaults=None,
+                               manifestFilename=MANIFEST_FILENAME):
     """Get a resource name and manifest from the given open
     ``zipfile.ZipFile`` using the given format. Returns a tuple::
 
@@ -123,7 +126,11 @@ def extractManifestFromZipFile(zipfile, format, defaults=None, manifestFilename=
         path = member.filename.lstrip('/')
 
         # Skip filtered files (OS X junk and dot files, mainly)
-        if any(any(filter.match(n) for filter in FILTERS) for n in path.split('/')):
+        if any(
+            any(
+                filter.match(n) for filter in FILTERS
+            ) for n in path.split('/')
+        ):
             continue
 
         pathSegments = path.rstrip('/').split('/')
@@ -141,7 +148,10 @@ def extractManifestFromZipFile(zipfile, format, defaults=None, manifestFilename=
             if isDirectory or len(pathSegments) > 0:
                 resourceName = pathSegments[0]
             else:
-                raise ValueError("Found a top level file - expected a single top level directory")
+                raise ValueError(
+                    "Found a top level file - expected a single top level "
+                    "directory"
+                )
 
         # Did we find a manifest file?
         if (
@@ -160,7 +170,9 @@ def extractManifestFromZipFile(zipfile, format, defaults=None, manifestFilename=
 
     return (resourceName, manifestDict)
 
-def getAllResources(format, defaults=None, filter=None, manifestFilename=MANIFEST_FILENAME):
+
+def getAllResources(format, defaults=None, filter=None,
+                    manifestFilename=MANIFEST_FILENAME):
     """Get a dict of all resources of the resource type indicated by the
     manifest format. Returns a dict where the keys are the resource ids and
     the values are manifests. The value may be None if no manifest was found.
@@ -192,13 +204,19 @@ def getAllResources(format, defaults=None, filter=None, manifestFilename=MANIFES
             try:
                 resources[name] = getManifest(manifest, format, defaults)
             except:
-                LOGGER.exception("Unable to read manifest for theme directory %s", name)
+                LOGGER.exception(
+                    "Unable to read manifest for theme directory {0}".format(
+                        name
+                    )
+                )
             finally:
                 manifest.close()
 
     return resources
 
-def getZODBResources(format, defaults=None, filter=None, manifestFilename=MANIFEST_FILENAME):
+
+def getZODBResources(format, defaults=None, filter=None,
+                     manifestFilename=MANIFEST_FILENAME):
     """Get a dict of all resources in the ZODB of the resource type indicated
     by the manifest format. Returns a dict where the keys are the resource
     ids and the values are manifests. The value may be None if no manifest was
@@ -237,11 +255,12 @@ def getZODBResources(format, defaults=None, filter=None, manifestFilename=MANIFE
             try:
                 resources[name] = getManifest(manifest, format, defaults)
             except:
-                LOGGER.exception("Unable to read manifest for %s directory %s",
-                        manifest.resourceType, name,
+                LOGGER.exception(
+                    "Unable to read manifest for {0} directory {1}".format(
+                        manifest.resourceType, name
                     )
+                )
             finally:
                 manifest.close()
 
     return resources
-
