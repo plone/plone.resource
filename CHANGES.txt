@@ -4,7 +4,9 @@ Changelog
 1.0.5 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Cleanup: PEP8, plone-coding conventions, ReST fixes, documentation
+  overhaul, et al.
+  [jensens]
 
 
 1.0.4 (2015-03-21)

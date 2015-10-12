@@ -1,5 +1,7 @@
+# -*- coding: utf-8 -*-
 from StringIO import StringIO
 from zope.publisher.browser import BrowserView
+
 
 class DownloadView(BrowserView):
 
@@ -16,7 +18,10 @@ class DownloadView(BrowserView):
         self.context.exportZip(out)
 
         response.setHeader('Content-Type', 'application/zip')
-        response.setHeader('Content-Disposition', 'attachment; filename="%s.zip"' % name)
+        response.setHeader(
+            'Content-Disposition',
+            'attachment; filename="%s.zip"' % name
+        )
         response.setHeader('Content-Length', len(out.getvalue()))
 
         response.write(out.getvalue())

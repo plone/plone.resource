@@ -1,11 +1,11 @@
-import urllib
-from zope.interface import alsoProvides
-from zope.traversing.namespace import SimpleHandler
-
+# -*- coding: utf-8 -*-
 from plone.resource.interfaces import IUniqueResourceRequest
 from plone.resource.utils import queryResourceDirectory
-
 from zExceptions import NotFound
+from zope.interface import alsoProvides
+from zope.traversing.namespace import SimpleHandler
+import urllib
+
 
 class ResourceTraverser(SimpleHandler):
 
@@ -15,12 +15,12 @@ class ResourceTraverser(SimpleHandler):
         self.context = context
 
     def traverse(self, name, remaining):
-        type = self.name
+        _type = self.name
 
         # Note: also fixes possible unicode problems
         name = urllib.quote(name)
 
-        res = queryResourceDirectory(type, name)
+        res = queryResourceDirectory(_type, name)
         if res is not None:
             return res
 

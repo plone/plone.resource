@@ -1,33 +1,32 @@
-import os.path
-import re
-import zipfile
-
+# -*- coding: utf-8 -*-
 from Acquisition import aq_base, aq_parent
 from OFS.Image import File
 from OFS.interfaces import IObjectManager
+from plone.resource.file import FilesystemFile
+from plone.resource.interfaces import IResourceDirectory
+from plone.resource.interfaces import IWritableResourceDirectory
 from Products.BTreeFolder2.BTreeFolder2 import BTreeFolder2
 from Products.CMFCore.utils import getToolByName
 from StringIO import StringIO
 from zExceptions import NotFound
-from zope.interface import implements
+from zope.interface import implementer
 from zope.site.hooks import getSite
-
-from plone.resource.file import FilesystemFile
-from plone.resource.interfaces import IResourceDirectory
-from plone.resource.interfaces import IWritableResourceDirectory
+import os.path
+import re
+import zipfile
 
 # filter dot files, Mac resource forks
 FILTERS = (r'\..*', '__MACOSX')
 FILTERS = [re.compile(pattern) for pattern in FILTERS]
 
 
+@implementer(IWritableResourceDirectory)
 class PersistentResourceDirectory(object):
     """A resource directory stored in the ZODB.
 
     It is assumed that directories provide IObjectManager
     and that files are instances of OFS.Image.File.
     """
-    implements(IWritableResourceDirectory)
 
     def __init__(self, context=None):
         if context is None:
@@ -94,7 +93,7 @@ class PersistentResourceDirectory(object):
 
     def listDirectory(self):
         return [n for n in self.context.objectIds()
-                  if not any(filter.match(n) for filter in FILTERS)]
+                if not any(filter.match(n) for filter in FILTERS)]
 
     def isDirectory(self, path):
         try:
@@ -181,10 +180,11 @@ class PersistentResourceDirectory(object):
                 data = f.open(member).read()
                 self.writeFile(path, data)
 
+
+@implementer(IResourceDirectory)
 class FilesystemResourceDirectory(object):
     """A resource directory based on files in the filesystem.
     """
-    implements(IResourceDirectory)
 
     __allow_access_to_unprotected_subobjects__ = True
 
@@ -241,7 +241,7 @@ class FilesystemResourceDirectory(object):
     def listDirectory(self):
         names = os.listdir(self.directory)
         return [n for n in names
-                  if not any(filter.match(n) for filter in FILTERS)]
+                if not any(filter.match(n) for filter in FILTERS)]
 
     def isDirectory(self, path):
         return os.path.isdir(self._resolveSubpath(path))
@@ -250,7 +250,6 @@ class FilesystemResourceDirectory(object):
         return os.path.isfile(self._resolveSubpath(path))
 
     def exportZip(self, out):
-        prefix = self.__name__
         zf = zipfile.ZipFile(out, 'w')
 
         toStrip = len(self.directory.replace(os.path.sep, '/')) + 1
@@ -266,6 +265,8 @@ class FilesystemResourceDirectory(object):
                        ):
                     continue
 
-                zf.writestr('/'.join([prefix, path,]), self.readFile(path))
-
+                zf.writestr(
+                    '/'.join([self.__name__, path, ]),
+                    self.readFile(path)
+                )
         zf.close()

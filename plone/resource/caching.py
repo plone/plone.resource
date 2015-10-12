@@ -1,18 +1,19 @@
-from zope.interface import Interface
-from zope.interface import implements
-from zope.component import adapts
+# -*- coding: utf-8 -*-
 from plone.caching.interfaces import IRulesetLookup
 from plone.resource.interfaces import IUniqueResourceRequest
+from zope.component import adapter
+from zope.interface import implementer
+from zope.interface import Interface
 
+
+@implementer(IRulesetLookup)
+@adapter(Interface, IUniqueResourceRequest)
 class UniqueResourceLookup(object):
     """Unique resource ruleset lookup.
 
     Returns 'plone.stableResource' for requests marked with
     IUniqueResourceRequest.
     """
-
-    implements(IRulesetLookup)
-    adapts(Interface, IUniqueResourceRequest)
 
     def __init__(self, published, request):
         pass
