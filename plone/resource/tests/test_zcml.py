@@ -1,5 +1,4 @@
 import unittest2 as unittest
-from zope.component.tests import clearZCML
 from zope.component.testing import tearDown
 from zope.configuration.exceptions import ConfigurationError
 
@@ -8,6 +7,17 @@ from StringIO import StringIO
 from zope.configuration.xmlconfig import xmlconfig, XMLConfig
 from zope.component import getUtility
 from plone.resource.interfaces import IResourceDirectory
+
+
+def clearZCML(test=None):
+    # Copy from ``zope.component.tests.examples``
+    from zope.configuration.xmlconfig import XMLConfig
+    import zope.component
+    from zope.component.testing import setUp
+    from zope.component.testing import tearDown
+    tearDown()
+    setUp()
+    XMLConfig('meta.zcml', zope.component)()
 
 
 def runSnippet(snippet, dist='plone.resource.tests'):

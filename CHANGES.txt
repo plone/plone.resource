@@ -4,6 +4,9 @@ Changelog
 1.0.5 (unreleased)
 ------------------
 
+- Test fix: ``clearZCML`` was removed from ``zope.component.tests``.
+  [thet]
+
 - Cleanup: PEP8, plone-coding conventions, ReST fixes, documentation
   overhaul, et al.
   [jensens]
