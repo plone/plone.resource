@@ -7,7 +7,7 @@ version = '1.0.5.dev0'
 setup(
     name='plone.resource',
     version=version,
-    description="",
+    description="Static files for Plone",
     long_description=(
         open("README.rst").read() +
         "\n" +
@@ -21,7 +21,7 @@ setup(
         "Programming Language :: Python :: 2.6",
         "Programming Language :: Python :: 2.7",
     ],
-    keywords='',
+    keywords='plone resource',
     author='David Glick, Plone Foundation',
     author_email='davidglick@groundwire.org',
     url='https://pypi.python.org/pypi/plone.resource',
