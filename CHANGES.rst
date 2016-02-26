@@ -4,6 +4,8 @@ Changelog
 1.0.5 (unreleased)
 ------------------
 
+Fixes:
+
 - Test fix: ``clearZCML`` was removed from ``zope.component.tests``.
   [thet]
 
