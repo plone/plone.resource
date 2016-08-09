@@ -225,7 +225,7 @@ class TestFilesystemResourceDirectory(unittest.TestCase):
     def test_contains(self):
         dir = self._makeOne()
         self.assertTrue('demo' in dir)
-        
+
     def test_openFile(self):
         dir = self._makeOne()
         file = dir.openFile('demo/foo/test.html')
@@ -245,10 +245,13 @@ class TestFilesystemResourceDirectory(unittest.TestCase):
 
     def test_listDirectory_filters_by_name(self):
         dir = self._makeOne()
-        name = '.svn'
-        if name not in os.listdir(dir.directory): # pragma: no cover
-            f = open(os.path.join(dir.directory, name), 'w')
+        name = '.dummy'
+        file_path = os.path.join(dir.directory, name)
+        if name not in os.listdir(dir.directory):
+            f = open(file_path, 'w')
             f.write("")
             f.close()
         self.assertTrue(name in os.listdir(dir.directory))
         self.assertEqual(['demo'], dir.listDirectory())
+        # Cleanup created file.
+        os.remove(file_path)

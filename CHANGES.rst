@@ -14,6 +14,8 @@ New:
 
 Fixes:
 
+- Do not leave an ``.svn`` file behind when running the tests.  [maurits]
+
 - Use zope.interface decorator.
   [gforcada]
 
