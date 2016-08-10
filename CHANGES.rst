@@ -4,14 +4,6 @@ Changelog
 1.0.6 (unreleased)
 ------------------
 
-Incompatibilities:
-
-- *add item here*
-
-New:
-
-- *add item here*
-
 Fixes:
 
 - Do not leave an ``.svn`` file behind when running the tests.  [maurits]
