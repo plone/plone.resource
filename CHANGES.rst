@@ -14,7 +14,7 @@ New features:
 
 Bug fixes:
 
-- *add item here*
+- Applied 20160830 security hotfix.  [maurits]
 
 
 1.0.6 (2016-08-10)

@@ -11,6 +11,7 @@ from plone.resource.interfaces import IUniqueResourceRequest
 from plone.resource.directory import PersistentResourceDirectory
 from plone.resource.directory import FilesystemResourceDirectory
 from plone.resource.file import FilesystemFile
+from zExceptions import Forbidden
 
 base_path = os.path.dirname(__file__)
 test_dir_path = os.path.join(base_path, 'resources')
@@ -91,3 +92,8 @@ class TraversalTestCase(unittest.TestCase):
 
         browser.open(self.app.absolute_url() + '/++demo++foo/++unique++bar/test.html')
         self.assertEqual('asdf', browser.contents)
+
+    def test_forbidden_resource_path_traversal(self):
+        resource_directory = FilesystemResourceDirectory(test_dir_path)
+        self.assertRaises(Forbidden, resource_directory._resolveSubpath,
+                          '../../../../setup.py')
