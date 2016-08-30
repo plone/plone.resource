@@ -8,6 +8,7 @@ from plone.resource.interfaces import IWritableResourceDirectory
 from Products.BTreeFolder2.BTreeFolder2 import BTreeFolder2
 from Products.CMFCore.utils import getToolByName
 from StringIO import StringIO
+from zExceptions import Forbidden
 from zExceptions import NotFound
 from zope.interface import implementer
 from zope.site.hooks import getSite
@@ -211,7 +212,9 @@ class FilesystemResourceDirectory(object):
 
     def _resolveSubpath(self, path):
         parts = path.split('/')
-        filepath = os.path.join(self.directory, *parts)
+        filepath = os.path.abspath(os.path.join(self.directory, *parts))
+        if not filepath.startswith(self.directory):
+            raise Forbidden('Invalid path resource')
         return filepath
 
     def publishTraverse(self, request, name):
