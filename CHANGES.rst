@@ -4,14 +4,6 @@ Changelog
 1.0.7 (unreleased)
 ------------------
 
-Breaking changes:
-
-- *add item here*
-
-New features:
-
-- *add item here*
-
 Bug fixes:
 
 - Applied 20160830 security hotfix.  [maurits]
