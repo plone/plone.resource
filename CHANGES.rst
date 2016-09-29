@@ -10,7 +10,8 @@ Breaking changes:
 
 New features:
 
-- *add item here*
+- Use ``mimetypes_registry`` utility to dertermine mimetype if available.
+  [jensens]
 
 Bug fixes:
 
