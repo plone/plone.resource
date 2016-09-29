@@ -4,10 +4,11 @@ from dateutil.tz import tzlocal
 from email.utils import formatdate
 from z3c.caching.interfaces import ILastModified
 from zope.component import adapter
-from zope.component import adapts
 from zope.filerepresentation.interfaces import IRawReadFile
 from zope.interface import implementer
 from ZPublisher.Iterators import filestream_iterator
+from zope.component import queryUtility
+
 import datetime
 import mimetypes
 import os
@@ -43,10 +44,15 @@ class FilesystemFile(object):
 
     def getContentType(self, default='application/octet-stream'):
         extension = os.path.splitext(self.__name__)[1].lower()
-        return mimetypes.types_map.get(extension, default)
+        mtr = queryUtility('mimetypes_registry')
+        mt = None
+        if mtr:
+            mt = mtr.lookupExtension(extension)
+        if mt is None:
+            mt = mimetypes.types_map.get(extension, default)
+        return mt
 
     def __call__(self, REQUEST=None, RESPONSE=None):
-
         contentType = self.getContentType()
         lastModifiedHeader = formatdate(
             self.lastModifiedTimestamp,
@@ -69,10 +75,10 @@ class FilesystemFile(object):
 
 
 @implementer(ILastModified)
+@adapter(FilesystemFile)
 class FileLastModified(object):
     """Determine when a file was last modified, for caching purposes
     """
-    adapts(FilesystemFile)
 
     def __init__(self, context):
         self.context = context
