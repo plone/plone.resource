@@ -7,7 +7,6 @@ from zope.component import adapter
 from zope.component import adapts
 from zope.filerepresentation.interfaces import IRawReadFile
 from zope.interface import implementer
-from zope.interface import implementer
 from ZPublisher.Iterators import filestream_iterator
 import datetime
 import mimetypes

@@ -14,7 +14,8 @@ New features:
 
 Bug fixes:
 
-- *add item here*
+- Remove duplicte import
+  [jensens]
 
 
 1.0.7 (2016-09-08)
