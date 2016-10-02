@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import os.path
 import unittest2 as unittest
 from Acquisition import aq_base

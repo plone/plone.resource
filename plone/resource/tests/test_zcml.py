@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import unittest2 as unittest
 from zope.component.testing import tearDown
 from zope.configuration.exceptions import ConfigurationError

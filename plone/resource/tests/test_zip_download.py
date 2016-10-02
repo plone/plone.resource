@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import unittest2 as unittest
 from plone.testing import zca
 from plone.resource.testing import DEMO_TRAVERSER_INTEGRATION_TESTING
