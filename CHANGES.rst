@@ -18,6 +18,8 @@ Bug fixes:
 - Remove duplicte import
   [jensens]
 
+- Add coding headers on python files.
+  [gforcada]
 
 1.0.7 (2016-09-08)
 ------------------
