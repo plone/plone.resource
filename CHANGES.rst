@@ -4,10 +4,6 @@ Changelog
 1.1 (unreleased)
 ----------------
 
-Breaking changes:
-
-- *add item here*
-
 New features:
 
 - Use ``mimetypes_registry`` utility to dertermine mimetype if available.
