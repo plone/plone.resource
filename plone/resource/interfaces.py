@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 from zope.interface import Attribute
 from zope.interface import Interface
+from zope.lifecycleevent.interfaces import IObjectCreatedEvent
+from zope.lifecycleevent.interfaces import IObjectModifiedEvent
 from zope.publisher.interfaces import IPublishTraverse
 
 
@@ -94,5 +96,14 @@ class IWritableResourceDirectory(IResourceDirectory):
         """Rename a child file or folder
         """
 
+
 class IUniqueResourceRequest(Interface):
     """Marker interface for requests to ++unique++<id>"""
+
+
+class IPloneResourceCreatedEvent(IObjectCreatedEvent):
+    """An resource has been created."""
+
+
+class IPloneResourceModifiedEvent(IObjectModifiedEvent):
+    """An resource has been created."""
