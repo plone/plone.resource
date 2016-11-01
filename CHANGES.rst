@@ -10,7 +10,8 @@ Breaking changes:
 
 New features:
 
-- *add item here*
+- Fire events on resources creation/modification
+  [jpgimenez, ebrehault]
 
 Bug fixes:
 
