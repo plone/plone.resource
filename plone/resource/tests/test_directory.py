@@ -2,8 +2,13 @@
 import os.path
 import unittest2 as unittest
 from Acquisition import aq_base
+from plone.resource.events import PloneResourceCreatedEvent
+from plone.resource.events import PloneResourceModifiedEvent
+from plone.resource.interfaces import IPloneResourceCreatedEvent
+from plone.resource.interfaces import IPloneResourceModifiedEvent
 from Products.BTreeFolder2.BTreeFolder2 import BTreeFolder2
-
+from zope.component import adapter
+from zope.component import provideHandler
 
 class TestPersistentResourceDirectory(unittest.TestCase):
 
@@ -188,6 +193,34 @@ class TestPersistentResourceDirectory(unittest.TestCase):
         dir['demo']['foo']['d2'] = d1
 
         self.assertEqual(dir['demo']['foo']['d2'].__name__, 'd2')
+
+    def test_events(self):
+        events = []
+
+        @adapter(IPloneResourceCreatedEvent)
+        def _handleFileCreated(event):
+            events.append(event)
+        provideHandler(_handleFileCreated)
+
+        @adapter(IPloneResourceModifiedEvent)
+        def _handleFileModified(event):
+            events.append(event)
+        provideHandler(_handleFileModified)
+
+        dir = self._makeOne()
+        dir.writeFile('test', 'my test')
+        dir.writeFile('test', 'my test is modified')
+        self.assertTrue(isinstance(events[0], PloneResourceCreatedEvent))
+        self.assertEqual(
+            str(events[0].object), 
+            'my test'
+        )
+        self.assertTrue(isinstance(events[1], PloneResourceModifiedEvent))
+        self.assertEqual(
+            str(events[1].object), 
+            'my test is modified'
+        )
+
 
 class TestFilesystemResourceDirectory(unittest.TestCase):
 

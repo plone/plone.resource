@@ -2,6 +2,8 @@
 from Acquisition import aq_base, aq_parent
 from OFS.Image import File
 from OFS.interfaces import IObjectManager
+from plone.resource.events import PloneResourceCreatedEvent
+from plone.resource.events import PloneResourceModifiedEvent
 from plone.resource.file import FilesystemFile
 from plone.resource.interfaces import IResourceDirectory
 from plone.resource.interfaces import IWritableResourceDirectory
@@ -10,6 +12,7 @@ from Products.CMFCore.utils import getToolByName
 from StringIO import StringIO
 from zExceptions import Forbidden
 from zExceptions import NotFound
+from zope.event import notify
 from zope.interface import implementer
 from zope.site.hooks import getSite
 import os.path
@@ -160,7 +163,12 @@ class PersistentResourceDirectory(object):
         container = self.context.unrestrictedTraverse(basepath)
         if filename in container:
             container._delOb(filename)
+            event = PloneResourceModifiedEvent
+        else:
+            event = PloneResourceCreatedEvent
         container._setOb(filename, f)
+        obj = container._getOb(filename)
+        notify(event(obj))
 
     def importZip(self, f):
         if not isinstance(f, zipfile.ZipFile):
