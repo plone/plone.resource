@@ -4,18 +4,10 @@ Changelog
 1.2 (unreleased)
 ----------------
 
-Breaking changes:
-
-- *add item here*
-
 New features:
 
 - Fire events on resources creation/modification
   [jpgimenez, ebrehault]
-
-Bug fixes:
-
-- *add item here*
 
 
 1.1 (2016-10-04)
