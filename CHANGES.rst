@@ -14,7 +14,8 @@ New features:
 
 Bug fixes:
 
-- *add item here*
+- 'unittest2' is a test dependency, make this explicit in setup.py.
+  [jensens]
 
 
 1.2 (2016-11-09)
