@@ -4,14 +4,6 @@ Changelog
 1.2.1 (unreleased)
 ------------------
 
-Breaking changes:
-
-- *add item here*
-
-New features:
-
-- *add item here*
-
 Bug fixes:
 
 - 'unittest2' is a test dependency, make this explicit in setup.py.
