@@ -14,8 +14,8 @@ New features:
 
 Bug fixes:
 
-- *add item here*
-
+- Require unittest2 only if we use Python < 2.7
+  [ale-rt]
 
 1.2.1 (2016-12-30)
 ------------------

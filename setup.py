@@ -2,7 +2,17 @@
 from setuptools import find_packages
 from setuptools import setup
 
+import sys
+
+
 version = '1.2.2.dev0'
+
+test_requires = [
+    'plone.app.testing',
+]
+if sys.version_info < (2, 7):
+    test_requires.append('unittest2')
+
 
 setup(
     name='plone.resource',
@@ -46,10 +56,7 @@ setup(
         'Zope2',
     ],
     extras_require={
-        'test': [
-	    'plone.app.testing',
-            'unittest2',
-        ]
+        'test': test_requires,
     },
     entry_points="""
     [z3c.autoinclude.plugin]
