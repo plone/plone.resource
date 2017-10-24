@@ -2,17 +2,12 @@
 from setuptools import find_packages
 from setuptools import setup
 
-import sys
 
-
-version = '1.2.2.dev0'
+version = '2.0.0.dev0'
 
 test_requires = [
     'plone.app.testing',
 ]
-if sys.version_info < (2, 7):
-    test_requires.append('unittest2')
-
 
 setup(
     name='plone.resource',
@@ -25,11 +20,9 @@ setup(
     ),
     classifiers=[
         "Framework :: Plone",
-        "Framework :: Plone :: 4.3",
         "Framework :: Plone :: 5.0",
         "Framework :: Plone :: 5.1",
         "Programming Language :: Python",
-        "Programming Language :: Python :: 2.6",
         "Programming Language :: Python :: 2.7",
     ],
     keywords='plone resource',

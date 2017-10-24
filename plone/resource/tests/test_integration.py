@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
-import unittest2 as unittest
-from plone.resource.testing import PLONE_RESOURCE_INTEGRATION_TESTING
 from plone.resource.interfaces import IResourceDirectory
+from plone.resource.testing import PLONE_RESOURCE_INTEGRATION_TESTING
+
+import unittest
 
 
 class IntegrationTestCase(unittest.TestCase):

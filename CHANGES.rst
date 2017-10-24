@@ -1,12 +1,13 @@
 Changelog
 =========
 
-1.2.2 (unreleased)
+2.0.0 (unreleased)
 ------------------
 
 Breaking changes:
 
-- *add item here*
+- Remove Python2.6 support.
+  [ale-rt]
 
 New features:
 
@@ -14,8 +15,7 @@ New features:
 
 Bug fixes:
 
-- Require unittest2 only if we use Python < 2.7
-  [ale-rt]
+- *add item here*
 
 1.2.1 (2016-12-30)
 ------------------
