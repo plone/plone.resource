@@ -1,6 +1,4 @@
 # -*- coding: utf-8 -*-
-import os.path
-import unittest2 as unittest
 from Acquisition import aq_base
 from plone.resource.events import PloneResourceCreatedEvent
 from plone.resource.events import PloneResourceModifiedEvent
@@ -9,6 +7,10 @@ from plone.resource.interfaces import IPloneResourceModifiedEvent
 from Products.BTreeFolder2.BTreeFolder2 import BTreeFolder2
 from zope.component import adapter
 from zope.component import provideHandler
+
+import os.path
+import unittest
+
 
 class TestPersistentResourceDirectory(unittest.TestCase):
 

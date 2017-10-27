@@ -1,18 +1,20 @@
 # -*- coding: utf-8 -*-
-import unittest2 as unittest
-from plone.testing import zca, z2
-from plone.resource.testing import DEMO_TRAVERSER_INTEGRATION_TESTING
-
-import os.path
-from zExceptions import NotFound
-from zope.component import provideUtility
-from Products.BTreeFolder2.BTreeFolder2 import BTreeFolder2
+from plone.resource.directory import FilesystemResourceDirectory
+from plone.resource.directory import PersistentResourceDirectory
+from plone.resource.file import FilesystemFile
 from plone.resource.interfaces import IResourceDirectory
 from plone.resource.interfaces import IUniqueResourceRequest
-from plone.resource.directory import PersistentResourceDirectory
-from plone.resource.directory import FilesystemResourceDirectory
-from plone.resource.file import FilesystemFile
+from plone.resource.testing import DEMO_TRAVERSER_INTEGRATION_TESTING
+from plone.testing import z2
+from plone.testing import zca
+from Products.BTreeFolder2.BTreeFolder2 import BTreeFolder2
 from zExceptions import Forbidden
+from zExceptions import NotFound
+from zope.component import provideUtility
+
+import os.path
+import unittest
+
 
 base_path = os.path.dirname(__file__)
 test_dir_path = os.path.join(base_path, 'resources')

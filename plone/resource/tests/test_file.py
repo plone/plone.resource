@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
-import unittest2 as unittest
 from plone.testing.zca import UNIT_TESTING
+
+import unittest
+
 
 class TestFilesystemResourceDirectory(unittest.TestCase):
 
