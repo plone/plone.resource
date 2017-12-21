@@ -215,8 +215,7 @@ class FilesystemResourceDirectory(object):
         self._parent = value
 
     def __repr__(self):
-        subpath = self.directory[self.directory.index(self.__name__):]
-        return '<%s object at %s>' % (self.__class__.__name__, subpath)
+        return '<%s object at %s>' % (self.__class__.__name__, self.__name__)
 
     def _resolveSubpath(self, path):
         parts = path.split('/')

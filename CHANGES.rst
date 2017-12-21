@@ -14,7 +14,11 @@ New features:
 
 Bug fixes:
 
-- *add item here*
+- Fixed 'ValueError: substring not found' in ``FilesystemResourceDirectory`` representation.
+  This happens when you register a directory with a name that differs from the directory name.
+  Visiting the ``/++theme++myname`` url would then give this error.
+  We also avoid listing a longer part of the path in case the directory name happens to be in the path multiple times.
+  [maurits]
 
 
 1.2.1 (2016-12-30)
