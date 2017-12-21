@@ -214,27 +214,32 @@ class TestPersistentResourceDirectory(unittest.TestCase):
         dir.writeFile('test', 'my test is modified')
         self.assertTrue(isinstance(events[0], PloneResourceCreatedEvent))
         self.assertEqual(
-            str(events[0].object), 
+            str(events[0].object),
             'my test'
         )
         self.assertTrue(isinstance(events[1], PloneResourceModifiedEvent))
         self.assertEqual(
-            str(events[1].object), 
+            str(events[1].object),
             'my test is modified'
         )
 
 
 class TestFilesystemResourceDirectory(unittest.TestCase):
 
-    def _makeOne(self):
+    def _makeOne(self, name=None):
         from plone.resource.directory import FilesystemResourceDirectory
         path = os.path.join(os.path.dirname(__file__), 'resources')
-        return FilesystemResourceDirectory(path)
+        return FilesystemResourceDirectory(path, name=name)
 
     def test_repr(self):
         dir = self._makeOne()
-        subpath = dir.directory[dir.directory.index(dir.__name__):]
-        s = '<FilesystemResourceDirectory object at %s>' % subpath
+        s = '<FilesystemResourceDirectory object at resources>'
+        self.assertEqual(s, repr(dir))
+
+    def test_repr(self):
+        dir = self._makeOne(name='something-else')
+        s = '<FilesystemResourceDirectory object at something-else>'
+        # This used to give a ValueError: substring not found
         self.assertEqual(s, repr(dir))
 
     def test_publishTraverse_directory(self):
