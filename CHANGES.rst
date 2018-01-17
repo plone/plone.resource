@@ -4,14 +4,6 @@ Changelog
 1.2.3 (unreleased)
 ------------------
 
-Breaking changes:
-
-- *add item here*
-
-New features:
-
-- *add item here*
-
 Bug fixes:
 
 - Fixed duplicate test name overriding earlier test.  [maurits]
