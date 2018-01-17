@@ -231,12 +231,12 @@ class TestFilesystemResourceDirectory(unittest.TestCase):
         path = os.path.join(os.path.dirname(__file__), 'resources')
         return FilesystemResourceDirectory(path, name=name)
 
-    def test_repr(self):
+    def test_repr_default(self):
         dir = self._makeOne()
         s = '<FilesystemResourceDirectory object at resources>'
         self.assertEqual(s, repr(dir))
 
-    def test_repr(self):
+    def test_repr_other_name(self):
         dir = self._makeOne(name='something-else')
         s = '<FilesystemResourceDirectory object at something-else>'
         # This used to give a ValueError: substring not found
