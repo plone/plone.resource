@@ -2,7 +2,7 @@
 from setuptools import find_packages
 from setuptools import setup
 
-version = '1.2.2.dev0'
+version = '1.2.2'
 
 setup(
     name='plone.resource',
