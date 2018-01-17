@@ -9,10 +9,6 @@ Breaking changes:
 - Remove Python2.6 support.
   [ale-rt]
 
-New features:
-
-- *add item here*
-
 Bug fixes:
 
 - Fixed 'ValueError: substring not found' in ``FilesystemResourceDirectory`` representation.
