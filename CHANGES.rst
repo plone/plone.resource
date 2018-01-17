@@ -14,7 +14,7 @@ New features:
 
 Bug fixes:
 
-- *add item here*
+- Fixed duplicate test name overriding earlier test.  [maurits]
 
 
 1.2.2 (2018-01-17)
