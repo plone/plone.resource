@@ -28,12 +28,13 @@ To get this manifest from an open file pointer ``fp``, do::
 ``bar``. ``title`` and ``description`` will be ``None`` if not found in the
 manifest. ``bar`` will be ``baz`` if not found.
 """
-from ConfigParser import SafeConfigParser
+import logging
+
 from plone.resource.directory import FILTERS
 from plone.resource.interfaces import IResourceDirectory
 from plone.resource.utils import iterDirectoriesOfType
+from six.moves.configparser import SafeConfigParser
 from zope.component import getUtility
-import logging
 
 MANIFEST_FILENAME = 'manifest.cfg'
 

@@ -1,18 +1,17 @@
 # -*- coding: utf-8 -*-
-from OFS.Image import File
-from plone.resource.directory import FilesystemResourceDirectory
-from plone.resource.directory import PersistentResourceDirectory
-from plone.resource.interfaces import IResourceDirectory
-from plone.resource.testing import DEMO_TRAVERSER_INTEGRATION_TESTING
-from plone.testing import zca
-from Products.BTreeFolder2.BTreeFolder2 import BTreeFolder2
-from StringIO import StringIO
-from zope.component import provideUtility
-
 import os.path
 import unittest
 import zipfile
 
+from OFS.Image import File
+from plone.resource.directory import (FilesystemResourceDirectory,
+                                      PersistentResourceDirectory)
+from plone.resource.interfaces import IResourceDirectory
+from plone.resource.testing import DEMO_TRAVERSER_INTEGRATION_TESTING
+from plone.testing import zca
+from Products.BTreeFolder2.BTreeFolder2 import BTreeFolder2
+from six import StringIO
+from zope.component import provideUtility
 
 base_path = os.path.dirname(__file__)
 test_dir_path = os.path.join(base_path, 'resources')
