@@ -36,6 +36,7 @@ from plone.resource.utils import iterDirectoriesOfType
 from six.moves.configparser import SafeConfigParser
 from zope.component import getUtility
 
+
 MANIFEST_FILENAME = 'manifest.cfg'
 
 LOGGER = logging.getLogger('plone.resource.manifest')

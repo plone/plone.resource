@@ -4,21 +4,24 @@ import re
 import zipfile
 
 import six
-from Acquisition import aq_base, aq_parent
+from Acquisition import aq_base
+from Acquisition import aq_parent
 from OFS.Image import File
 from OFS.interfaces import IObjectManager
-from plone.resource.events import (PloneResourceCreatedEvent,
-                                   PloneResourceModifiedEvent)
+from plone.resource.events import PloneResourceCreatedEvent
+from plone.resource.events import PloneResourceModifiedEvent
 from plone.resource.file import FilesystemFile
-from plone.resource.interfaces import (IResourceDirectory,
-                                       IWritableResourceDirectory)
+from plone.resource.interfaces import IResourceDirectory
+from plone.resource.interfaces import IWritableResourceDirectory
 from Products.BTreeFolder2.BTreeFolder2 import BTreeFolder2
 from Products.CMFCore.utils import getToolByName
 from six import StringIO
-from zExceptions import Forbidden, NotFound
+from zExceptions import Forbidden
+from zExceptions import NotFound
 from zope.event import notify
 from zope.interface import implementer
 from zope.site.hooks import getSite
+
 
 # filter dot files, Mac resource forks
 FILTERS = (r'\..*', '__MACOSX')
