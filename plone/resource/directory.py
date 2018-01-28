@@ -1,5 +1,11 @@
 # -*- coding: utf-8 -*-
-from Acquisition import aq_base, aq_parent
+import os.path
+import re
+import zipfile
+
+import six
+from Acquisition import aq_base
+from Acquisition import aq_parent
 from OFS.Image import File
 from OFS.interfaces import IObjectManager
 from plone.resource.events import PloneResourceCreatedEvent
@@ -9,15 +15,13 @@ from plone.resource.interfaces import IResourceDirectory
 from plone.resource.interfaces import IWritableResourceDirectory
 from Products.BTreeFolder2.BTreeFolder2 import BTreeFolder2
 from Products.CMFCore.utils import getToolByName
-from StringIO import StringIO
+from six import StringIO
 from zExceptions import Forbidden
 from zExceptions import NotFound
 from zope.event import notify
 from zope.interface import implementer
 from zope.site.hooks import getSite
-import os.path
-import re
-import zipfile
+
 
 # filter dot files, Mac resource forks
 FILTERS = (r'\..*', '__MACOSX')
@@ -46,7 +50,7 @@ class PersistentResourceDirectory(object):
                                       '/'.join(self.context.getPhysicalPath()))
 
     def publishTraverse(self, request, name):
-        if isinstance(name, unicode):
+        if isinstance(name, six.text_type):
             name = name.encode('utf-8')
 
         context = self.context
@@ -70,7 +74,7 @@ class PersistentResourceDirectory(object):
         return self.publishTraverse(None, name)
 
     def __setitem__(self, name, item):
-        if isinstance(name, unicode):
+        if isinstance(name, six.text_type):
             name = name.encode('utf-8')
 
         if IResourceDirectory.providedBy(item):
@@ -142,7 +146,7 @@ class PersistentResourceDirectory(object):
         names = path.strip('/').split('/')
         for name in names:
             if name not in parent:
-                if isinstance(name, unicode):
+                if isinstance(name, six.text_type):
                     name = name.encode('utf-8')
                 f = BTreeFolder2(name)
                 parent._setOb(name, f)
@@ -153,7 +157,7 @@ class PersistentResourceDirectory(object):
         if basepath:
             self.makeDirectory(basepath)
         filename = path.split('/')[-1]
-        if isinstance(filename, unicode):
+        if isinstance(filename, six.text_type):
             filename = filename.encode('utf-8')
         f = File(filename, filename, data)
         ct = f.getContentType()

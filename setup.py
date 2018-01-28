@@ -49,6 +49,7 @@ setup(
         'zope.schema',
         'zope.traversing',
         'Zope2',
+        'six',
     ],
     extras_require={
         'test': test_requires,

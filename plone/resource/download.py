@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from StringIO import StringIO
+from six import StringIO
 from zope.publisher.browser import BrowserView
 
 

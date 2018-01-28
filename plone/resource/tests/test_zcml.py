@@ -1,14 +1,13 @@
 # -*- coding: utf-8 -*-
+import os.path
+import unittest
+
 from plone.resource.interfaces import IResourceDirectory
-from StringIO import StringIO
+from six import StringIO
 from zope.component import getUtility
 from zope.component.testing import tearDown
 from zope.configuration.exceptions import ConfigurationError
-from zope.configuration.xmlconfig import xmlconfig
-from zope.configuration.xmlconfig import XMLConfig
-
-import os.path
-import unittest
+from zope.configuration.xmlconfig import XMLConfig, xmlconfig
 
 
 def clearZCML(test=None):
