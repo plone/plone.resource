@@ -31,7 +31,7 @@ setup(
     author='David Glick, Plone Foundation',
     author_email='davidglick@groundwire.org',
     url='https://pypi.python.org/pypi/plone.resource',
-    license='GPL',
+    license='GPL version 2 or later',
     packages=find_packages(exclude=['ez_setup']),
     namespace_packages=['plone'],
     include_package_data=True,
