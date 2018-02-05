@@ -4,17 +4,9 @@ Changelog
 2.0.1 (unreleased)
 ------------------
 
-Breaking changes:
-
-- *add item here*
-
 New features:
 
 - Add python 2 / 3 compatibility
-
-Bug fixes:
-
-- *add item here*
 
 
 2.0.0 (2018-01-17)
