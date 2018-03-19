@@ -58,7 +58,7 @@ def registerResourceDirectory(_context, directory, name=None, type=None):
         raise ConfigurationError('Traversing to parent directories '
                                  'via .. is not allowed.')
     if not os.path.exists(directory):
-        raise IOError, 'Directory not found: %s' % directory
+        raise IOError('Directory not found: %s' % directory)
 
     if name is None and _context.package:
         name = _context.package.__name__
