@@ -50,7 +50,7 @@ class PersistentResourceDirectory(object):
                                       '/'.join(self.context.getPhysicalPath()))
 
     def publishTraverse(self, request, name):
-        if isinstance(name, six.text_type):
+        if six.PY2 and isinstance(name, six.text_type):
             name = name.encode('utf-8')
 
         context = self.context
@@ -74,7 +74,7 @@ class PersistentResourceDirectory(object):
         return self.publishTraverse(None, name)
 
     def __setitem__(self, name, item):
-        if isinstance(name, six.text_type):
+        if six.PY2 and isinstance(name, six.text_type):
             name = name.encode('utf-8')
 
         if IResourceDirectory.providedBy(item):
@@ -146,7 +146,7 @@ class PersistentResourceDirectory(object):
         names = path.strip('/').split('/')
         for name in names:
             if name not in parent:
-                if isinstance(name, six.text_type):
+                if six.PY2 and isinstance(name, six.text_type):
                     name = name.encode('utf-8')
                 f = BTreeFolder2(name)
                 parent._setOb(name, f)
@@ -157,8 +157,6 @@ class PersistentResourceDirectory(object):
         if basepath:
             self.makeDirectory(basepath)
         filename = path.split('/')[-1]
-        if isinstance(filename, six.text_type):
-            filename = filename.encode('utf-8')
         f = File(filename, filename, data)
         ct = f.getContentType()
         if ct.startswith('text/') or ct == 'application/javascript':
