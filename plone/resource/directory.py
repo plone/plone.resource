@@ -1,11 +1,7 @@
 # -*- coding: utf-8 -*-
-import os.path
-import re
-import zipfile
-
-import six
 from Acquisition import aq_base
 from Acquisition import aq_parent
+from io import StringIO
 from OFS.Image import File
 from OFS.interfaces import IObjectManager
 from plone.resource.events import PloneResourceCreatedEvent
@@ -15,12 +11,16 @@ from plone.resource.interfaces import IResourceDirectory
 from plone.resource.interfaces import IWritableResourceDirectory
 from Products.BTreeFolder2.BTreeFolder2 import BTreeFolder2
 from Products.CMFCore.utils import getToolByName
-from six import StringIO
 from zExceptions import Forbidden
 from zExceptions import NotFound
 from zope.event import notify
 from zope.interface import implementer
 from zope.site.hooks import getSite
+
+import os.path
+import re
+import six
+import zipfile
 
 
 # filter dot files, Mac resource forks
@@ -245,7 +245,7 @@ class FilesystemResourceDirectory(object):
 
     def openFile(self, path):
         filepath = self._resolveSubpath(path)
-        return open(filepath, 'rb')
+        return StringIO(open(filepath, 'rb').read().decode())
 
     def readFile(self, path):
         return self.openFile(path).read()
