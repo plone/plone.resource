@@ -245,10 +245,10 @@ class FilesystemResourceDirectory(object):
 
     def openFile(self, path):
         filepath = self._resolveSubpath(path)
+        mode = u'r'
         if six.PY2:
-            # XXX: why we need StringIO, can't we just return the file?
-            return StringIO(open(filepath, 'rb').read())
-        return StringIO(open(filepath, 'rb').read().decode())
+            mode += u'b'
+        return open(filepath, mode)
 
     def readFile(self, path):
         return self.openFile(path).read()
