@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 from Acquisition import aq_base
 from Acquisition import aq_parent
-from io import StringIO
 from OFS.Image import File
 from OFS.interfaces import IObjectManager
 from plone.resource.events import PloneResourceCreatedEvent
@@ -11,6 +10,7 @@ from plone.resource.interfaces import IResourceDirectory
 from plone.resource.interfaces import IWritableResourceDirectory
 from Products.BTreeFolder2.BTreeFolder2 import BTreeFolder2
 from Products.CMFCore.utils import getToolByName
+from six import StringIO
 from zExceptions import Forbidden
 from zExceptions import NotFound
 from zope.event import notify
@@ -245,6 +245,9 @@ class FilesystemResourceDirectory(object):
 
     def openFile(self, path):
         filepath = self._resolveSubpath(path)
+        if six.PY2:
+            # XXX: why we need StringIO, can't we just return the file?
+            return StringIO(open(filepath, 'rb').read())
         return StringIO(open(filepath, 'rb').read().decode())
 
     def readFile(self, path):
