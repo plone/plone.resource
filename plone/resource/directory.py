@@ -1,9 +1,4 @@
 # -*- coding: utf-8 -*-
-import os.path
-import re
-import zipfile
-
-import six
 from Acquisition import aq_base
 from Acquisition import aq_parent
 from OFS.Image import File
@@ -21,6 +16,11 @@ from zExceptions import NotFound
 from zope.event import notify
 from zope.interface import implementer
 from zope.site.hooks import getSite
+
+import os.path
+import re
+import six
+import zipfile
 
 
 # filter dot files, Mac resource forks
@@ -50,7 +50,7 @@ class PersistentResourceDirectory(object):
                                       '/'.join(self.context.getPhysicalPath()))
 
     def publishTraverse(self, request, name):
-        if isinstance(name, six.text_type):
+        if six.PY2 and isinstance(name, six.text_type):
             name = name.encode('utf-8')
 
         context = self.context
@@ -74,7 +74,7 @@ class PersistentResourceDirectory(object):
         return self.publishTraverse(None, name)
 
     def __setitem__(self, name, item):
-        if isinstance(name, six.text_type):
+        if six.PY2 and isinstance(name, six.text_type):
             name = name.encode('utf-8')
 
         if IResourceDirectory.providedBy(item):
@@ -146,7 +146,7 @@ class PersistentResourceDirectory(object):
         names = path.strip('/').split('/')
         for name in names:
             if name not in parent:
-                if isinstance(name, six.text_type):
+                if six.PY2 and isinstance(name, six.text_type):
                     name = name.encode('utf-8')
                 f = BTreeFolder2(name)
                 parent._setOb(name, f)
@@ -157,8 +157,6 @@ class PersistentResourceDirectory(object):
         if basepath:
             self.makeDirectory(basepath)
         filename = path.split('/')[-1]
-        if isinstance(filename, six.text_type):
-            filename = filename.encode('utf-8')
         f = File(filename, filename, data)
         ct = f.getContentType()
         if ct.startswith('text/') or ct == 'application/javascript':
@@ -247,7 +245,10 @@ class FilesystemResourceDirectory(object):
 
     def openFile(self, path):
         filepath = self._resolveSubpath(path)
-        return open(filepath, 'rb')
+        mode = u'r'
+        if six.PY2:
+            mode += u'b'
+        return open(filepath, mode)
 
     def readFile(self, path):
         return self.openFile(path).read()
