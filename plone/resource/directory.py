@@ -96,7 +96,8 @@ class PersistentResourceDirectory(object):
             f = self.context.unrestrictedTraverse(path)
         except Exception as e:
             raise IOError(str(e))
-
+        if isinstance(f.data, six.binary_type):
+            return f.data.decode()
         return str(f.data)
 
     def listDirectory(self):
