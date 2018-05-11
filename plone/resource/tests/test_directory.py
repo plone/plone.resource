@@ -1,12 +1,21 @@
 # -*- coding: utf-8 -*-
 from Acquisition import aq_base
+from OFS.Image import File
+from plone.resource.directory import FilesystemResourceDirectory
+from plone.resource.directory import PersistentResourceDirectory
 from plone.resource.events import PloneResourceCreatedEvent
 from plone.resource.events import PloneResourceModifiedEvent
 from plone.resource.interfaces import IPloneResourceCreatedEvent
 from plone.resource.interfaces import IPloneResourceModifiedEvent
 from Products.BTreeFolder2.BTreeFolder2 import BTreeFolder2
+from StringIO import StringIO
+from zExceptions import NotFound
+from zipfile import ZipFile
 from zope.component import adapter
 from zope.component import provideHandler
+from zope.site.testing import createSiteManager
+from zope.site.testing import siteSetUp
+from zope.site.testing import siteTearDown
 
 import os.path
 import unittest
@@ -18,20 +27,15 @@ class TestPersistentResourceDirectory(unittest.TestCase):
         root = BTreeFolder2('portal_resources')
         root._setOb('demo', BTreeFolder2('demo'))
         root.demo._setOb('foo', BTreeFolder2('foo'))
-
-        from StringIO import StringIO
-        from OFS.Image import File
         file = File('test.html', 'test.html', StringIO('asdf'))
         root.demo.foo._setOb('test.html', file)
 
-        from plone.resource.directory import PersistentResourceDirectory
         return PersistentResourceDirectory(root)
 
     def _assertSameUnwrapped(self, a, b):
         self.assertTrue(aq_base(a) is aq_base(b))
 
     def test_ctor_implicit_context(self):
-        from zope.site.testing import siteSetUp, createSiteManager, siteTearDown
         siteSetUp()
 
         site = BTreeFolder2('site')
@@ -39,7 +43,6 @@ class TestPersistentResourceDirectory(unittest.TestCase):
         root = self._makeOne().context
         site._setOb('portal_resources', root)
 
-        from plone.resource.directory import PersistentResourceDirectory
         try:
             dir = PersistentResourceDirectory()
             # context should be stored unwrapped
@@ -68,7 +71,6 @@ class TestPersistentResourceDirectory(unittest.TestCase):
 
     def test_publishTraverse_not_found(self):
         dir = self._makeOne()
-        from zExceptions import NotFound
         self.assertRaises(NotFound, dir.publishTraverse, None, 'baz')
 
     def test_getitem(self):
@@ -138,7 +140,6 @@ class TestPersistentResourceDirectory(unittest.TestCase):
 
     def test_importZip_takes_ZipFile(self):
         dir = self._makeOne()
-        from zipfile import ZipFile
         f = ZipFile(os.path.join(os.path.dirname(__file__), 'resources.zip'))
         dir.importZip(f)
         self.assertEqual('from zip', dir.readFile('demo/foo/test.html'))
@@ -227,7 +228,6 @@ class TestPersistentResourceDirectory(unittest.TestCase):
 class TestFilesystemResourceDirectory(unittest.TestCase):
 
     def _makeOne(self, name=None):
-        from plone.resource.directory import FilesystemResourceDirectory
         path = os.path.join(os.path.dirname(__file__), 'resources')
         return FilesystemResourceDirectory(path, name=name)
 
@@ -255,7 +255,6 @@ class TestFilesystemResourceDirectory(unittest.TestCase):
 
     def test_publishTraverse_not_found(self):
         dir = self._makeOne()
-        from zExceptions import NotFound
         self.assertRaises(NotFound, dir.publishTraverse, None, 'baz')
 
     def test_getitem(self):
