@@ -4,10 +4,10 @@ from dateutil.tz import tzlocal
 from email.utils import formatdate
 from z3c.caching.interfaces import ILastModified
 from zope.component import adapter
+from zope.component import queryUtility
 from zope.filerepresentation.interfaces import IRawReadFile
 from zope.interface import implementer
 from ZPublisher.Iterators import filestream_iterator
-from zope.component import queryUtility
 
 import datetime
 import mimetypes

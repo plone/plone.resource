@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from six import StringIO
+from io import BytesIO
 from zope.publisher.browser import BrowserView
 
 
@@ -14,7 +14,7 @@ class DownloadView(BrowserView):
         # the output stream, but this is awkward with the ZPublisher response
         # interface. For now, we write the zipfile to a stream in memory.
 
-        out = StringIO()
+        out = BytesIO()
         self.context.exportZip(out)
 
         response.setHeader('Content-Type', 'application/zip')
@@ -23,5 +23,4 @@ class DownloadView(BrowserView):
             'attachment; filename="%s.zip"' % name
         )
         response.setHeader('Content-Length', len(out.getvalue()))
-
         response.write(out.getvalue())

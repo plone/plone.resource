@@ -1,6 +1,19 @@
 # -*- coding: utf-8 -*-
+from dateutil.tz import tzlocal
+from email.utils import formatdate
+from plone.resource.file import FileLastModified
+from plone.resource.file import FilesystemFile
+from plone.resource.file import rawReadFile
 from plone.testing.zca import UNIT_TESTING
+from z3c.caching.interfaces import ILastModified
+from zope.component import provideAdapter
+from zope.filerepresentation.interfaces import IRawReadFile
+from zope.publisher.browser import TestRequest
 
+import datetime
+import io
+import os.path
+import six
 import unittest
 
 
@@ -9,11 +22,6 @@ class TestFilesystemResourceDirectory(unittest.TestCase):
     layer = UNIT_TESTING
 
     def test_render(self):
-        import os.path
-        from email.utils import formatdate
-        from plone.resource.file import FilesystemFile
-        from zope.publisher.browser import TestRequest
-
         name = 'test.html'
         path = os.path.join(os.path.dirname(__file__), 'resources', 'demo', 'foo', name)
         mtime = os.path.getmtime(path)
@@ -23,26 +31,13 @@ class TestFilesystemResourceDirectory(unittest.TestCase):
         f = FilesystemFile(None, request, path, name)
         iterator = f()
 
-        data = ''.join(iterator)
-        self.assertEqual(data, 'asdf')
+        data = b''.join(iterator)
+        self.assertEqual(data, b'asdf')
         self.assertEqual(request.response.getHeader('Content-Type'), 'text/html')
         self.assertEqual(request.response.getHeader('Content-Length'), '4')
         self.assertEqual(request.response.getHeader('Last-Modified'), formatdate(mtime, usegmt=True))
 
     def test_last_modified(self):
-        import os.path
-        import datetime
-
-        from dateutil.tz import tzlocal
-
-        from zope.component import provideAdapter
-        from zope.publisher.browser import TestRequest
-
-        from plone.resource.file import FilesystemFile
-        from plone.resource.file import FileLastModified
-
-        from z3c.caching.interfaces import ILastModified
-
         provideAdapter(FileLastModified)
 
         name = 'test.html'
@@ -59,16 +54,6 @@ class TestFilesystemResourceDirectory(unittest.TestCase):
         self.assertEqual(lastModified(), mdate)
 
     def test_raw_read_file(self):
-        import os.path
-
-        from zope.component import provideAdapter
-        from zope.publisher.browser import TestRequest
-
-        from plone.resource.file import FilesystemFile
-        from plone.resource.file import rawReadFile
-
-        from zope.filerepresentation.interfaces import IRawReadFile
-
         provideAdapter(rawReadFile)
 
         name = 'test.html'
@@ -80,7 +65,10 @@ class TestFilesystemResourceDirectory(unittest.TestCase):
 
         rf = IRawReadFile(f)
 
-        self.assertTrue(isinstance(rf, file))
-        self.assertEqual(rf.read(), 'asdf')
+        if six.PY2:
+            self.assertTrue(isinstance(rf, file))
+        else:
+            self.assertTrue(isinstance(rf, io.IOBase))
+        self.assertEqual(rf.read(), b'asdf')
 
         rf.close()
