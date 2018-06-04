@@ -4,14 +4,6 @@ Changelog
 2.0.2 (unreleased)
 ------------------
 
-Breaking changes:
-
-- *add item here*
-
-New features:
-
-- *add item here*
-
 Bug fixes:
 
 - More Python 3 fixes
