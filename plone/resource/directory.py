@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 from Acquisition import aq_base
 from Acquisition import aq_parent
-from io import BytesIO
 from OFS.Image import File
 from OFS.interfaces import IObjectManager
 from plone.resource.events import PloneResourceCreatedEvent
@@ -89,15 +88,14 @@ class PersistentResourceDirectory(object):
         return name in self.context
 
     def openFile(self, path):
-        return BytesIO(self.readFile(path))
+        return six.BytesIO(self.readFile(path))
 
     def readFile(self, path):
         try:
             f = self.context.unrestrictedTraverse(path)
         except Exception as e:
             raise IOError(str(e))
-
-        return six.binary_type(f.data)
+        return f.data
 
     def listDirectory(self):
         return [n for n in self.context.objectIds()
@@ -142,17 +140,20 @@ class PersistentResourceDirectory(object):
         zf.close()
 
     def makeDirectory(self, path):
+        if six.PY2:
+            path = path.encode('utf-8')
+
         parent = self.context
         names = path.strip('/').split('/')
         for name in names:
             if name not in parent:
-                if six.PY2 and isinstance(name, six.text_type):
-                    name = name.encode('utf-8')
                 f = BTreeFolder2(name)
                 parent._setOb(name, f)
             parent = parent[name]
 
     def writeFile(self, path, data):
+        if isinstance(data, six.text_type):
+            data = data.encode('utf8')
         basepath = '/'.join(path.split('/')[:-1])
         if basepath:
             self.makeDirectory(basepath)
