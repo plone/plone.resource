@@ -22,7 +22,7 @@ Bug fixes:
 
 Bug fixes:
 
-- More Python 3 fixes
+- More Python 3 fixes. Fix tests in py3.
   [ale, pbauer]
 
 
