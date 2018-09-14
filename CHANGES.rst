@@ -1,7 +1,7 @@
 Changelog
 =========
 
-2.0.3 (unreleased)
+2.1.0 (unreleased)
 ------------------
 
 Breaking changes:
@@ -14,7 +14,8 @@ New features:
 
 Bug fixes:
 
-- *add item here*
+- Fix tests in py3.
+  [pbauer]
 
 
 2.0.2 (2018-06-04)
@@ -22,7 +23,7 @@ Bug fixes:
 
 Bug fixes:
 
-- More Python 3 fixes. Fix tests in py3.
+- More Python 3 fixes.
   [ale, pbauer]
 
 
