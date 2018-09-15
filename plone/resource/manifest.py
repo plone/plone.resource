@@ -28,13 +28,14 @@ To get this manifest from an open file pointer ``fp``, do::
 ``bar``. ``title`` and ``description`` will be ``None`` if not found in the
 manifest. ``bar`` will be ``baz`` if not found.
 """
-import logging
-
 from plone.resource.directory import FILTERS
 from plone.resource.interfaces import IResourceDirectory
 from plone.resource.utils import iterDirectoriesOfType
 from six.moves.configparser import SafeConfigParser
 from zope.component import getUtility
+
+import logging
+import six
 
 
 MANIFEST_FILENAME = 'manifest.cfg'
@@ -79,7 +80,13 @@ def getManifest(fp, format, defaults=None):
         defaults = format.defaults
 
     parser = SafeConfigParser()
-    parser.readfp(fp)
+    if six.PY2:
+        parser.readfp(fp)
+    else:
+        data = fp.read()
+        if isinstance(data, six.binary_type):
+            data = data.decode()
+        parser.read_string(data)
 
     results = {}
     for key in format.keys:

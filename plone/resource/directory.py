@@ -10,7 +10,6 @@ from plone.resource.interfaces import IResourceDirectory
 from plone.resource.interfaces import IWritableResourceDirectory
 from Products.BTreeFolder2.BTreeFolder2 import BTreeFolder2
 from Products.CMFCore.utils import getToolByName
-from six import StringIO
 from zExceptions import Forbidden
 from zExceptions import NotFound
 from zope.event import notify
@@ -89,15 +88,16 @@ class PersistentResourceDirectory(object):
         return name in self.context
 
     def openFile(self, path):
-        return StringIO(self.readFile(path))
+        return six.BytesIO(self.readFile(path))
 
     def readFile(self, path):
         try:
             f = self.context.unrestrictedTraverse(path)
         except Exception as e:
             raise IOError(str(e))
-
-        return str(f.data)
+        if isinstance(f.data, six.binary_type):
+            return f.data
+        return f.data.__bytes__()
 
     def listDirectory(self):
         return [n for n in self.context.objectIds()
@@ -142,17 +142,20 @@ class PersistentResourceDirectory(object):
         zf.close()
 
     def makeDirectory(self, path):
+        if six.PY2:
+            path = path.encode('utf-8')
+
         parent = self.context
         names = path.strip('/').split('/')
         for name in names:
             if name not in parent:
-                if six.PY2 and isinstance(name, six.text_type):
-                    name = name.encode('utf-8')
                 f = BTreeFolder2(name)
                 parent._setOb(name, f)
             parent = parent[name]
 
     def writeFile(self, path, data):
+        if isinstance(data, six.text_type):
+            data = data.encode('utf8')
         basepath = '/'.join(path.split('/')[:-1])
         if basepath:
             self.makeDirectory(basepath)
@@ -245,13 +248,11 @@ class FilesystemResourceDirectory(object):
 
     def openFile(self, path):
         filepath = self._resolveSubpath(path)
-        mode = u'r'
-        if six.PY2:
-            mode += u'b'
-        return open(filepath, mode)
+        return open(filepath, 'rb')
 
     def readFile(self, path):
-        return self.openFile(path).read()
+        with self.openFile(path) as f:
+            return f.read()
 
     def listDirectory(self):
         names = os.listdir(self.directory)
@@ -265,23 +266,21 @@ class FilesystemResourceDirectory(object):
         return os.path.isfile(self._resolveSubpath(path))
 
     def exportZip(self, out):
-        zf = zipfile.ZipFile(out, 'w')
+        with zipfile.ZipFile(out, 'w') as zf:
+            toStrip = len(self.directory.replace(os.path.sep, '/')) + 1
 
-        toStrip = len(self.directory.replace(os.path.sep, '/')) + 1
+            for (dirpath, dirnames, filenames) in os.walk(self.directory):
+                subpath = dirpath.replace(os.path.sep, '/')[toStrip:].strip('/')
 
-        for (dirpath, dirnames, filenames) in os.walk(self.directory):
-            subpath = dirpath.replace(os.path.sep, '/')[toStrip:].strip('/')
+                for filename in filenames:
+                    path = '/'.join([subpath, filename]).strip('/')
 
-            for filename in filenames:
-                path = '/'.join([subpath, filename]).strip('/')
+                    if any(any(filter.match(n) for filter in FILTERS)
+                           for n in path.split('/')
+                           ):
+                        continue
 
-                if any(any(filter.match(n) for filter in FILTERS)
-                       for n in path.split('/')
-                       ):
-                    continue
-
-                zf.writestr(
-                    '/'.join([self.__name__, path, ]),
-                    self.readFile(path)
-                )
-        zf.close()
+                    zf.writestr(
+                        '/'.join([self.__name__, path, ]),
+                        self.readFile(path),
+                    )

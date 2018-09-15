@@ -79,8 +79,8 @@ class TraversalTestCase(unittest.TestCase):
         source = PersistentResourceDirectory(root['demo']['foo'])
         target = PersistentResourceDirectory(root['demo']['bar'])
 
-        source.writeFile('file1.txt', 'file1')
-        source.writeFile('subdir1/file2.txt', 'file2')
+        source.writeFile('file1.txt', b'file1')
+        source.writeFile('subdir1/file2.txt', b'file2')
         source.makeDirectory('subdir2')
 
         cloneResourceDirectory(source, target)

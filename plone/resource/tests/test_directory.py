@@ -1,12 +1,21 @@
 # -*- coding: utf-8 -*-
 from Acquisition import aq_base
+from io import BytesIO
+from OFS.Image import File
+from plone.resource.directory import FilesystemResourceDirectory
+from plone.resource.directory import PersistentResourceDirectory
 from plone.resource.events import PloneResourceCreatedEvent
 from plone.resource.events import PloneResourceModifiedEvent
 from plone.resource.interfaces import IPloneResourceCreatedEvent
 from plone.resource.interfaces import IPloneResourceModifiedEvent
 from Products.BTreeFolder2.BTreeFolder2 import BTreeFolder2
+from zExceptions import NotFound
+from zipfile import ZipFile
 from zope.component import adapter
 from zope.component import provideHandler
+from zope.site.testing import createSiteManager
+from zope.site.testing import siteSetUp
+from zope.site.testing import siteTearDown
 
 import os.path
 import unittest
@@ -18,20 +27,15 @@ class TestPersistentResourceDirectory(unittest.TestCase):
         root = BTreeFolder2('portal_resources')
         root._setOb('demo', BTreeFolder2('demo'))
         root.demo._setOb('foo', BTreeFolder2('foo'))
-
-        from StringIO import StringIO
-        from OFS.Image import File
-        file = File('test.html', 'test.html', StringIO('asdf'))
+        file = File('test.html', 'test.html', BytesIO(b'asdf'))
         root.demo.foo._setOb('test.html', file)
 
-        from plone.resource.directory import PersistentResourceDirectory
         return PersistentResourceDirectory(root)
 
     def _assertSameUnwrapped(self, a, b):
         self.assertTrue(aq_base(a) is aq_base(b))
 
     def test_ctor_implicit_context(self):
-        from zope.site.testing import siteSetUp, createSiteManager, siteTearDown
         siteSetUp()
 
         site = BTreeFolder2('site')
@@ -39,7 +43,6 @@ class TestPersistentResourceDirectory(unittest.TestCase):
         root = self._makeOne().context
         site._setOb('portal_resources', root)
 
-        from plone.resource.directory import PersistentResourceDirectory
         try:
             dir = PersistentResourceDirectory()
             # context should be stored unwrapped
@@ -68,7 +71,6 @@ class TestPersistentResourceDirectory(unittest.TestCase):
 
     def test_publishTraverse_not_found(self):
         dir = self._makeOne()
-        from zExceptions import NotFound
         self.assertRaises(NotFound, dir.publishTraverse, None, 'baz')
 
     def test_getitem(self):
@@ -78,11 +80,11 @@ class TestPersistentResourceDirectory(unittest.TestCase):
     def test_openFile(self):
         dir = self._makeOne()
         file = dir.openFile('demo/foo/test.html')
-        self.assertEqual('asdf', file.read())
+        self.assertEqual(b'asdf', file.read())
 
     def test_readFile(self):
         dir = self._makeOne()
-        self.assertEqual('asdf', dir.readFile('demo/foo/test.html'))
+        self.assertEqual(b'asdf', dir.readFile('demo/foo/test.html'))
 
     def test_readFile_not_found(self):
         dir = self._makeOne()
@@ -111,49 +113,60 @@ class TestPersistentResourceDirectory(unittest.TestCase):
 
     def test_writeFile(self):
         dir = self._makeOne()
-        dir.writeFile('qux', 'qux')
-        self.assertEqual('qux', dir.readFile('qux'))
+        dir.writeFile('qux', b'qux')
+        self.assertEqual(b'qux', dir.readFile('qux'))
 
     def test_writeFile_does_not_create_empty_directory(self):
         dir = self._makeOne()
-        dir.writeFile('qux', 'qux')
+        dir.writeFile('qux', b'qux')
         self.assertFalse('' in dir)
         self.assertTrue('qux' in dir)
 
     def test_writeFile_directory_missing(self):
         dir = self._makeOne()
-        dir.writeFile('baz/qux', 'qux')
-        self.assertEqual('qux', dir.readFile('baz/qux'))
+        dir.writeFile('baz/qux', b'qux')
+        self.assertEqual(b'qux', dir.readFile('baz/qux'))
 
     def test_writeFile_file_already_exists(self):
         dir = self._makeOne()
-        dir.writeFile('demo/foo/test.html', 'changed')
-        self.assertEqual('changed', dir.readFile('demo/foo/test.html'))
+        dir.writeFile('demo/foo/test.html', b'changed')
+        self.assertEqual(b'changed', dir.readFile('demo/foo/test.html'))
 
     def test_importZip(self):
         dir = self._makeOne()
-        f = open(os.path.join(os.path.dirname(__file__), 'resources.zip'))
-        dir.importZip(f)
-        self.assertEqual('from zip', dir.readFile('demo/foo/test.html'))
+        with open(
+            os.path.join(os.path.dirname(__file__), 'resources.zip'),
+            'rb',
+        ) as f:
+            dir.importZip(f)
+            self.assertEqual(b'from zip', dir.readFile('demo/foo/test.html'))
 
     def test_importZip_takes_ZipFile(self):
         dir = self._makeOne()
-        from zipfile import ZipFile
-        f = ZipFile(os.path.join(os.path.dirname(__file__), 'resources.zip'))
-        dir.importZip(f)
-        self.assertEqual('from zip', dir.readFile('demo/foo/test.html'))
+        with open(
+            os.path.join(os.path.dirname(__file__), 'resources.zip'),
+            'rb',
+        ) as f:
+            dir.importZip(f)
+            self.assertEqual(b'from zip', dir.readFile('demo/foo/test.html'))
 
     def test_importZip_filters_resource_forks(self):
         dir = self._makeOne()
-        f = open(os.path.join(os.path.dirname(__file__), 'resources.zip'))
-        dir.importZip(f)
-        self.assertFalse('__MACOSX' in dir.context.objectIds())
+        with open(
+            os.path.join(os.path.dirname(__file__), 'resources.zip'),
+            'rb',
+        ) as f:
+            dir.importZip(f)
+            self.assertFalse('__MACOSX' in dir.context.objectIds())
 
     def test_importZip_filters_hidden_directories(self):
         dir = self._makeOne()
-        f = open(os.path.join(os.path.dirname(__file__), 'resources.zip'))
-        dir.importZip(f)
-        self.assertFalse('.svn' in dir)
+        with open(
+            os.path.join(os.path.dirname(__file__), 'resources.zip'),
+            'rb',
+        ) as f:
+            dir.importZip(f)
+            self.assertFalse('.svn' in dir)
 
     def test_delitem(self):
         dir = self._makeOne()
@@ -210,24 +223,17 @@ class TestPersistentResourceDirectory(unittest.TestCase):
         provideHandler(_handleFileModified)
 
         dir = self._makeOne()
-        dir.writeFile('test', 'my test')
-        dir.writeFile('test', 'my test is modified')
+        dir.writeFile('test', b'my test')
+        dir.writeFile('test', b'my test is modified')
         self.assertTrue(isinstance(events[0], PloneResourceCreatedEvent))
-        self.assertEqual(
-            str(events[0].object),
-            'my test'
-        )
+        self.assertEqual(events[0].object.data, b'my test')
         self.assertTrue(isinstance(events[1], PloneResourceModifiedEvent))
-        self.assertEqual(
-            str(events[1].object),
-            'my test is modified'
-        )
+        self.assertEqual(events[1].object.data, b'my test is modified')
 
 
 class TestFilesystemResourceDirectory(unittest.TestCase):
 
     def _makeOne(self, name=None):
-        from plone.resource.directory import FilesystemResourceDirectory
         path = os.path.join(os.path.dirname(__file__), 'resources')
         return FilesystemResourceDirectory(path, name=name)
 
@@ -255,7 +261,6 @@ class TestFilesystemResourceDirectory(unittest.TestCase):
 
     def test_publishTraverse_not_found(self):
         dir = self._makeOne()
-        from zExceptions import NotFound
         self.assertRaises(NotFound, dir.publishTraverse, None, 'baz')
 
     def test_getitem(self):
@@ -270,11 +275,11 @@ class TestFilesystemResourceDirectory(unittest.TestCase):
     def test_openFile(self):
         dir = self._makeOne()
         file = dir.openFile('demo/foo/test.html')
-        self.assertEqual('asdf', file.read())
+        self.assertEqual(b'asdf', file.read())
 
     def test_readFile(self):
         dir = self._makeOne()
-        self.assertEqual('asdf', dir.readFile('demo/foo/test.html'))
+        self.assertEqual(b'asdf', dir.readFile('demo/foo/test.html'))
 
     def test_readFile_not_found(self):
         dir = self._makeOne()
