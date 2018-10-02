@@ -15,7 +15,7 @@ New features:
 Bug fixes:
 
 - Fix tests in py3.
-  [pbauer]
+  [pbauer, jensens]
 
 
 2.0.2 (2018-06-04)
