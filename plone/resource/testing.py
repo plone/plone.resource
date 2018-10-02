@@ -27,6 +27,7 @@ class DemoTraverser(Layer):
         # Zap the stacked configuration context
         del self['configurationContext']
 
+
 DEMO_TRAVERSER_FIXTURE = DemoTraverser()
 DEMO_TRAVERSER_INTEGRATION_TESTING = z2.IntegrationTesting(
     bases=(DEMO_TRAVERSER_FIXTURE,),
@@ -50,8 +51,6 @@ class PloneResource(PloneSandboxLayer):
         # install into the Plone site
         applyProfile(portal, 'plone.resource:default')
 
-        from transaction import commit
-        commit()
 
 PLONE_RESOURCE_FIXTURE = PloneResource()
 PLONE_RESOURCE_INTEGRATION_TESTING = IntegrationTesting(
