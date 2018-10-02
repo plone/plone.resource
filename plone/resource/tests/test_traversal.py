@@ -31,24 +31,30 @@ class TraversalTestCase(unittest.TestCase):
         zca.popGlobalRegistry()
 
     def test_traverse_packaged_type_specific_directory(self):
-        dir = FilesystemResourceDirectory(test_dir_path)
-        provideUtility(dir, provides=IResourceDirectory, name=u'++demo++foo')
+        dire = FilesystemResourceDirectory(test_dir_path)
+        provideUtility(dire, provides=IResourceDirectory, name=u'++demo++foo')
 
         res = self.app.restrictedTraverse('++demo++foo')
         self.assertTrue(res.directory.endswith('resources'))
 
-        self.assertRaises(NotFound, self.app.restrictedTraverse, '++demo++asdf')
+        self.assertRaises(
+            NotFound,
+            self.app.restrictedTraverse,
+            '++demo++asdf',
+        )
 
     def test_traverse_packaged_type_specific_file(self):
-        dir = FilesystemResourceDirectory(os.path.join(test_dir_path, 'demo', 'foo'))
-        provideUtility(dir, provides=IResourceDirectory, name=u'++demo++foo')
+        dire = FilesystemResourceDirectory(
+            os.path.join(test_dir_path, 'demo', 'foo')
+        )
+        provideUtility(dire, provides=IResourceDirectory, name=u'++demo++foo')
 
         res = self.app.restrictedTraverse('++demo++foo/test.html')
         self.assertTrue(isinstance(res, FilesystemFile))
 
     def test_traverse_global_directory(self):
-        dir = FilesystemResourceDirectory(test_dir_path)
-        provideUtility(dir, provides=IResourceDirectory, name=u'')
+        dire = FilesystemResourceDirectory(test_dir_path)
+        provideUtility(dire, provides=IResourceDirectory, name=u'')
 
         res = self.app.restrictedTraverse('++demo++foo')
         self.assertTrue(res.directory.endswith('resources/demo/foo'))
@@ -61,17 +67,21 @@ class TraversalTestCase(unittest.TestCase):
         root._setOb('demo', BTreeFolder2('demo'))
         root.demo._setOb('foo', BTreeFolder2('foo'))
 
-        dir = PersistentResourceDirectory(root)
-        provideUtility(dir, provides=IResourceDirectory, name=u'persistent')
+        dire = PersistentResourceDirectory(root)
+        provideUtility(dire, provides=IResourceDirectory, name=u'persistent')
 
         res = self.app.restrictedTraverse('++demo++foo')
-        self.assertEqual('portal_resources/demo/foo', '/'.join(res.context.getPhysicalPath()))
+        self.assertEqual(
+            'portal_resources/demo/foo', '/'.join(
+                res.context.getPhysicalPath(),
+            ),
+        )
 
         self.assertRaises(NotFound, self.app.restrictedTraverse, '++demo++bar')
 
     def test_publish_resource(self):
-        dir = FilesystemResourceDirectory(test_dir_path)
-        provideUtility(dir, provides=IResourceDirectory, name=u'')
+        dire = FilesystemResourceDirectory(test_dir_path)
+        provideUtility(dire, provides=IResourceDirectory, name=u'')
 
         browser = z2.Browser(self.app)
         browser.handleErrors = False
@@ -80,20 +90,24 @@ class TraversalTestCase(unittest.TestCase):
         self.assertEqual('asdf', browser.contents)
 
     def test_traverse_unique_resource_marks_request(self):
-        dir = FilesystemResourceDirectory(test_dir_path)
-        provideUtility(dir, provides=IResourceDirectory, name=u'')
+        dire = FilesystemResourceDirectory(test_dir_path)
+        provideUtility(dire, provides=IResourceDirectory, name=u'')
 
-        res = self.app.restrictedTraverse('++demo++foo/++unique++bar/test.html')
+        self.app.restrictedTraverse(
+            '++demo++foo/++unique++bar/test.html'
+        )
         self.assertTrue(IUniqueResourceRequest.providedBy(self.app.REQUEST))
 
     def test_publish_unique_resource(self):
-        dir = FilesystemResourceDirectory(test_dir_path)
-        provideUtility(dir, provides=IResourceDirectory, name=u'')
+        dire = FilesystemResourceDirectory(test_dir_path)
+        provideUtility(dire, provides=IResourceDirectory, name=u'')
 
         browser = z2.Browser(self.app)
         browser.handleErrors = False
 
-        browser.open(self.app.absolute_url() + '/++demo++foo/++unique++bar/test.html')
+        browser.open(
+            self.app.absolute_url() + '/++demo++foo/++unique++bar/test.html'
+        )
         self.assertEqual('asdf', browser.contents)
 
     def test_forbidden_resource_path_traversal(self):
