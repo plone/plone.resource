@@ -3,16 +3,17 @@ from plone.app.testing import applyProfile
 from plone.app.testing import IntegrationTesting
 from plone.app.testing import PLONE_FIXTURE
 from plone.app.testing import PloneSandboxLayer
+from plone.testing.zope import FunctionalTesting
+from plone.testing.zope import STARTUP
 from plone.resource.traversal import ResourceTraverser
 from plone.testing import Layer
 from plone.testing import publisher
-from plone.testing import z2
 from plone.testing import zca
 from zope.configuration import xmlconfig
 
 
 class DemoTraverser(Layer):
-    defaultBases = (z2.STARTUP, publisher.PUBLISHER_DIRECTIVES)
+    defaultBases = (STARTUP, publisher.PUBLISHER_DIRECTIVES)
 
     def setUp(self):
         # Stack a new configuration context
@@ -29,9 +30,9 @@ class DemoTraverser(Layer):
 
 
 DEMO_TRAVERSER_FIXTURE = DemoTraverser()
-DEMO_TRAVERSER_INTEGRATION_TESTING = z2.IntegrationTesting(
+DEMO_TRAVERSER_FUNCTIONAL_TESTING = FunctionalTesting(
     bases=(DEMO_TRAVERSER_FIXTURE,),
-    name="plone.resource:DemoTraverser"
+    name="plone.resource:DemoTraverserFunctional"
 )
 
 
