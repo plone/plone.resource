@@ -7,7 +7,7 @@ from plone.resource.manifest import getAllResources
 from plone.resource.manifest import getManifest
 from plone.resource.manifest import getZODBResources
 from plone.resource.manifest import ManifestFormat
-from plone.resource.testing import DEMO_TRAVERSER_INTEGRATION_TESTING
+from plone.resource.testing import DEMO_TRAVERSER_FUNCTIONAL_TESTING
 from plone.testing import zca
 from Products.BTreeFolder2.BTreeFolder2 import BTreeFolder2
 from zope.component import provideUtility
@@ -24,7 +24,7 @@ TEST_FORMAT = ManifestFormat('demo', ['title', 'description', 'bar'], {'bar': 'b
 TEST_FORMAT_PARAMS = ManifestFormat('demo', ['title', 'description', 'bar'], {'bar': 'baz'}, ['params'])
 
 class TestManifest(unittest.TestCase):
-    layer = DEMO_TRAVERSER_INTEGRATION_TESTING
+    layer = DEMO_TRAVERSER_FUNCTIONAL_TESTING
 
     def setUp(self):
         zca.pushGlobalRegistry()

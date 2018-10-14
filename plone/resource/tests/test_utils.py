@@ -2,7 +2,7 @@
 from plone.resource.directory import FilesystemResourceDirectory
 from plone.resource.directory import PersistentResourceDirectory
 from plone.resource.interfaces import IResourceDirectory
-from plone.resource.testing import DEMO_TRAVERSER_INTEGRATION_TESTING
+from plone.resource.testing import DEMO_TRAVERSER_FUNCTIONAL_TESTING
 from plone.testing import zca
 from Products.BTreeFolder2.BTreeFolder2 import BTreeFolder2
 from zope.component import provideUtility
@@ -16,7 +16,7 @@ test_dir_path = os.path.join(base_path, 'resources')
 
 
 class TraversalTestCase(unittest.TestCase):
-    layer = DEMO_TRAVERSER_INTEGRATION_TESTING
+    layer = DEMO_TRAVERSER_FUNCTIONAL_TESTING
 
     def setUp(self):
         self.app = self.layer.get('app')
