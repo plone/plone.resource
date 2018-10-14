@@ -3,12 +3,12 @@ from plone.app.testing import applyProfile
 from plone.app.testing import IntegrationTesting
 from plone.app.testing import PLONE_FIXTURE
 from plone.app.testing import PloneSandboxLayer
-from plone.testing.zope import FunctionalTesting
-from plone.testing.zope import STARTUP
 from plone.resource.traversal import ResourceTraverser
 from plone.testing import Layer
 from plone.testing import publisher
 from plone.testing import zca
+from plone.testing.z2 import FunctionalTesting
+from plone.testing.z2 import STARTUP
 from zope.configuration import xmlconfig
 
 
