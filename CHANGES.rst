@@ -17,6 +17,9 @@ Bug fixes:
 - Fix tests in py3.
   [pbauer, jensens]
 
+- Change name of IResourceDirectoryDirective to TextLine to work with zope.configuration >= 4.2.
+  See https://github.com/plone/Products.CMFPlone/issues/2591
+  [pbauer]
 
 2.0.2 (2018-06-04)
 ------------------
