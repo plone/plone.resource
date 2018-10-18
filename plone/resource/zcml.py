@@ -1,14 +1,12 @@
 # -*- coding: utf-8 -*-
-import os.path
-
-from zope.interface import Interface
+from plone.resource.directory import FilesystemResourceDirectory
+from plone.resource.interfaces import IResourceDirectory
 from zope.component.zcml import handler
 from zope.configuration.exceptions import ConfigurationError
-from zope.configuration.fields import PythonIdentifier
+from zope.interface import Interface
 from zope.schema import ASCIILine, TextLine
 
-from plone.resource.interfaces import IResourceDirectory
-from plone.resource.directory import FilesystemResourceDirectory
+import os.path
 
 
 class IResourceDirectoryDirective(Interface):
@@ -16,23 +14,23 @@ class IResourceDirectoryDirective(Interface):
     """
 
     directory = TextLine(
-        title = u'Directory path',
-        description = u'Path relative to the package.',
-        required = True
+        title=u'Directory path',
+        description=u'Path relative to the package.',
+        required=True
         )
 
-    name = PythonIdentifier(
-        title = u'Name',
-        description = u'Name of the directory. If not specified, the name of '
-                      u'the current package is used.',
-        required = False,
+    name = TextLine(
+        title=u'Name',
+        description=u'Name of the directory. If not specified, the name of '
+                    u'the current package is used.',
+        required=False,
         )
 
     type = ASCIILine(
-        title = u'Resource type',
-# XXX use a Choice field + vocab
-#        vocabulary = 'plone.resource.vocab.ResourceTypes',
-        required = False,
+        title=u'Resource type',
+        # XXX use a Choice field + vocab
+        # vocabulary = 'plone.resource.vocab.ResourceTypes',
+        required=False,
         )
 
 
@@ -75,7 +73,7 @@ def registerResourceDirectory(_context, directory, name=None, type=None):
     directory = FilesystemResourceDirectory(directory, name)
 
     _context.action(
-        discriminator = ('plone:static', identifier),
-        callable = handler,
-        args = ('registerUtility', directory, IResourceDirectory, identifier),
+        discriminator=('plone:static', identifier),
+        callable=handler,
+        args=('registerUtility', directory, IResourceDirectory, identifier),
         )
