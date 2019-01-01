@@ -62,12 +62,9 @@ class TestFilesystemResourceDirectory(unittest.TestCase):
 
         f = FilesystemFile(None, request, path, name)
 
-        rf = IRawReadFile(f)
-
-        if six.PY2:
-            self.assertTrue(isinstance(rf, file))
-        else:
-            self.assertTrue(isinstance(rf, io.IOBase))
-        self.assertEqual(rf.read(), b'asdf')
-
-        rf.close()
+        with IRawReadFile(f) as rf:
+            if six.PY2:
+                self.assertTrue(isinstance(rf, file))
+            else:
+                self.assertTrue(isinstance(rf, io.IOBase))
+            self.assertEqual(rf.read(), b'asdf')
