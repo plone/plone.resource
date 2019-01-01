@@ -29,13 +29,12 @@ class TestFilesystemResourceDirectory(unittest.TestCase):
         request = TestRequest()
 
         f = FilesystemFile(None, request, path, name)
-        iterator = f()
-
-        data = b''.join(iterator)
-        self.assertEqual(data, b'asdf')
-        self.assertEqual(request.response.getHeader('Content-Type'), 'text/html')
-        self.assertEqual(request.response.getHeader('Content-Length'), '4')
-        self.assertEqual(request.response.getHeader('Last-Modified'), formatdate(mtime, usegmt=True))
+        with f() as iterator:
+            data = b''.join(iterator)
+            self.assertEqual(data, b'asdf')
+            self.assertEqual(request.response.getHeader('Content-Type'), 'text/html')
+            self.assertEqual(request.response.getHeader('Content-Length'), '4')
+            self.assertEqual(request.response.getHeader('Last-Modified'), formatdate(mtime, usegmt=True))
 
     def test_last_modified(self):
         provideAdapter(FileLastModified)
