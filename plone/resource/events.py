@@ -1,6 +1,6 @@
 from plone.resource.interfaces import IPloneResourceCreatedEvent
 from plone.resource.interfaces import IPloneResourceModifiedEvent
-from zope.component.interfaces import ObjectEvent
+from zope.interface.interfaces import ObjectEvent
 from zope.interface import implementer
 
 

@@ -12,9 +12,9 @@ from Products.BTreeFolder2.BTreeFolder2 import BTreeFolder2
 from Products.CMFCore.utils import getToolByName
 from zExceptions import Forbidden
 from zExceptions import NotFound
+from zope.component.hooks import getSite
 from zope.event import notify
 from zope.interface import implementer
-from zope.site.hooks import getSite
 
 import os.path
 import re
