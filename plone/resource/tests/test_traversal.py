@@ -5,7 +5,7 @@ from plone.resource.file import FilesystemFile
 from plone.resource.interfaces import IResourceDirectory
 from plone.resource.interfaces import IUniqueResourceRequest
 from plone.resource.testing import DEMO_TRAVERSER_FUNCTIONAL_TESTING
-from plone.testing import z2
+from plone.testing import zope
 from plone.testing import zca
 from Products.BTreeFolder2.BTreeFolder2 import BTreeFolder2
 from zExceptions import Forbidden
@@ -83,7 +83,7 @@ class TraversalTestCase(unittest.TestCase):
         dire = FilesystemResourceDirectory(test_dir_path)
         provideUtility(dire, provides=IResourceDirectory, name=u'')
 
-        browser = z2.Browser(self.app)
+        browser = zope.Browser(self.app)
         browser.handleErrors = False
 
         browser.open(self.app.absolute_url() + '/++demo++foo/test.html')
@@ -102,7 +102,7 @@ class TraversalTestCase(unittest.TestCase):
         dire = FilesystemResourceDirectory(test_dir_path)
         provideUtility(dire, provides=IResourceDirectory, name=u'')
 
-        browser = z2.Browser(self.app)
+        browser = zope.Browser(self.app)
         browser.handleErrors = False
 
         browser.open(
