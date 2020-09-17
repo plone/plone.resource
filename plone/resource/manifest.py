@@ -37,11 +37,13 @@ import logging
 import six
 
 try:
-    # Python 3
-    from configparser import ConfigParser
-except ImportError:
-    # Python 2
+    # On Python 2 we must have the SafeConfigParser
     from ConfigParser import SafeConfigParser as ConfigParser
+except ImportError:
+    # On Python 3 we want the standard ConfigParser,
+    # to avoid a deprecation warning.
+    # Note that on Python 2 configparser can come from a backport.
+    from configparser import ConfigParser
 
 
 MANIFEST_FILENAME = 'manifest.cfg'
