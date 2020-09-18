@@ -274,8 +274,8 @@ class TestFilesystemResourceDirectory(unittest.TestCase):
 
     def test_openFile(self):
         dir = self._makeOne()
-        file = dir.openFile('demo/foo/test.html')
-        self.assertEqual(b'asdf', file.read())
+        with dir.openFile('demo/foo/test.html') as fp:
+            self.assertEqual(b'asdf', fp.read())
 
     def test_readFile(self):
         dir = self._makeOne()
@@ -294,9 +294,8 @@ class TestFilesystemResourceDirectory(unittest.TestCase):
         name = '.dummy'
         file_path = os.path.join(dir.directory, name)
         if name not in os.listdir(dir.directory):
-            f = open(file_path, 'w')
-            f.write("")
-            f.close()
+            with open(file_path, 'w') as fp:
+                fp.write("")
         self.assertTrue(name in os.listdir(dir.directory))
         self.assertEqual(['demo'], dir.listDirectory())
         # Cleanup created file.

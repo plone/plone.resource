@@ -31,11 +31,19 @@ manifest. ``bar`` will be ``baz`` if not found.
 from plone.resource.directory import FILTERS
 from plone.resource.interfaces import IResourceDirectory
 from plone.resource.utils import iterDirectoriesOfType
-from six.moves.configparser import SafeConfigParser
 from zope.component import getUtility
 
 import logging
 import six
+
+try:
+    # On Python 2 we must have the SafeConfigParser
+    from ConfigParser import SafeConfigParser as ConfigParser
+except ImportError:
+    # On Python 3 we want the standard ConfigParser,
+    # to avoid a deprecation warning.
+    # Note that on Python 2 configparser can come from a backport.
+    from configparser import ConfigParser
 
 
 MANIFEST_FILENAME = 'manifest.cfg'
@@ -79,7 +87,7 @@ def getManifest(fp, format, defaults=None):
     if defaults is None:
         defaults = format.defaults
 
-    parser = SafeConfigParser()
+    parser = ConfigParser()
     if six.PY2:
         parser.readfp(fp)
     else:

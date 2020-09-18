@@ -33,36 +33,30 @@ class TestManifest(unittest.TestCase):
         zca.popGlobalRegistry()
 
     def test_get_manifest(self):
-        fp = open(os.path.join(test_dir_path, 'demo', 'manifest-test', 'manifest.cfg'))
-        manifest = getManifest(fp, TEST_FORMAT)
-        self.assertEqual(manifest['title'], 'Manifest test')
-        self.assertEqual(manifest['description'], None)
-        self.assertEqual(manifest['bar'], 'baz')
-
-        fp.close()
+        with open(os.path.join(test_dir_path, 'demo', 'manifest-test', 'manifest.cfg')) as fp:
+            manifest = getManifest(fp, TEST_FORMAT)
+            self.assertEqual(manifest['title'], 'Manifest test')
+            self.assertEqual(manifest['description'], None)
+            self.assertEqual(manifest['bar'], 'baz')
 
     def test_get_manifest_params(self):
-        fp = open(os.path.join(test_dir_path, 'demo', 'manifest-test', 'manifest.cfg'))
-        manifest = getManifest(fp, TEST_FORMAT_PARAMS)
-        self.assertEqual(manifest['title'], 'Manifest test')
-        self.assertEqual(manifest['description'], None)
-        self.assertEqual(manifest['bar'], 'baz')
-        self.assertEqual(manifest['params'], {'alpha': 'beta', 'delta': 'theta'})
-
-        fp.close()
+        with open(os.path.join(test_dir_path, 'demo', 'manifest-test', 'manifest.cfg')) as fp:
+            manifest = getManifest(fp, TEST_FORMAT_PARAMS)
+            self.assertEqual(manifest['title'], 'Manifest test')
+            self.assertEqual(manifest['description'], None)
+            self.assertEqual(manifest['bar'], 'baz')
+            self.assertEqual(manifest['params'], {'alpha': 'beta', 'delta': 'theta'})
 
     def test_get_manifest_ignores_extra(self):
-        fp = open(os.path.join(test_dir_path, 'demo', 'manifest-test', 'manifest.cfg'))
-        manifest = getManifest(fp, TEST_FORMAT)
-        self.assertFalse('baz' in manifest)
-        fp.close()
+        with open(os.path.join(test_dir_path, 'demo', 'manifest-test', 'manifest.cfg')) as fp:
+            manifest = getManifest(fp, TEST_FORMAT)
+            self.assertFalse('baz' in manifest)
 
     def test_get_manifest_override_defaults(self):
-        fp = open(os.path.join(test_dir_path, 'demo', 'manifest-test', 'manifest.cfg'))
-        manifest = getManifest(fp, TEST_FORMAT, {'bar': 'foo', 'title': 'foo'})
-        self.assertEqual(manifest['title'], 'Manifest test')
-        self.assertEqual(manifest['bar'], 'foo')
-        fp.close()
+        with open(os.path.join(test_dir_path, 'demo', 'manifest-test', 'manifest.cfg')) as fp:
+            manifest = getManifest(fp, TEST_FORMAT, {'bar': 'foo', 'title': 'foo'})
+            self.assertEqual(manifest['title'], 'Manifest test')
+            self.assertEqual(manifest['bar'], 'foo')
 
     def test_extract_from_zip_file(self):
         zf = zipfile.ZipFile(os.path.join(base_path, 'zipfiles', 'normal.zip'))
