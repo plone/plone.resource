@@ -8,6 +8,16 @@ Changelog
 
 .. towncrier release notes start
 
+2.1.3 (2020-09-28)
+------------------
+
+Bug fixes:
+
+
+- Fixed various warnings.
+  [maurits] (#3130)
+
+
 2.1.2 (2020-04-22)
 ------------------
 
