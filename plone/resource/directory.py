@@ -222,6 +222,11 @@ class FilesystemResourceDirectory(object):
     def __repr__(self):
         return '<%s object at %s>' % (self.__class__.__name__, self.__name__)
 
+    def __bytes__(self):
+        if six.PY2:
+            return repr(self)
+        return repr(self).encode()
+
     def _resolveSubpath(self, path):
         parts = path.split('/')
         filepath = os.path.abspath(os.path.join(self.directory, *parts))
