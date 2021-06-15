@@ -8,6 +8,15 @@ Changelog
 
 .. towncrier release notes start
 
+2.1.4 (2021-06-14)
+------------------
+
+Bug fixes:
+
+
+- Do not throw an error when traversing to a FilesystemResourceDirectory (#31)
+
+
 2.1.3 (2020-09-28)
 ------------------
 
