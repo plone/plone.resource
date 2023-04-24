@@ -27,22 +27,13 @@ To get this manifest from an open file pointer ``fp``, do::
 ``bar``. ``title`` and ``description`` will be ``None`` if not found in the
 manifest. ``bar`` will be ``baz`` if not found.
 """
+from configparser import ConfigParser
 from plone.resource.directory import FILTERS
 from plone.resource.interfaces import IResourceDirectory
 from plone.resource.utils import iterDirectoriesOfType
 from zope.component import getUtility
 
 import logging
-
-
-try:
-    # On Python 2 we must have the SafeConfigParser
-    from ConfigParser import SafeConfigParser as ConfigParser
-except ImportError:
-    # On Python 3 we want the standard ConfigParser,
-    # to avoid a deprecation warning.
-    # Note that on Python 2 configparser can come from a backport.
-    from configparser import ConfigParser
 
 
 MANIFEST_FILENAME = "manifest.cfg"
