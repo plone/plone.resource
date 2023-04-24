@@ -211,9 +211,7 @@ def getAllResources(
             try:
                 resources[name] = getManifest(manifest, format, defaults)
             except:
-                LOGGER.exception(
-                    "Unable to read manifest for theme directory {}".format(name)
-                )
+                LOGGER.exception(f"Unable to read manifest for theme directory {name}")
             finally:
                 manifest.close()
 
