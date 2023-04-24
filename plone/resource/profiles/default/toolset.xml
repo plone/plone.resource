@@ -1,7 +1,6 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="utf-8"?>
 <tool-setup>
-    <required
-        tool_id="portal_resources"
-        class="Products.BTreeFolder2.BTreeFolder2.BTreeFolder2"
-        />
+  <required class="Products.BTreeFolder2.BTreeFolder2.BTreeFolder2"
+            tool_id="portal_resources"
+  />
 </tool-setup>

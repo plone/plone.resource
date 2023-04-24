@@ -1,11 +1,10 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="utf-8"?>
 <componentregistry>
-    <adapters/>
-    <utilities>
-        <utility
-            interface="plone.resource.interfaces.IResourceDirectory"
-            factory="plone.resource.directory.PersistentResourceDirectory"
-            name="persistent"
-            />
-    </utilities>
+  <adapters />
+  <utilities>
+    <utility factory="plone.resource.directory.PersistentResourceDirectory"
+             interface="plone.resource.interfaces.IResourceDirectory"
+             name="persistent"
+    />
+  </utilities>
 </componentregistry>

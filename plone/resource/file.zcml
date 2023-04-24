@@ -1,8 +1,9 @@
 <configure
     xmlns="http://namespaces.zope.org/zope"
-    i18n_domain="plone">
+    i18n_domain="plone"
+    >
 
-    <adapter factory=".file.rawReadFile" />
-    <adapter factory=".file.FileLastModified" />
+  <adapter factory=".file.rawReadFile" />
+  <adapter factory=".file.FileLastModified" />
 
 </configure>
