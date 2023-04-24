@@ -114,12 +114,12 @@ New features:
 
 New features:
 
-- Use ``mimetypes_registry`` utility to dertermine mimetype if available.
+- Use ``mimetypes_registry`` utility to determine mimetype if available.
   [jensens]
 
 Bug fixes:
 
-- Remove duplicte import
+- Remove duplicate import
   [jensens]
 
 - Add coding headers on python files.
