@@ -35,6 +35,7 @@ from zope.component import getUtility
 import logging
 import six
 
+
 try:
     # On Python 2 we must have the SafeConfigParser
     from ConfigParser import SafeConfigParser as ConfigParser

@@ -1,20 +1,22 @@
-import os.path
-import unittest
-
-from plone.resource.interfaces import IResourceDirectory
 from io import StringIO
+from plone.resource.interfaces import IResourceDirectory
 from zope.component import getUtility
 from zope.component.testing import tearDown
 from zope.configuration.exceptions import ConfigurationError
-from zope.configuration.xmlconfig import XMLConfig, xmlconfig
+from zope.configuration.xmlconfig import XMLConfig
+from zope.configuration.xmlconfig import xmlconfig
+
+import os.path
+import unittest
 
 
 def clearZCML(test=None):
     # Copy from ``zope.component.tests.examples``
-    from zope.configuration.xmlconfig import XMLConfig
-    import zope.component
     from zope.component.testing import setUp
     from zope.component.testing import tearDown
+    from zope.configuration.xmlconfig import XMLConfig
+
+    import zope.component
     tearDown()
     setUp()
     XMLConfig('meta.zcml', zope.component)()

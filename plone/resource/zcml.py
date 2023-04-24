@@ -3,7 +3,8 @@ from plone.resource.interfaces import IResourceDirectory
 from zope.component.zcml import handler
 from zope.configuration.exceptions import ConfigurationError
 from zope.interface import Interface
-from zope.schema import ASCIILine, TextLine
+from zope.schema import ASCIILine
+from zope.schema import TextLine
 
 import os.path
 

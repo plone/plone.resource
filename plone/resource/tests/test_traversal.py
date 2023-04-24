@@ -4,8 +4,8 @@ from plone.resource.file import FilesystemFile
 from plone.resource.interfaces import IResourceDirectory
 from plone.resource.interfaces import IUniqueResourceRequest
 from plone.resource.testing import DEMO_TRAVERSER_FUNCTIONAL_TESTING
-from plone.testing import zope
 from plone.testing import zca
+from plone.testing import zope
 from Products.BTreeFolder2.BTreeFolder2 import BTreeFolder2
 from zExceptions import Forbidden
 from zExceptions import NotFound
