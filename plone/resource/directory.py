@@ -15,9 +15,9 @@ from zope.component.hooks import getSite
 from zope.event import notify
 from zope.interface import implementer
 
+import io
 import os.path
 import re
-import six
 import zipfile
 
 
@@ -49,9 +49,6 @@ class PersistentResourceDirectory:
         )
 
     def publishTraverse(self, request, name):
-        if six.PY2 and isinstance(name, str):
-            name = name.encode("utf-8")
-
         context = self.context
         if aq_parent(context) is None:
             # Re-supply the acquisition chain if this is the root resource
@@ -71,9 +68,6 @@ class PersistentResourceDirectory:
         return self.publishTraverse(None, name)
 
     def __setitem__(self, name, item):
-        if six.PY2 and isinstance(name, str):
-            name = name.encode("utf-8")
-
         if IResourceDirectory.providedBy(item):
             item = item.context
         self.context[name] = item
@@ -86,7 +80,7 @@ class PersistentResourceDirectory:
         return name in self.context
 
     def openFile(self, path):
-        return six.BytesIO(self.readFile(path))
+        return io.BytesIO(self.readFile(path))
 
     def readFile(self, path):
         try:
@@ -143,9 +137,6 @@ class PersistentResourceDirectory:
         zf.close()
 
     def makeDirectory(self, path):
-        if six.PY2:
-            path = path.encode("utf-8")
-
         parent = self.context
         names = path.strip("/").split("/")
         for name in names:
@@ -221,8 +212,6 @@ class FilesystemResourceDirectory:
         return f"<{self.__class__.__name__} object at {self.__name__}>"
 
     def __bytes__(self):
-        if six.PY2:
-            return repr(self)
         return repr(self).encode()
 
     def _resolveSubpath(self, path):
