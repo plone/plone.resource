@@ -107,7 +107,7 @@ class PersistentResourceDirectory:
     def isDirectory(self, path):
         try:
             obj = self.context.unrestrictedTraverse(path)
-        except:
+        except Exception:
             obj = None
 
         return IObjectManager.providedBy(obj)
@@ -115,7 +115,7 @@ class PersistentResourceDirectory:
     def isFile(self, path):
         try:
             obj = self.context.unrestrictedTraverse(path)
-        except:
+        except Exception:
             obj = None
 
         return isinstance(obj, File)

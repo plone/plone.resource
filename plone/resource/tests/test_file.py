@@ -12,7 +12,6 @@ from zope.publisher.browser import TestRequest
 import datetime
 import io
 import os.path
-import six
 import unittest
 
 

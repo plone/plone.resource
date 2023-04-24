@@ -9,7 +9,6 @@ from plone.resource.interfaces import IPloneResourceCreatedEvent
 from plone.resource.interfaces import IPloneResourceModifiedEvent
 from Products.BTreeFolder2.BTreeFolder2 import BTreeFolder2
 from zExceptions import NotFound
-from zipfile import ZipFile
 from zope.component import adapter
 from zope.component import provideHandler
 from zope.site.testing import createSiteManager

@@ -33,7 +33,6 @@ from plone.resource.utils import iterDirectoriesOfType
 from zope.component import getUtility
 
 import logging
-import six
 
 
 try:
@@ -210,7 +209,7 @@ def getAllResources(
             manifest = directory.openFile(manifestFilename)
             try:
                 resources[name] = getManifest(manifest, format, defaults)
-            except:
+            except Exception:
                 LOGGER.exception(f"Unable to read manifest for theme directory {name}")
             finally:
                 manifest.close()
@@ -257,7 +256,7 @@ def getZODBResources(
             manifest = resourceDir.openFile(MANIFEST_FILENAME)
             try:
                 resources[name] = getManifest(manifest, format, defaults)
-            except:
+            except Exception:
                 LOGGER.exception(
                     "Unable to read manifest for {} directory {}".format(
                         manifest.resourceType, name
