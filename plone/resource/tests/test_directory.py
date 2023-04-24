@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from Acquisition import aq_base
 from io import BytesIO
 from OFS.Image import File
@@ -194,7 +193,7 @@ class TestPersistentResourceDirectory(unittest.TestCase):
         f = dir['demo']['foo']['test.html']
         dir['demo'].makeDirectory('bar')
 
-        dir['demo']['bar'][u'test.html'] = f
+        dir['demo']['bar']['test.html'] = f
         self.assertEqual(dir['demo']['foo'].readFile('test.html'),
                          dir['demo']['bar'].readFile('test.html'),)
 

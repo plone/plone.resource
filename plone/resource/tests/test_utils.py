@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from plone.resource.directory import FilesystemResourceDirectory
 from plone.resource.directory import PersistentResourceDirectory
 from plone.resource.interfaces import IResourceDirectory
@@ -25,20 +24,20 @@ class TraversalTestCase(unittest.TestCase):
         # set up all three types of directory
         package_dir_path = os.path.join(test_dir_path, 'demo', 'foo')
         self.package_dir = dir = FilesystemResourceDirectory(package_dir_path)
-        provideUtility(dir, provides=IResourceDirectory, name=u'++demo++foo')
+        provideUtility(dir, provides=IResourceDirectory, name='++demo++foo')
 
         self.global_dir = dir = FilesystemResourceDirectory(test_dir_path)
-        provideUtility(dir, provides=IResourceDirectory, name=u'')
+        provideUtility(dir, provides=IResourceDirectory, name='')
 
         root = BTreeFolder2('portal_resources')
         self.app._setOb('portal_resources', root)
         root._setOb('demo', BTreeFolder2('demo'))
         root.demo._setOb('foo', BTreeFolder2('foo'))
         self.zodb_dir = dir = PersistentResourceDirectory(root)
-        provideUtility(dir, provides=IResourceDirectory, name=u'persistent')
+        provideUtility(dir, provides=IResourceDirectory, name='persistent')
 
         # We don't want a false positive for the following.
-        provideUtility(dir, provides=IResourceDirectory, name=u'++bogus++foo')
+        provideUtility(dir, provides=IResourceDirectory, name='++bogus++foo')
 
     def tearDown(self):
         zca.popGlobalRegistry()

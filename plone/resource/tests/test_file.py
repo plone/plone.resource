@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from dateutil.tz import tzlocal
 from email.utils import formatdate
 from plone.resource.file import FileLastModified
@@ -63,8 +62,5 @@ class TestFilesystemResourceDirectory(unittest.TestCase):
         f = FilesystemFile(None, request, path, name)
 
         with IRawReadFile(f) as rf:
-            if six.PY2:
-                self.assertTrue(isinstance(rf, file))
-            else:
-                self.assertTrue(isinstance(rf, io.IOBase))
+            self.assertTrue(isinstance(rf, io.IOBase))
             self.assertEqual(rf.read(), b'asdf')

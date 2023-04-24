@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from plone.resource.directory import FilesystemResourceDirectory
 from plone.resource.directory import PersistentResourceDirectory
 from plone.resource.interfaces import IResourceDirectory
@@ -112,10 +111,10 @@ class TestManifest(unittest.TestCase):
         app = self.layer['app']
 
         foo = FilesystemResourceDirectory(os.path.join(test_dir_path, 'demo', 'foo'))
-        provideUtility(foo, provides=IResourceDirectory, name=u'++demo++foo')
+        provideUtility(foo, provides=IResourceDirectory, name='++demo++foo')
 
         manifestTest = FilesystemResourceDirectory(os.path.join(test_dir_path, 'demo', 'manifest-test'))
-        provideUtility(manifestTest, provides=IResourceDirectory, name=u'++demo++manifest-test')
+        provideUtility(manifestTest, provides=IResourceDirectory, name='++demo++manifest-test')
 
         root = BTreeFolder2('portal_resources')
         app._setOb('portal_resources', root)
@@ -123,7 +122,7 @@ class TestManifest(unittest.TestCase):
         root['demo']._setOb('bar', BTreeFolder2('bar'))
 
         persistentDir = PersistentResourceDirectory(root)
-        provideUtility(persistentDir, provides=IResourceDirectory, name=u'persistent')
+        provideUtility(persistentDir, provides=IResourceDirectory, name='persistent')
 
         resources = getAllResources(TEST_FORMAT)
 
@@ -140,10 +139,10 @@ class TestManifest(unittest.TestCase):
         app = self.layer['app']
 
         foo = FilesystemResourceDirectory(os.path.join(test_dir_path, 'demo', 'foo'))
-        provideUtility(foo, provides=IResourceDirectory, name=u'++demo++foo')
+        provideUtility(foo, provides=IResourceDirectory, name='++demo++foo')
 
         manifestTest = FilesystemResourceDirectory(os.path.join(test_dir_path, 'demo', 'manifest-test'))
-        provideUtility(manifestTest, provides=IResourceDirectory, name=u'++demo++manifest-test')
+        provideUtility(manifestTest, provides=IResourceDirectory, name='++demo++manifest-test')
 
         root = BTreeFolder2('portal_resources')
         app._setOb('portal_resources', root)
@@ -151,7 +150,7 @@ class TestManifest(unittest.TestCase):
         root['demo']._setOb('bar', BTreeFolder2('bar'))
 
         persistentDir = PersistentResourceDirectory(root)
-        provideUtility(persistentDir, provides=IResourceDirectory, name=u'persistent')
+        provideUtility(persistentDir, provides=IResourceDirectory, name='persistent')
 
         resources = getAllResources(TEST_FORMAT, filter=lambda dir: dir.__name__ != 'foo')
 
@@ -167,10 +166,10 @@ class TestManifest(unittest.TestCase):
         app = self.layer['app']
 
         foo = FilesystemResourceDirectory(os.path.join(test_dir_path, 'demo', 'foo'))
-        provideUtility(foo, provides=IResourceDirectory, name=u'++demo++foo')
+        provideUtility(foo, provides=IResourceDirectory, name='++demo++foo')
 
         manifestTest = FilesystemResourceDirectory(os.path.join(test_dir_path, 'demo', 'manifest-test'))
-        provideUtility(manifestTest, provides=IResourceDirectory, name=u'++demo++manifest-test')
+        provideUtility(manifestTest, provides=IResourceDirectory, name='++demo++manifest-test')
 
         root = BTreeFolder2('portal_resources')
         app._setOb('portal_resources', root)
@@ -179,7 +178,7 @@ class TestManifest(unittest.TestCase):
         root['demo']._setOb('baz', BTreeFolder2('baz'))
 
         persistentDir = PersistentResourceDirectory(root)
-        provideUtility(persistentDir, provides=IResourceDirectory, name=u'persistent')
+        provideUtility(persistentDir, provides=IResourceDirectory, name='persistent')
 
         resources = getZODBResources(TEST_FORMAT)
 
@@ -193,10 +192,10 @@ class TestManifest(unittest.TestCase):
         app = self.layer['app']
 
         foo = FilesystemResourceDirectory(os.path.join(test_dir_path, 'demo', 'foo'))
-        provideUtility(foo, provides=IResourceDirectory, name=u'++demo++foo')
+        provideUtility(foo, provides=IResourceDirectory, name='++demo++foo')
 
         manifestTest = FilesystemResourceDirectory(os.path.join(test_dir_path, 'demo', 'manifest-test'))
-        provideUtility(manifestTest, provides=IResourceDirectory, name=u'++demo++manifest-test')
+        provideUtility(manifestTest, provides=IResourceDirectory, name='++demo++manifest-test')
 
         root = BTreeFolder2('portal_resources')
         app._setOb('portal_resources', root)
@@ -205,7 +204,7 @@ class TestManifest(unittest.TestCase):
         root['demo']._setOb('baz', BTreeFolder2('baz'))
 
         persistentDir = PersistentResourceDirectory(root)
-        provideUtility(persistentDir, provides=IResourceDirectory, name=u'persistent')
+        provideUtility(persistentDir, provides=IResourceDirectory, name='persistent')
 
         resources = getZODBResources(TEST_FORMAT, filter=lambda dir: dir.__name__ != 'baz')
 

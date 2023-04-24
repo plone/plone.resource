@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from plone.resource.directory import FilesystemResourceDirectory
 from plone.resource.directory import PersistentResourceDirectory
 from plone.resource.file import FilesystemFile
@@ -32,7 +31,7 @@ class TraversalTestCase(unittest.TestCase):
 
     def test_traverse_packaged_type_specific_directory(self):
         dire = FilesystemResourceDirectory(test_dir_path)
-        provideUtility(dire, provides=IResourceDirectory, name=u'++demo++foo')
+        provideUtility(dire, provides=IResourceDirectory, name='++demo++foo')
 
         res = self.app.restrictedTraverse('++demo++foo')
         self.assertTrue(res.directory.endswith('resources'))
@@ -47,14 +46,14 @@ class TraversalTestCase(unittest.TestCase):
         dire = FilesystemResourceDirectory(
             os.path.join(test_dir_path, 'demo', 'foo')
         )
-        provideUtility(dire, provides=IResourceDirectory, name=u'++demo++foo')
+        provideUtility(dire, provides=IResourceDirectory, name='++demo++foo')
 
         res = self.app.restrictedTraverse('++demo++foo/test.html')
         self.assertTrue(isinstance(res, FilesystemFile))
 
     def test_traverse_global_directory(self):
         dire = FilesystemResourceDirectory(test_dir_path)
-        provideUtility(dire, provides=IResourceDirectory, name=u'')
+        provideUtility(dire, provides=IResourceDirectory, name='')
 
         res = self.app.restrictedTraverse('++demo++foo')
         self.assertTrue(res.directory.endswith('resources/demo/foo'))
@@ -68,7 +67,7 @@ class TraversalTestCase(unittest.TestCase):
         root.demo._setOb('foo', BTreeFolder2('foo'))
 
         dire = PersistentResourceDirectory(root)
-        provideUtility(dire, provides=IResourceDirectory, name=u'persistent')
+        provideUtility(dire, provides=IResourceDirectory, name='persistent')
 
         res = self.app.restrictedTraverse('++demo++foo')
         self.assertEqual(
@@ -81,7 +80,7 @@ class TraversalTestCase(unittest.TestCase):
 
     def test_publish_resource(self):
         dire = FilesystemResourceDirectory(test_dir_path)
-        provideUtility(dire, provides=IResourceDirectory, name=u'')
+        provideUtility(dire, provides=IResourceDirectory, name='')
 
         browser = zope.Browser(self.app)
         browser.handleErrors = False
@@ -91,7 +90,7 @@ class TraversalTestCase(unittest.TestCase):
 
     def test_traverse_unique_resource_marks_request(self):
         dire = FilesystemResourceDirectory(test_dir_path)
-        provideUtility(dire, provides=IResourceDirectory, name=u'')
+        provideUtility(dire, provides=IResourceDirectory, name='')
 
         self.app.restrictedTraverse(
             '++demo++foo/++unique++bar/test.html'
@@ -100,7 +99,7 @@ class TraversalTestCase(unittest.TestCase):
 
     def test_publish_unique_resource(self):
         dire = FilesystemResourceDirectory(test_dir_path)
-        provideUtility(dire, provides=IResourceDirectory, name=u'')
+        provideUtility(dire, provides=IResourceDirectory, name='')
 
         browser = zope.Browser(self.app)
         browser.handleErrors = False

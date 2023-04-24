@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from plone.resource.interfaces import IResourceDirectory
 from plone.resource.testing import PLONE_RESOURCE_INTEGRATION_TESTING
 

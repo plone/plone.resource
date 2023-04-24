@@ -1,9 +1,8 @@
-# -*- coding: utf-8 -*-
 import os.path
 import unittest
 
 from plone.resource.interfaces import IResourceDirectory
-from six import StringIO
+from io import StringIO
 from zope.component import getUtility
 from zope.component.testing import tearDown
 from zope.configuration.exceptions import ConfigurationError

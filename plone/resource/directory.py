@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from Acquisition import aq_base
 from Acquisition import aq_parent
 from OFS.Image import File
@@ -28,7 +27,7 @@ FILTERS = [re.compile(pattern) for pattern in FILTERS]
 
 
 @implementer(IWritableResourceDirectory)
-class PersistentResourceDirectory(object):
+class PersistentResourceDirectory:
     """A resource directory stored in the ZODB.
 
     It is assumed that directories provide IObjectManager
@@ -45,11 +44,11 @@ class PersistentResourceDirectory(object):
         self.__name__ = context.getId()
 
     def __repr__(self):
-        return '<%s object at %s>' % (self.__class__.__name__,
+        return '<{} object at {}>'.format(self.__class__.__name__,
                                       '/'.join(self.context.getPhysicalPath()))
 
     def publishTraverse(self, request, name):
-        if six.PY2 and isinstance(name, six.text_type):
+        if six.PY2 and isinstance(name, str):
             name = name.encode('utf-8')
 
         context = self.context
@@ -73,7 +72,7 @@ class PersistentResourceDirectory(object):
         return self.publishTraverse(None, name)
 
     def __setitem__(self, name, item):
-        if six.PY2 and isinstance(name, six.text_type):
+        if six.PY2 and isinstance(name, str):
             name = name.encode('utf-8')
 
         if IResourceDirectory.providedBy(item):
@@ -94,8 +93,8 @@ class PersistentResourceDirectory(object):
         try:
             f = self.context.unrestrictedTraverse(path)
         except Exception as e:
-            raise IOError(str(e))
-        if isinstance(f.data, six.binary_type):
+            raise OSError(str(e))
+        if isinstance(f.data, bytes):
             return f.data
         return f.data.__bytes__()
 
@@ -132,7 +131,7 @@ class PersistentResourceDirectory(object):
 
         def write(dir, prefix, zf):
             for name in dir.listDirectory():
-                relativeName = "%s/%s" % (prefix, name,)
+                relativeName = f"{prefix}/{name}"
                 if dir.isDirectory(name):
                     write(dir[name], relativeName, zf)
                 elif dir.isFile(name):
@@ -154,7 +153,7 @@ class PersistentResourceDirectory(object):
             parent = parent[name]
 
     def writeFile(self, path, data):
-        if isinstance(data, six.text_type):
+        if isinstance(data, str):
             data = data.encode('utf8')
         basepath = '/'.join(path.split('/')[:-1])
         if basepath:
@@ -196,7 +195,7 @@ class PersistentResourceDirectory(object):
 
 
 @implementer(IResourceDirectory)
-class FilesystemResourceDirectory(object):
+class FilesystemResourceDirectory:
     """A resource directory based on files in the filesystem.
     """
 
@@ -220,7 +219,7 @@ class FilesystemResourceDirectory(object):
         self._parent = value
 
     def __repr__(self):
-        return '<%s object at %s>' % (self.__class__.__name__, self.__name__)
+        return f'<{self.__class__.__name__} object at {self.__name__}>'
 
     def __bytes__(self):
         if six.PY2:

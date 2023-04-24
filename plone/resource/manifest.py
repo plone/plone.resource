@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Utilities for working with manifest files.
 
 The manifest is stored in a file ``manifest.cfg`` in the root of a resource
@@ -51,7 +50,7 @@ MANIFEST_FILENAME = 'manifest.cfg'
 LOGGER = logging.getLogger('plone.resource.manifest')
 
 
-class ManifestFormat(object):
+class ManifestFormat:
     """Describes a manifest format.
 
     An immutable, threadsafe object.
@@ -88,13 +87,10 @@ def getManifest(fp, format, defaults=None):
         defaults = format.defaults
 
     parser = ConfigParser()
-    if six.PY2:
-        parser.readfp(fp)
-    else:
-        data = fp.read()
-        if isinstance(data, six.binary_type):
-            data = data.decode()
-        parser.read_string(data)
+    data = fp.read()
+    if isinstance(data, bytes):
+        data = data.decode()
+    parser.read_string(data)
 
     results = {}
     for key in format.keys:
@@ -104,7 +100,7 @@ def getManifest(fp, format, defaults=None):
             results[key] = defaults.get(key, None)
 
     for key in format.parameterSections:
-        sectionName = "%s:%s" % (format.resourceType, key,)
+        sectionName = f"{format.resourceType}:{key}"
         if parser.has_section(sectionName):
             results[key] = dict(parser.items(sectionName))
         else:
@@ -174,7 +170,7 @@ def extractManifestFromZipFile(zipfile, format, defaults=None,
         if (
             resourceName is not None and
             not isDirectory and
-            path == "%s/%s" % (resourceName, manifestFilename,)
+            path == f"{resourceName}/{manifestFilename}"
         ):
             manifest = zipfile.open(member)
             try:
@@ -222,7 +218,7 @@ def getAllResources(format, defaults=None, filter=None,
                 resources[name] = getManifest(manifest, format, defaults)
             except:
                 LOGGER.exception(
-                    "Unable to read manifest for theme directory {0}".format(
+                    "Unable to read manifest for theme directory {}".format(
                         name
                     )
                 )
@@ -273,7 +269,7 @@ def getZODBResources(format, defaults=None, filter=None,
                 resources[name] = getManifest(manifest, format, defaults)
             except:
                 LOGGER.exception(
-                    "Unable to read manifest for {0} directory {1}".format(
+                    "Unable to read manifest for {} directory {}".format(
                         manifest.resourceType, name
                     )
                 )

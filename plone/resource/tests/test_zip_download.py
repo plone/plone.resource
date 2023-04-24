@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from io import BytesIO
 from OFS.Image import File
 from plone.resource.directory import FilesystemResourceDirectory
@@ -30,7 +29,7 @@ class ZipDownloadTestCase(unittest.TestCase):
 
     def test_traverse_packaged_type_specific_directory(self):
         dir = FilesystemResourceDirectory(os.path.join(test_dir_path, 'demo', 'foo'))
-        provideUtility(dir, provides=IResourceDirectory, name=u'++demo++foo')
+        provideUtility(dir, provides=IResourceDirectory, name='++demo++foo')
 
         out = BytesIO()
         request = self.layer['request']
@@ -47,7 +46,7 @@ class ZipDownloadTestCase(unittest.TestCase):
 
     def test_traverse_global_directory(self):
         dir = FilesystemResourceDirectory(test_dir_path)
-        provideUtility(dir, provides=IResourceDirectory, name=u'')
+        provideUtility(dir, provides=IResourceDirectory, name='')
 
         out = BytesIO()
         request = self.layer['request']
@@ -73,7 +72,7 @@ class ZipDownloadTestCase(unittest.TestCase):
         )
 
         dir = PersistentResourceDirectory(root)
-        provideUtility(dir, provides=IResourceDirectory, name=u'persistent')
+        provideUtility(dir, provides=IResourceDirectory, name='persistent')
 
         out = BytesIO()
         request = self.layer['request']

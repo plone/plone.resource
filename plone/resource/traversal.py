@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from plone.resource.interfaces import IUniqueResourceRequest
 from plone.resource.utils import queryResourceDirectory
 from six.moves import urllib

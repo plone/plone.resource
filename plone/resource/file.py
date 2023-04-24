@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from datetime import time
 from dateutil.tz import tzlocal
 from email.utils import formatdate
@@ -28,7 +27,7 @@ class ResourceIterator(filestream_iterator):
         return self.read().decode('utf-8')
 
 
-class FilesystemFile(object):
+class FilesystemFile:
     """Representation of a file. When called, it will set response headers
     and return the file's contents
     """
@@ -76,7 +75,7 @@ class FilesystemFile(object):
 
 @implementer(ILastModified)
 @adapter(FilesystemFile)
-class FileLastModified(object):
+class FileLastModified:
     """Determine when a file was last modified, for caching purposes
     """
 
