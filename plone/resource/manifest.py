@@ -46,9 +46,9 @@ except ImportError:
     from configparser import ConfigParser
 
 
-MANIFEST_FILENAME = 'manifest.cfg'
+MANIFEST_FILENAME = "manifest.cfg"
 
-LOGGER = logging.getLogger('plone.resource.manifest')
+LOGGER = logging.getLogger("plone.resource.manifest")
 
 
 class ManifestFormat:
@@ -70,8 +70,7 @@ class ManifestFormat:
     ``[theme:parameters]``.
     """
 
-    def __init__(self, resourceType, keys, defaults=None,
-                 parameterSections=None):
+    def __init__(self, resourceType, keys, defaults=None, parameterSections=None):
         self.resourceType = resourceType
         self.keys = keys
         self.defaults = defaults or {}
@@ -110,8 +109,9 @@ def getManifest(fp, format, defaults=None):
     return results
 
 
-def extractManifestFromZipFile(zipfile, format, defaults=None,
-                               manifestFilename=MANIFEST_FILENAME):
+def extractManifestFromZipFile(
+    zipfile, format, defaults=None, manifestFilename=MANIFEST_FILENAME
+):
     """Get a resource name and manifest from the given open
     ``zipfile.ZipFile`` using the given format. Returns a tuple::
 
@@ -137,22 +137,17 @@ def extractManifestFromZipFile(zipfile, format, defaults=None,
 
     for name in zipfile.namelist():
         member = zipfile.getinfo(name)
-        path = member.filename.lstrip('/')
+        path = member.filename.lstrip("/")
 
         # Skip filtered files (OS X junk and dot files, mainly)
-        if any(
-            any(
-                filter.match(n) for filter in FILTERS
-            ) for n in path.split('/')
-        ):
+        if any(any(filter.match(n) for filter in FILTERS) for n in path.split("/")):
             continue
 
-        pathSegments = path.rstrip('/').split('/')
-        isDirectory = path.endswith('/')
+        pathSegments = path.rstrip("/").split("/")
+        isDirectory = path.endswith("/")
 
         # Is this a new top level directory?
         if pathSegments[0] != resourceName:
-
             # We already thought we had one - abort
             if resourceName is not None:
                 raise ValueError("More than one top level directory")
@@ -163,15 +158,14 @@ def extractManifestFromZipFile(zipfile, format, defaults=None,
                 resourceName = pathSegments[0]
             else:
                 raise ValueError(
-                    "Found a top level file - expected a single top level "
-                    "directory"
+                    "Found a top level file - expected a single top level " "directory"
                 )
 
         # Did we find a manifest file?
         if (
-            resourceName is not None and
-            not isDirectory and
-            path == f"{resourceName}/{manifestFilename}"
+            resourceName is not None
+            and not isDirectory
+            and path == f"{resourceName}/{manifestFilename}"
         ):
             manifest = zipfile.open(member)
             try:
@@ -185,8 +179,9 @@ def extractManifestFromZipFile(zipfile, format, defaults=None,
     return (resourceName, manifestDict)
 
 
-def getAllResources(format, defaults=None, filter=None,
-                    manifestFilename=MANIFEST_FILENAME):
+def getAllResources(
+    format, defaults=None, filter=None, manifestFilename=MANIFEST_FILENAME
+):
     """Get a dict of all resources of the resource type indicated by the
     manifest format. Returns a dict where the keys are the resource ids and
     the values are manifests. The value may be None if no manifest was found.
@@ -205,7 +200,6 @@ def getAllResources(format, defaults=None, filter=None,
     resources = {}
 
     for directory in iterDirectoriesOfType(format.resourceType):
-
         if filter is not None and not filter(directory):
             continue
 
@@ -213,15 +207,12 @@ def getAllResources(format, defaults=None, filter=None,
         resources[name] = None
 
         if directory.isFile(manifestFilename):
-
             manifest = directory.openFile(manifestFilename)
             try:
                 resources[name] = getManifest(manifest, format, defaults)
             except:
                 LOGGER.exception(
-                    "Unable to read manifest for theme directory {}".format(
-                        name
-                    )
+                    "Unable to read manifest for theme directory {}".format(name)
                 )
             finally:
                 manifest.close()
@@ -229,8 +220,9 @@ def getAllResources(format, defaults=None, filter=None,
     return resources
 
 
-def getZODBResources(format, defaults=None, filter=None,
-                     manifestFilename=MANIFEST_FILENAME):
+def getZODBResources(
+    format, defaults=None, filter=None, manifestFilename=MANIFEST_FILENAME
+):
     """Get a dict of all resources in the ZODB of the resource type indicated
     by the manifest format. Returns a dict where the keys are the resource
     ids and the values are manifests. The value may be None if no manifest was
@@ -256,7 +248,6 @@ def getZODBResources(format, defaults=None, filter=None,
     resourcesDirectory = persistentDirectory[format.resourceType]
 
     for name in resourcesDirectory.listDirectory():
-
         resourceDir = resourcesDirectory[name]
 
         if filter is not None and not filter(resourceDir):

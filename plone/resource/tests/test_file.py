@@ -17,29 +17,31 @@ import unittest
 
 
 class TestFilesystemResourceDirectory(unittest.TestCase):
-
     layer = UNIT_TESTING
 
     def test_render(self):
-        name = 'test.html'
-        path = os.path.join(os.path.dirname(__file__), 'resources', 'demo', 'foo', name)
+        name = "test.html"
+        path = os.path.join(os.path.dirname(__file__), "resources", "demo", "foo", name)
         mtime = os.path.getmtime(path)
 
         request = TestRequest()
 
         f = FilesystemFile(None, request, path, name)
         with f() as iterator:
-            data = b''.join(iterator)
-            self.assertEqual(data, b'asdf')
-            self.assertEqual(request.response.getHeader('Content-Type'), 'text/html')
-            self.assertEqual(request.response.getHeader('Content-Length'), '4')
-            self.assertEqual(request.response.getHeader('Last-Modified'), formatdate(mtime, usegmt=True))
+            data = b"".join(iterator)
+            self.assertEqual(data, b"asdf")
+            self.assertEqual(request.response.getHeader("Content-Type"), "text/html")
+            self.assertEqual(request.response.getHeader("Content-Length"), "4")
+            self.assertEqual(
+                request.response.getHeader("Last-Modified"),
+                formatdate(mtime, usegmt=True),
+            )
 
     def test_last_modified(self):
         provideAdapter(FileLastModified)
 
-        name = 'test.html'
-        path = os.path.join(os.path.dirname(__file__), 'resources', 'demo', 'foo', name)
+        name = "test.html"
+        path = os.path.join(os.path.dirname(__file__), "resources", "demo", "foo", name)
         mtime = os.path.getmtime(path)
 
         request = TestRequest()
@@ -54,8 +56,8 @@ class TestFilesystemResourceDirectory(unittest.TestCase):
     def test_raw_read_file(self):
         provideAdapter(rawReadFile)
 
-        name = 'test.html'
-        path = os.path.join(os.path.dirname(__file__), 'resources', 'demo', 'foo', name)
+        name = "test.html"
+        path = os.path.join(os.path.dirname(__file__), "resources", "demo", "foo", name)
 
         request = TestRequest()
 
@@ -63,4 +65,4 @@ class TestFilesystemResourceDirectory(unittest.TestCase):
 
         with IRawReadFile(f) as rf:
             self.assertTrue(isinstance(rf, io.IOBase))
-            self.assertEqual(rf.read(), b'asdf')
+            self.assertEqual(rf.read(), b"asdf")

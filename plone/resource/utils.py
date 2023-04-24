@@ -22,7 +22,7 @@ def iterDirectoriesOfType(type, filter_duplicates=True):
 
     # 1. Persistent resource directory:
     #    List (persistent resource directory)/$type
-    res = queryUtility(IResourceDirectory, name='persistent')
+    res = queryUtility(IResourceDirectory, name="persistent")
     if res and res.isDirectory(type):
         typedir = res[type]
         for dirname in typedir.listDirectory():
@@ -33,7 +33,7 @@ def iterDirectoriesOfType(type, filter_duplicates=True):
 
     # 2. Global resource directory:
     #    List (global resource directory)/$type
-    res = queryUtility(IResourceDirectory, name='')
+    res = queryUtility(IResourceDirectory, name="")
     if res and res.isDirectory(type):
         typedir = res[type]
         for dirname in typedir.listDirectory():
@@ -45,7 +45,7 @@ def iterDirectoriesOfType(type, filter_duplicates=True):
 
     # 3. Packaged resource directories:
     #    Scan the registry
-    identifier = '++%s++' % type
+    identifier = "++%s++" % type
     for name, u in getUtilitiesFor(IResourceDirectory):
         if name.startswith(identifier):
             if not filter_duplicates or u.__name__ not in found:
@@ -59,25 +59,31 @@ def queryResourceDirectory(type, name):
 
     # 1. Persistent resource directory:
     #    Try (persistent resource directory)/$type/$name
-    res = queryUtility(IResourceDirectory, name='persistent')
+    res = queryUtility(IResourceDirectory, name="persistent")
     if res:
         try:
             return res[type][name]
-        except (KeyError, NotFound,):
+        except (
+            KeyError,
+            NotFound,
+        ):
             pass  # pragma: no cover
 
     # 2. Global resource directory:
     #    Try (global resource directory)/$type/$name
-    res = queryUtility(IResourceDirectory, name='')
+    res = queryUtility(IResourceDirectory, name="")
     if res:
         try:
             return res[type][name]
-        except (KeyError, NotFound,):
+        except (
+            KeyError,
+            NotFound,
+        ):
             pass  # pragma: no cover
 
     # 3. Packaged type-specific resource directory:
     #    Try (directory named after type + name)
-    identifier = f'++{type}++{name}'
+    identifier = f"++{type}++{name}"
     res = queryUtility(IResourceDirectory, name=identifier)
     if res is not None:
         return res
@@ -100,4 +106,3 @@ def cloneResourceDirectory(source, target):
                 target.writeFile(name, f)
             finally:
                 f.close()
-

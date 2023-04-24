@@ -7,7 +7,6 @@ from zope.traversing.namespace import SimpleHandler
 
 
 class ResourceTraverser(SimpleHandler):
-
     name = None
 
     def __init__(self, context, request=None):

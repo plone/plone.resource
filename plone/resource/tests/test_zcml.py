@@ -17,12 +17,13 @@ def clearZCML(test=None):
     from zope.configuration.xmlconfig import XMLConfig
 
     import zope.component
+
     tearDown()
     setUp()
-    XMLConfig('meta.zcml', zope.component)()
+    XMLConfig("meta.zcml", zope.component)()
 
 
-def runSnippet(snippet, dist='plone.resource.tests'):
+def runSnippet(snippet, dist="plone.resource.tests"):
     template = """\
     <configure xmlns="http://namespaces.zope.org/zope"
                xmlns:plone="http://namespaces.plone.org/plone"
@@ -30,83 +31,93 @@ def runSnippet(snippet, dist='plone.resource.tests'):
                %s>
     %s
     </configure>"""
-    dist = 'package="%s"' % dist if dist else ''
+    dist = 'package="%s"' % dist if dist else ""
     xmlconfig(StringIO(template % (dist, snippet)))
 
 
 class ZCMLTestCase(unittest.TestCase):
-
     def setUp(self):
         clearZCML()
         import plone.resource
-        XMLConfig('meta.zcml', plone.resource)()
+
+        XMLConfig("meta.zcml", plone.resource)()
 
     def tearDown(self):
         tearDown()
 
     def test_dist_with_name_and_type(self):
-        runSnippet("""
+        runSnippet(
+            """
         <plone:static
           name="foo"
           type="theme"
           directory="resources"
           />
-        """)
+        """
+        )
 
-        res = getUtility(IResourceDirectory, name='++theme++foo')
-        self.assertTrue(res.directory.endswith(os.path.join('plone', 'resource', 'tests', 'resources')))
+        res = getUtility(IResourceDirectory, name="++theme++foo")
+        self.assertTrue(
+            res.directory.endswith(
+                os.path.join("plone", "resource", "tests", "resources")
+            )
+        )
 
     def test_dist_rejects_with_missing_type(self):
         # resource directories in distributions must be registered with a type
-        self.assertRaises(ConfigurationError,
+        self.assertRaises(
+            ConfigurationError,
             runSnippet,
             """<plone:static
               name="foo"
               directory="resources"
-              />"""
-            )
+              />""",
+        )
 
     def test_dist_with_type_only(self):
-        runSnippet("""
+        runSnippet(
+            """
         <plone:static
           type="theme"
           directory="resources"
           />
-        """)
+        """
+        )
 
-        getUtility(IResourceDirectory, name='++theme++plone.resource.tests')
+        getUtility(IResourceDirectory, name="++theme++plone.resource.tests")
 
     def test_dist_rejects_absolute_directory(self):
-        self.assertRaises(ConfigurationError,
-            runSnippet,
-            """<plone:static directory="/" />"""
-            )
+        self.assertRaises(
+            ConfigurationError, runSnippet, """<plone:static directory="/" />"""
+        )
 
     def test_global(self):
-        runSnippet("""
+        runSnippet(
+            """
         <plone:static
           directory="/"
           />
-        """, dist=None)
+        """,
+            dist=None,
+        )
 
         res = getUtility(IResourceDirectory)
-        self.assertEqual('/', res.directory)
+        self.assertEqual("/", res.directory)
 
     def test_global_rejects_relative_directory(self):
-        self.assertRaises(ConfigurationError,
+        self.assertRaises(
+            ConfigurationError,
             runSnippet,
             """<plone:static directory="foobar" />""",
-            dist=None
-            )
+            dist=None,
+        )
 
     def test_missing_directory(self):
-        self.assertRaises(ConfigurationError,
-            runSnippet,
-            """<plone:static directory="foobar" />"""
-            )
+        self.assertRaises(
+            ConfigurationError, runSnippet, """<plone:static directory="foobar" />"""
+        )
 
     def test_rejects_parent_directory_traversal(self):
-        self.assertRaises(ConfigurationError,
-            runSnippet,
-            """<plone:static directory="../tests" />"""
-            )
+        self.assertRaises(
+            ConfigurationError, runSnippet, """<plone:static directory="../tests" />"""
+        )

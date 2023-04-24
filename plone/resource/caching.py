@@ -18,4 +18,4 @@ class UniqueResourceLookup:
         pass
 
     def __call__(self):
-        return 'plone.stableResource'
+        return "plone.stableResource"
