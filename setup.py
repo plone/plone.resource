@@ -6,6 +6,7 @@ version = "2.1.5.dev0"
 
 test_requires = [
     "plone.app.testing",
+    "plone.testing",
 ]
 
 setup(
@@ -41,15 +42,10 @@ setup(
         "python-dateutil",
         "setuptools",
         "z3c.caching",
-        "zope.component",
-        "zope.configuration",
-        "zope.filerepresentation",
-        "zope.interface",
-        "zope.publisher",
-        "zope.schema",
-        "zope.traversing",
-        "Zope2",
-        "six",
+        "Zope",
+        "Products.BTreeFolder2",
+        "Products.CMFCore",
+        "Products.GenericSetup",
     ],
     extras_require={
         "test": test_requires,
