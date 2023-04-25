@@ -1,10 +1,8 @@
-# -*- coding: utf-8 -*-
 from io import BytesIO
 from zope.publisher.browser import BrowserView
 
 
 class DownloadView(BrowserView):
-
     def __call__(self):
         name = self.context.__name__
 
@@ -17,10 +15,9 @@ class DownloadView(BrowserView):
         out = BytesIO()
         self.context.exportZip(out)
 
-        response.setHeader('Content-Type', 'application/zip')
+        response.setHeader("Content-Type", "application/zip")
         response.setHeader(
-            'Content-Disposition',
-            'attachment; filename="%s.zip"' % name
+            "Content-Disposition", 'attachment; filename="%s.zip"' % name
         )
-        response.setHeader('Content-Length', len(out.getvalue()))
+        response.setHeader("Content-Length", len(out.getvalue()))
         response.write(out.getvalue())

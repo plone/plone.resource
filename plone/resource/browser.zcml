@@ -1,21 +1,23 @@
 <configure
     xmlns="http://namespaces.zope.org/zope"
     xmlns:browser="http://namespaces.zope.org/browser"
-    i18n_domain="plone">
+    i18n_domain="plone"
+    >
 
   <browser:view
       name="download-zip"
       for=".interfaces.IResourceDirectory"
-      permission="plone.resource.ExportZip"
       class=".download.DownloadView"
+      permission="plone.resource.ExportZip"
       />
 
   <!-- Unique traverser -->
   <adapter
-      name="unique"
-      for=".interfaces.IResourceDirectory zope.publisher.interfaces.IRequest"
-      provides="zope.traversing.interfaces.ITraversable"
       factory=".traversal.UniqueResourceTraverser"
+      provides="zope.traversing.interfaces.ITraversable"
+      for=".interfaces.IResourceDirectory
+           zope.publisher.interfaces.IRequest"
+      name="unique"
       />
 
 </configure>

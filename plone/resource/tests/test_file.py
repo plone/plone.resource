@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from dateutil.tz import tzlocal
 from email.utils import formatdate
 from plone.resource.file import FileLastModified
@@ -13,34 +12,35 @@ from zope.publisher.browser import TestRequest
 import datetime
 import io
 import os.path
-import six
 import unittest
 
 
 class TestFilesystemResourceDirectory(unittest.TestCase):
-
     layer = UNIT_TESTING
 
     def test_render(self):
-        name = 'test.html'
-        path = os.path.join(os.path.dirname(__file__), 'resources', 'demo', 'foo', name)
+        name = "test.html"
+        path = os.path.join(os.path.dirname(__file__), "resources", "demo", "foo", name)
         mtime = os.path.getmtime(path)
 
         request = TestRequest()
 
         f = FilesystemFile(None, request, path, name)
         with f() as iterator:
-            data = b''.join(iterator)
-            self.assertEqual(data, b'asdf')
-            self.assertEqual(request.response.getHeader('Content-Type'), 'text/html')
-            self.assertEqual(request.response.getHeader('Content-Length'), '4')
-            self.assertEqual(request.response.getHeader('Last-Modified'), formatdate(mtime, usegmt=True))
+            data = b"".join(iterator)
+            self.assertEqual(data, b"asdf")
+            self.assertEqual(request.response.getHeader("Content-Type"), "text/html")
+            self.assertEqual(request.response.getHeader("Content-Length"), "4")
+            self.assertEqual(
+                request.response.getHeader("Last-Modified"),
+                formatdate(mtime, usegmt=True),
+            )
 
     def test_last_modified(self):
         provideAdapter(FileLastModified)
 
-        name = 'test.html'
-        path = os.path.join(os.path.dirname(__file__), 'resources', 'demo', 'foo', name)
+        name = "test.html"
+        path = os.path.join(os.path.dirname(__file__), "resources", "demo", "foo", name)
         mtime = os.path.getmtime(path)
 
         request = TestRequest()
@@ -55,16 +55,13 @@ class TestFilesystemResourceDirectory(unittest.TestCase):
     def test_raw_read_file(self):
         provideAdapter(rawReadFile)
 
-        name = 'test.html'
-        path = os.path.join(os.path.dirname(__file__), 'resources', 'demo', 'foo', name)
+        name = "test.html"
+        path = os.path.join(os.path.dirname(__file__), "resources", "demo", "foo", name)
 
         request = TestRequest()
 
         f = FilesystemFile(None, request, path, name)
 
         with IRawReadFile(f) as rf:
-            if six.PY2:
-                self.assertTrue(isinstance(rf, file))
-            else:
-                self.assertTrue(isinstance(rf, io.IOBase))
-            self.assertEqual(rf.read(), b'asdf')
+            self.assertTrue(isinstance(rf, io.IOBase))
+            self.assertEqual(rf.read(), b"asdf")

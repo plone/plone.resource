@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from zope.interface import Attribute
 from zope.interface import Interface
 from zope.lifecycleevent.interfaces import IObjectCreatedEvent
@@ -20,8 +19,7 @@ class IResourceDirectory(IPublishTraverse):
         """Returns a string identifier of the directory."""
 
     def __contains__(name):
-        """Return true if the given file or directory exists
-        """
+        """Return true if the given file or directory exists"""
 
     def __getitem__(name):
         """Return the file or resource directory with the given name
@@ -62,7 +60,6 @@ class IResourceDirectory(IPublishTraverse):
 
 
 class IWritableResourceDirectory(IResourceDirectory):
-
     def makeDirectory(path):
         """Create the given path as a directory. (Returns successfully without
         doing anything if the directory already exists.)
@@ -85,16 +82,13 @@ class IWritableResourceDirectory(IResourceDirectory):
         """
 
     def __delitem__(name):
-        """Delete a file or directory inside this directory
-        """
+        """Delete a file or directory inside this directory"""
 
     def __setitem__(name, item):
-        """Add a file or directory as returned by ``__getitem__()``
-        """
+        """Add a file or directory as returned by ``__getitem__()``"""
 
     def rename(oldName, newName):
-        """Rename a child file or folder
-        """
+        """Rename a child file or folder"""
 
 
 class IUniqueResourceRequest(Interface):

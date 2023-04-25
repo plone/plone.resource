@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from Acquisition import aq_base
 from Acquisition import aq_parent
 from OFS.Image import File
@@ -16,19 +15,19 @@ from zope.component.hooks import getSite
 from zope.event import notify
 from zope.interface import implementer
 
+import io
 import os.path
 import re
-import six
 import zipfile
 
 
 # filter dot files, Mac resource forks
-FILTERS = (r'\..*', '__MACOSX')
+FILTERS = (r"\..*", "__MACOSX")
 FILTERS = [re.compile(pattern) for pattern in FILTERS]
 
 
 @implementer(IWritableResourceDirectory)
-class PersistentResourceDirectory(object):
+class PersistentResourceDirectory:
     """A resource directory stored in the ZODB.
 
     It is assumed that directories provide IObjectManager
@@ -40,18 +39,16 @@ class PersistentResourceDirectory(object):
             # This is also used as a local IResourceDirectory utility,
             # named u'persistent', which wraps the root folder.
             # This gets pickled, so we can't keep the acquisition chain.
-            context = aq_base(getToolByName(getSite(), 'portal_resources'))
+            context = aq_base(getToolByName(getSite(), "portal_resources"))
         self.context = self.__parent__ = context
         self.__name__ = context.getId()
 
     def __repr__(self):
-        return '<%s object at %s>' % (self.__class__.__name__,
-                                      '/'.join(self.context.getPhysicalPath()))
+        return "<{} object at {}>".format(
+            self.__class__.__name__, "/".join(self.context.getPhysicalPath())
+        )
 
     def publishTraverse(self, request, name):
-        if six.PY2 and isinstance(name, six.text_type):
-            name = name.encode('utf-8')
-
         context = self.context
         if aq_parent(context) is None:
             # Re-supply the acquisition chain if this is the root resource
@@ -61,9 +58,7 @@ class PersistentResourceDirectory(object):
                 context = context.__of__(site)
 
         if self.isDirectory(name):
-            return self.__class__(
-                context.unrestrictedTraverse(name).__of__(context)
-            )
+            return self.__class__(context.unrestrictedTraverse(name).__of__(context))
         elif self.isFile(name):
             return context.unrestrictedTraverse(name).__of__(context)
 
@@ -73,9 +68,6 @@ class PersistentResourceDirectory(object):
         return self.publishTraverse(None, name)
 
     def __setitem__(self, name, item):
-        if six.PY2 and isinstance(name, six.text_type):
-            name = name.encode('utf-8')
-
         if IResourceDirectory.providedBy(item):
             item = item.context
         self.context[name] = item
@@ -88,25 +80,28 @@ class PersistentResourceDirectory(object):
         return name in self.context
 
     def openFile(self, path):
-        return six.BytesIO(self.readFile(path))
+        return io.BytesIO(self.readFile(path))
 
     def readFile(self, path):
         try:
             f = self.context.unrestrictedTraverse(path)
         except Exception as e:
-            raise IOError(str(e))
-        if isinstance(f.data, six.binary_type):
+            raise OSError(str(e))
+        if isinstance(f.data, bytes):
             return f.data
         return f.data.__bytes__()
 
     def listDirectory(self):
-        return [n for n in self.context.objectIds()
-                if not any(filter.match(n) for filter in FILTERS)]
+        return [
+            n
+            for n in self.context.objectIds()
+            if not any(filter.match(n) for filter in FILTERS)
+        ]
 
     def isDirectory(self, path):
         try:
             obj = self.context.unrestrictedTraverse(path)
-        except:
+        except Exception:
             obj = None
 
         return IObjectManager.providedBy(obj)
@@ -114,7 +109,7 @@ class PersistentResourceDirectory(object):
     def isFile(self, path):
         try:
             obj = self.context.unrestrictedTraverse(path)
-        except:
+        except Exception:
             obj = None
 
         return isinstance(obj, File)
@@ -128,11 +123,11 @@ class PersistentResourceDirectory(object):
     def exportZip(self, out):
         prefix = self.__name__
 
-        zf = zipfile.ZipFile(out, 'w')
+        zf = zipfile.ZipFile(out, "w")
 
         def write(dir, prefix, zf):
             for name in dir.listDirectory():
-                relativeName = "%s/%s" % (prefix, name,)
+                relativeName = f"{prefix}/{name}"
                 if dir.isDirectory(name):
                     write(dir[name], relativeName, zf)
                 elif dir.isFile(name):
@@ -142,11 +137,8 @@ class PersistentResourceDirectory(object):
         zf.close()
 
     def makeDirectory(self, path):
-        if six.PY2:
-            path = path.encode('utf-8')
-
         parent = self.context
-        names = path.strip('/').split('/')
+        names = path.strip("/").split("/")
         for name in names:
             if name not in parent:
                 f = BTreeFolder2(name)
@@ -154,17 +146,17 @@ class PersistentResourceDirectory(object):
             parent = parent[name]
 
     def writeFile(self, path, data):
-        if isinstance(data, six.text_type):
-            data = data.encode('utf8')
-        basepath = '/'.join(path.split('/')[:-1])
+        if isinstance(data, str):
+            data = data.encode("utf8")
+        basepath = "/".join(path.split("/")[:-1])
         if basepath:
             self.makeDirectory(basepath)
-        filename = path.split('/')[-1]
+        filename = path.split("/")[-1]
         f = File(filename, filename, data)
         ct = f.getContentType()
-        if ct.startswith('text/') or ct == 'application/javascript':
+        if ct.startswith("text/") or ct == "application/javascript":
             # otherwise HTTPResponse.setBody assumes latin1 and mangles things
-            f.content_type = ct + '; charset=utf-8'
+            f.content_type = ct + "; charset=utf-8"
         container = self.context.unrestrictedTraverse(basepath)
         if filename in container:
             container._delOb(filename)
@@ -180,15 +172,13 @@ class PersistentResourceDirectory(object):
             f = zipfile.ZipFile(f)
         for name in f.namelist():
             member = f.getinfo(name)
-            path = member.filename.lstrip('/')
+            path = member.filename.lstrip("/")
 
             # test each part of the path against the filters
-            if any(any(filter.match(n) for filter in FILTERS)
-                   for n in path.split('/')
-                   ):
+            if any(any(filter.match(n) for filter in FILTERS) for n in path.split("/")):
                 continue
 
-            if path.endswith('/'):
+            if path.endswith("/"):
                 self.makeDirectory(path)
             else:
                 data = f.open(member).read()
@@ -196,9 +186,8 @@ class PersistentResourceDirectory(object):
 
 
 @implementer(IResourceDirectory)
-class FilesystemResourceDirectory(object):
-    """A resource directory based on files in the filesystem.
-    """
+class FilesystemResourceDirectory:
+    """A resource directory based on files in the filesystem."""
 
     __allow_access_to_unprotected_subobjects__ = True
 
@@ -220,18 +209,16 @@ class FilesystemResourceDirectory(object):
         self._parent = value
 
     def __repr__(self):
-        return '<%s object at %s>' % (self.__class__.__name__, self.__name__)
+        return f"<{self.__class__.__name__} object at {self.__name__}>"
 
     def __bytes__(self):
-        if six.PY2:
-            return repr(self)
         return repr(self).encode()
 
     def _resolveSubpath(self, path):
-        parts = path.split('/')
+        parts = path.split("/")
         filepath = os.path.abspath(os.path.join(self.directory, *parts))
         if not filepath.startswith(self.directory):
-            raise Forbidden('Invalid path resource')
+            raise Forbidden("Invalid path resource")
         return filepath
 
     def publishTraverse(self, request, name):
@@ -253,7 +240,7 @@ class FilesystemResourceDirectory(object):
 
     def openFile(self, path):
         filepath = self._resolveSubpath(path)
-        return open(filepath, 'rb')
+        return open(filepath, "rb")
 
     def readFile(self, path):
         with self.openFile(path) as f:
@@ -261,8 +248,7 @@ class FilesystemResourceDirectory(object):
 
     def listDirectory(self):
         names = os.listdir(self.directory)
-        return [n for n in names
-                if not any(filter.match(n) for filter in FILTERS)]
+        return [n for n in names if not any(filter.match(n) for filter in FILTERS)]
 
     def isDirectory(self, path):
         return os.path.isdir(self._resolveSubpath(path))
@@ -271,21 +257,27 @@ class FilesystemResourceDirectory(object):
         return os.path.isfile(self._resolveSubpath(path))
 
     def exportZip(self, out):
-        with zipfile.ZipFile(out, 'w') as zf:
-            toStrip = len(self.directory.replace(os.path.sep, '/')) + 1
+        with zipfile.ZipFile(out, "w") as zf:
+            toStrip = len(self.directory.replace(os.path.sep, "/")) + 1
 
-            for (dirpath, dirnames, filenames) in os.walk(self.directory):
-                subpath = dirpath.replace(os.path.sep, '/')[toStrip:].strip('/')
+            for dirpath, dirnames, filenames in os.walk(self.directory):
+                subpath = dirpath.replace(os.path.sep, "/")[toStrip:].strip("/")
 
                 for filename in filenames:
-                    path = '/'.join([subpath, filename]).strip('/')
+                    path = "/".join([subpath, filename]).strip("/")
 
-                    if any(any(filter.match(n) for filter in FILTERS)
-                           for n in path.split('/')
-                           ):
+                    if any(
+                        any(filter.match(n) for filter in FILTERS)
+                        for n in path.split("/")
+                    ):
                         continue
 
                     zf.writestr(
-                        '/'.join([self.__name__, path, ]),
+                        "/".join(
+                            [
+                                self.__name__,
+                                path,
+                            ]
+                        ),
                         self.readFile(path),
                     )

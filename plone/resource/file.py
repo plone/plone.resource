@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from datetime import time
 from dateutil.tz import tzlocal
 from email.utils import formatdate
@@ -25,10 +24,10 @@ class ResourceIterator(filestream_iterator):
         return self.read()
 
     def __unicode__(self):
-        return self.read().decode('utf-8')
+        return self.read().decode("utf-8")
 
 
-class FilesystemFile(object):
+class FilesystemFile:
     """Representation of a file. When called, it will set response headers
     and return the file's contents
     """
@@ -38,13 +37,11 @@ class FilesystemFile(object):
         self.request = request
         self.__name__ = name
         self.__parent__ = parent
-        self.lastModifiedTimestamp = float(
-            os.path.getmtime(path)
-        ) or time.time()
+        self.lastModifiedTimestamp = float(os.path.getmtime(path)) or time.time()
 
-    def getContentType(self, default='application/octet-stream'):
+    def getContentType(self, default="application/octet-stream"):
         extension = os.path.splitext(self.__name__)[1].lower()
-        mtr = queryUtility('mimetypes_registry')
+        mtr = queryUtility("mimetypes_registry")
         mt = None
         if mtr:
             mt = mtr.lookupExtension(extension)
@@ -54,10 +51,7 @@ class FilesystemFile(object):
 
     def __call__(self, REQUEST=None, RESPONSE=None):
         contentType = self.getContentType()
-        lastModifiedHeader = formatdate(
-            self.lastModifiedTimestamp,
-            usegmt=True
-        )
+        lastModifiedHeader = formatdate(self.lastModifiedTimestamp, usegmt=True)
 
         request = REQUEST
         if request is None:
@@ -67,30 +61,28 @@ class FilesystemFile(object):
         if response is None:
             response = self.request.response
 
-        response.setHeader('Content-Type', contentType)
-        response.setHeader('Content-Length', os.path.getsize(self.path))
-        response.setHeader('Last-Modified', lastModifiedHeader)
+        response.setHeader("Content-Type", contentType)
+        response.setHeader("Content-Length", os.path.getsize(self.path))
+        response.setHeader("Last-Modified", lastModifiedHeader)
 
-        return ResourceIterator(self.path, 'rb')
+        return ResourceIterator(self.path, "rb")
 
 
 @implementer(ILastModified)
 @adapter(FilesystemFile)
-class FileLastModified(object):
-    """Determine when a file was last modified, for caching purposes
-    """
+class FileLastModified:
+    """Determine when a file was last modified, for caching purposes"""
 
     def __init__(self, context):
         self.context = context
 
     def __call__(self):
         return datetime.datetime.fromtimestamp(
-            self.context.lastModifiedTimestamp,
-            tz=tzlocal()
+            self.context.lastModifiedTimestamp, tz=tzlocal()
         )
 
 
 @implementer(IRawReadFile)
 @adapter(FilesystemFile)
 def rawReadFile(context):
-    return open(context.path, 'rb')
+    return open(context.path, "rb")

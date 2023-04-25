@@ -1,14 +1,13 @@
-# -*- coding: utf-8 -*-
 from plone.resource.interfaces import IUniqueResourceRequest
 from plone.resource.utils import queryResourceDirectory
-from six.moves import urllib
 from zExceptions import NotFound
 from zope.interface import alsoProvides
 from zope.traversing.namespace import SimpleHandler
 
+import urllib
+
 
 class ResourceTraverser(SimpleHandler):
-
     name = None
 
     def __init__(self, context, request=None):
