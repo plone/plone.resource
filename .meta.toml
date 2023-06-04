@@ -1,5 +1,11 @@
 # Generated from:
 # https://github.com/plone/meta/tree/master/config/default
+# See the inline comments on how to expand/tweak this configuration file
 [meta]
 template = "default"
-commit-id = "2a4ba395"
+commit-id = "c73a9bf7"
+
+[pre_commit]
+zpretty_extra_lines = """
+        exclude: test.html
+"""
