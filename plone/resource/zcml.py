@@ -50,13 +50,13 @@ def registerResourceDirectory(_context, directory, name=None, type=None):
         directory = _context.path(directory)
     elif not _context.package and not os.path.isabs(directory):
         raise ConfigurationError(
-            "Global resource directories must be " "specified as absolute paths."
+            "Global resource directories must be specified as absolute paths."
         )
 
     # TODO: make sure this works in Windows
     if ".." in directory.split("/"):
         raise ConfigurationError(
-            "Traversing to parent directories " "via .. is not allowed."
+            "Traversing to parent directories via .. is not allowed."
         )
     if not os.path.exists(directory):
         raise OSError("Directory not found: %s" % directory)
