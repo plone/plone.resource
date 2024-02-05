@@ -27,6 +27,7 @@ To get this manifest from an open file pointer ``fp``, do::
 ``bar``. ``title`` and ``description`` will be ``None`` if not found in the
 manifest. ``bar`` will be ``baz`` if not found.
 """
+
 from configparser import ConfigParser
 from plone.resource.directory import FILTERS
 from plone.resource.interfaces import IResourceDirectory
