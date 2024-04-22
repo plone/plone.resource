@@ -10,7 +10,7 @@
       title="Static resource storage"
       description="A folder for storing and serving static resource files"
       provides="Products.GenericSetup.interfaces.EXTENSION"
-      for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+      for="plone.base.interfaces.IPloneSiteRoot"
       directory="profiles/default"
       />
 
