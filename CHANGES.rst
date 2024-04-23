@@ -8,6 +8,15 @@ Changelog
 
 .. towncrier release notes start
 
+3.0.2 (2024-04-23)
+------------------
+
+Bug fixes:
+
+
+- Import IPloneSiteRoot from plone.base. @davisagli (#45)
+
+
 3.0.1 (2024-01-22)
 ------------------
 
