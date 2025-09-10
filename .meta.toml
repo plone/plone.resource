@@ -3,7 +3,7 @@
 # See the inline comments on how to expand/tweak this configuration file
 [meta]
 template = "default"
-commit-id = "dc65bd47"
+commit-id = "2.0.1.dev0"
 
 [pre_commit]
 zpretty_extra_lines = """
