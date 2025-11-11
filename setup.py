@@ -41,7 +41,6 @@ setup(
     install_requires=[
         "plone.caching",
         "python-dateutil",
-        "setuptools",
         "z3c.caching",
         "Zope",
         "Products.BTreeFolder2",
