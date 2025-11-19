@@ -2,7 +2,7 @@ from pathlib import Path
 from setuptools import setup
 
 
-version = "4.0.0a1"
+version = "4.0.0a2.dev0"
 
 test_requires = [
     "plone.app.testing",
