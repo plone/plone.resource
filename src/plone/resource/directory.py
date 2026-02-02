@@ -20,7 +20,6 @@ import os.path
 import re
 import zipfile
 
-
 # filter dot files, Mac resource forks
 FILTERS = (r"\..*", "__MACOSX")
 FILTERS = [re.compile(pattern) for pattern in FILTERS]
