@@ -36,7 +36,6 @@ from zope.component import getUtility
 
 import logging
 
-
 MANIFEST_FILENAME = "manifest.cfg"
 
 LOGGER = logging.getLogger("plone.resource.manifest")

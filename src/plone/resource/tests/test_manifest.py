@@ -15,7 +15,6 @@ import os.path
 import unittest
 import zipfile
 
-
 base_path = os.path.dirname(__file__)
 test_dir_path = os.path.join(base_path, "resources")
 
