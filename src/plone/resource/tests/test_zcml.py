@@ -46,15 +46,13 @@ class ZCMLTestCase(unittest.TestCase):
         tearDown()
 
     def test_dist_with_name_and_type(self):
-        runSnippet(
-            """
+        runSnippet("""
         <plone:static
           name="foo"
           type="theme"
           directory="resources"
           />
-        """
-        )
+        """)
 
         res = getUtility(IResourceDirectory, name="++theme++foo")
         self.assertTrue(
@@ -75,14 +73,12 @@ class ZCMLTestCase(unittest.TestCase):
         )
 
     def test_dist_with_type_only(self):
-        runSnippet(
-            """
+        runSnippet("""
         <plone:static
           type="theme"
           directory="resources"
           />
-        """
-        )
+        """)
 
         getUtility(IResourceDirectory, name="++theme++plone.resource.tests")
 
