@@ -14,7 +14,6 @@ from zope.component import provideUtility
 import os.path
 import unittest
 
-
 base_path = os.path.dirname(__file__)
 test_dir_path = os.path.join(base_path, "resources")
 
