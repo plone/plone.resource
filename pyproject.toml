@@ -4,7 +4,64 @@
 [build-system]
 requires = ["setuptools>=68.2,<83", "wheel"]
 
+# START-MARKER-MANUAL-CONFIG
+# Anything from here until END-MARKER-MANUAL-CONFIG
+# will be kept by plone.meta
 
+[project]
+name = "plone.resource"
+version = "4.0.1.dev0"
+description = "Static files for Plone"
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Framework :: Plone",
+    "Framework :: Plone :: 6.2",
+    "Framework :: Plone :: Core",
+    "Framework :: Zope :: 5",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+]
+license = "GPL-2.0-or-later"
+dynamic = ["readme"]
+requires-python = ">=3.10"
+authors = [
+    {name = "David Glick, Plone Foundation",email = "davidglick@groundwire.org"},
+]
+maintainers = [
+    {name = "Plone Foundation and contributors",email = "plone-developers@lists.sourceforge.net"},
+]
+dependencies = [
+    "Products.BTreeFolder2",
+    "Products.CMFCore",
+    "Products.GenericSetup",
+    "Zope",
+    "plone.caching",
+    "python-dateutil",
+    "z3c.caching",
+]
+keywords = ["plone", "resource"]
+
+[project.entry-points."plone.autoinclude.plugin"]
+target = "plone"
+
+[project.optional-dependencies]
+test = [
+    "plone.app.testing",
+    "plone.testing",
+]
+
+[project.urls]
+Source = "https://github.com/plone/plone.resource"
+Issues = "https://github.com/plone/Products.CMFPlone/issues"
+Changelog = "https://github.com/plone/plone.resource/blob/master/CHANGES.rst"
+
+[tool.setuptools.dynamic]
+readme = {file = ["README.rst", "CHANGES.rst"]}
+# END-MARKER-MANUAL-CONFIG
 
 [tool.towncrier]
 directory = "news/"
